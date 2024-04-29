@@ -58,6 +58,8 @@ public:
     void set_lights(const std::vector<light>& lights);
     void set_shadow_view(const Eigen::Matrix4f& s);
     void set_shadow_buffer(const std::vector<float>& shadow_buffer);
+    void save_frame_buf();
+    void blend_frame_bufs();
 
     Eigen::Matrix4f shadow_projection;
 
@@ -77,7 +79,7 @@ public:
     void draw(pos_buf_id pos_buffer, ind_buf_id ind_buffer, col_buf_id col_buffer,
               Primitive type, bool culling = false, bool anti_aliasing = false);
     void draw(std::vector<Triangle*>& TriangleList, bool culling = false,
-              Shading shading = Shading::Phong, bool shadown=false);
+              Shading shading = Shading::Phong, bool shadown=false, bool snow=false);
 
     std::vector<Eigen::Vector3f>& frame_buffer() {
         return frame_buf;
@@ -120,6 +122,7 @@ private:
     std::function<Eigen::Vector3f(vertex_shader_payload)> vertex_shader;
 
     std::vector<Eigen::Vector3f> frame_buf;
+    std::vector<Eigen::Vector3f> frame_buf2;
     std::vector<float> depth_buf;
     std::vector<Eigen::Vector3f> ssaa_frame_buf;
     std::vector<float> ssaa_depth_buf;

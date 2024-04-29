@@ -242,7 +242,10 @@ int main(int argc, const char **argv) {
         r.set_projection(get_projection_matrix(45.0, 1, 0.1, 50));
         r.set_lights(lights);
 
-        r.draw(TriangleList, true, shading, shadow);
+        r.draw(TriangleList, true, shading);
+        r.save_frame_buf();
+        r.draw(TriangleList, false, shading, false, true);
+        r.blend_frame_bufs();
         cv::Mat image(700, 700, CV_32FC3, r.frame_buffer().data());
         
         image.convertTo(image, CV_8UC3, 1.0f);

@@ -239,7 +239,7 @@ void rst::rasterizer::draw(pos_buf_id pos_buffer, ind_buf_id ind_buffer, col_buf
     }
 }
 
-void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, rst::Shading shading, bool shadow) {
+void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, rst::Shading shading, bool shadow, bool snow) {
     float f1 = (50 - 0.1) / 2.0;
     float f2 = (50 + 0.1) / 2.0;
     culling = true;
@@ -628,6 +628,10 @@ void rst::rasterizer::set_shadow_view(const Eigen::Matrix4f &v) {
 
 void rst::rasterizer::set_shadow_buffer(const std::vector<float> &shadow_buffer) {
     std::copy(shadow_buffer.begin(), shadow_buffer.end(), this->shadow_buf.begin());
+}
+
+void rst::rasterizer::save_frame_buf() {
+    std::copy(frame_buf.begin(), frame_buf.end(), this->frame_buf2);
 }
 
 void rst::rasterizer::clear(rst::Buffers buff) {
