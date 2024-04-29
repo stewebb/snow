@@ -6,7 +6,7 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &payload) {
     Eigen::Vector3f amb_light_intensity {10, 10, 10};
     float p = 150;
 
-
+    // TODO Change color range
     auto lights = payload.view_lights;
     Eigen::Vector3f color = payload.color;
     Eigen::Vector3f point = payload.view_pos;
@@ -18,7 +18,55 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &payload) {
     // n, v need to be normalized!
     Eigen::Vector3f n = normal.normalized();
     Eigen::Vector3f v = (eye_pos - point).normalized();
-    Eigen::Vector3f La = ka.cwiseProduct(amb_light_intensity); 
+
+    Eigen::Vector3f Ia = ka.cwiseProduct(amb_light_intensity); 
+    //        Vector3f Ia = 0;
+    Eigen::Vector3f Id = 0;
+    Eigen::Vector3f Is = 0;
+
+    for (auto &light : lights) {
+
+        //float len2 = dotProduct()
+
+            
+
+        // Id = kd * I * (N dot L) if N dot L > 0; 0 otherwise
+        Eigen::Vector3f I = light.intensity;
+        //Vector3f I = light->intensity;
+
+        //Vector3f L = (light->position - hitPoint).normalized();
+        Eigen::Vector3f L = (light.position - point).normalized();
+
+        //float L2 = dotProduct(L, L);
+        //float tnear = INFINITY;
+
+ 
+
+        float NL = N.dot(L);
+        //float NL = dotProduct(N, L);
+
+        if(NL > 0){
+            Id += Kd * I * NL;
+        }
+
+        // Is = ks * I * (V dot R) ** a if V dot R > 0 and N dot L > 0; 0 otherwise
+
+        // TODO Possible (L, N)?
+        Vector3f R = reflect(-L, N);
+        Vector3f V = dir.normalized();
+
+        float VR = V.dot(R);
+        if(VR > 0 && NL > 0){
+            Is += Kd * I * pow(VR, a);
+        }   
+
+        result_color += Ia;
+        result_color += Id;
+        result_color += Is;
+
+    }
+
+    return result_color;
 
 }
 
@@ -142,7 +190,13 @@ Eigen::Vector3f texture_fragment_shader(const fragment_shader_payload &payload) 
     return result_color * 255.f;
 }
 
-Eigen::Vector3f reflect(const Eigen::Vector3f &vec, const Eigen::Vector3f &axis) {
-    auto costheta = vec.dot(axis);
-    return (2 * costheta * axis - vec).normalized();
+//Eigen::Vector3f reflect(const Eigen::Vector3f &vec, const Eigen::Vector3f &axis) {
+//    auto costheta = vec.dot(axis);
+//    return (2 * costheta * axis - vec).normalized();
+//}
+
+
+Eigen::Vector3f reflect(const Eigen::Vector3f &I, const Eigen::Vector3f &N) const{
+    //return I - 2 * dotProduct(I, N) * N;
+    return I - 2 * I.dot(N) * N;
 }
