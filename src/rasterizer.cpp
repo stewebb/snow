@@ -587,7 +587,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
                             if (snow) {
                                 Eigen::Vector2f dE;
                                 float fp = prediction_function(shadingcoords, normal, dE);
-                                pixel_color = full_snow(pixel_color, normal, fp);
+                                pixel_color = full_snow(pixel_color, normal, dE, fp);
                             }
                         }
                         
