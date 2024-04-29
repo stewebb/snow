@@ -437,7 +437,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, bool anti_aliasing) 
 }
 
 // Task2 Implement this function
-void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eigen::Vector3f, 3> &view_pos, const std::vector<light> &view_lights, rst::Shading shading, bool shadow) {
+void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eigen::Vector3f, 3> &view_pos, const std::vector<light> &view_lights, rst::Shading shading, bool shadow, bool snow) {
     auto v = t.toVector4();
 
     int x_min = std::numeric_limits<int>::max();
@@ -574,7 +574,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
                         // Call the fragment shader to get the pixel color
                         auto pixel_color = fragment_shader(payload);
                         
-                        if (shadow) {
+                        if (shadow || snow) {
 
                             // Find the relative position to the light source (by given shadow_projection and shadow_view)
                             Eigen::Vector4f view_pos {shadingcoords[0], shadingcoords[1], shadingcoords[2], 1.0f};
@@ -593,7 +593,13 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
                             float z_B = v.z() * f1 + f2;
 
                             // Draw shadow
-                            if(z_B > z_A)   pixel_color *= 0.3;
+                            if(shadow && z_B > z_A)   pixel_color *= 0.3;
+
+                            // Draw snow
+                            if (snow) {
+                                float fp = prediction_function(shadingcoords);
+                                pixel_color = full_snow(pixel_color, fp);
+                            }
                         }
                         
                         set_pixel(Vector2i(x, y), pixel_color);

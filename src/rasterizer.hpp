@@ -94,7 +94,10 @@ private:
     void rasterize_triangle(const Triangle& t,
                             const std::array<Eigen::Vector3f, 3>& world_pos,
                             const std::vector<light>& viewspace_lights,
-                            Shading shading = Shading::Phong, bool shadown=false);
+                            Shading shading = Shading::Phong, bool shadown=false, bool snow=false);
+
+    float prediction_function(const Eigen::Vector3f shading_coords);
+    Eigen::Vector3f full_snow(const Eigen::Vector3f &orig_color, float fp);
 
     void post_process_buffer();
 
