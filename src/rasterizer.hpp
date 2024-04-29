@@ -96,8 +96,13 @@ private:
                             const std::vector<light>& viewspace_lights,
                             Shading shading = Shading::Phong, bool shadown=false, bool snow=false);
 
-    float prediction_function(const Eigen::Vector3f shading_coords);
-    Eigen::Vector3f full_snow(const Eigen::Vector3f &orig_color, float fp);
+    float prediction_function(const Eigen::Vector3f &shading_coords,
+                              const Eigen::Vector3f &normal,
+                              Eigen::Vector2f &dE);
+    float exposure_function(const Eigen::Vector3f &shading_coords, Eigen::Vector2f &dE);
+    float inclination_function(const Eigen::Vector3f &normal);
+    Eigen::Vector3f snow_color(const Eigen::Vector3f &normal, Eigen::Vector2f dE, float fp);
+    Eigen::Vector3f full_snow(const Eigen::Vector3f &orig_color, Eigen::Vector3f normal, float fp);
 
     void post_process_buffer();
 
