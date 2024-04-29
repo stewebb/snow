@@ -353,12 +353,6 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, bool anti_aliasing) 
         if(y > y_max)   y_max = y;
     }
 
-    int padding = 5;
-    x_min = std::max(x_min-padding, 0);
-    y_min = std::max(y_min-padding, 0);
-    x_max = std::min(x_max+padding, width);
-    y_max = std::min(y_max+padding, height);
-
     // Anti-aliasing is ENABLED.
     if(anti_aliasing){
 
@@ -454,12 +448,6 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
         if(y < y_min)   y_min = y;
         if(y > y_max)   y_max = y;
     }
-
-    int padding = 5;
-    x_min = std::max(x_min-padding, 0);
-    y_min = std::max(y_min-padding, 0);
-    x_max = std::min(x_max+padding, width);
-    y_max = std::min(y_max+padding, height);
    
     // Flat shading
     if (shading == rst::Shading::Flat) {
