@@ -4,6 +4,7 @@
 #include <Eigen/Eigen>
 #include <algorithm>
 #include <optional>
+#include <random>
 #include <vector>
 
 #include "Shader.hpp"
@@ -46,7 +47,7 @@ struct col_buf_id {
 
 class rasterizer {
 public:
-    rasterizer(int w, int h);
+    rasterizer(int w, int h) : inclination_gen(std::random_device{}()), inclination_dis(0.0, 0.4) {}
     pos_buf_id load_positions(const std::vector<Eigen::Vector3f>& positions);
     ind_buf_id load_indices(const std::vector<Eigen::Vector3i>& indices);
     col_buf_id load_colors(const std::vector<Eigen::Vector3f>& colors);
@@ -143,5 +144,8 @@ private:
     int get_next_id() {
         return next_id++;
     }
+
+    std::mt19937 inclination_gen;
+    std::uniform_real_distribution<> inclination_dis; // for inclination_function
 };
 }  // namespace rst

@@ -7,6 +7,7 @@
 #include <array>
 #include <opencv2/opencv.hpp>
 #include <vector>
+#include <random>
 
 #include "Shader.hpp"
 #include "Triangle.hpp"
@@ -428,6 +429,17 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, bool anti_aliasing) 
             }
         }
     }
+}
+
+float rst::rasterizer::inclination_function(const Eigen::Vector3f &normal) {
+    double n = inclination_dis(inclination_gen);
+    return 0;
+}
+
+float rst::rasterizer::prediction_function(const Eigen::Vector3f &shading_coords, const Eigen::Vector3f &normal, Eigen::Vector2f &dE) {
+    float fe = exposure_function(shading_coords, dE);
+    float finc = inclination_function(normal);
+    return fe * finc;
 }
 
 // Task2 Implement this function
