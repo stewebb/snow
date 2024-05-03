@@ -98,13 +98,13 @@ Eigen::Vector3f vertex_shader(const vertex_shader_payload &payload) {
     return payload.position;
 }
 
-//static Eigen::Vector3f reflect(const Eigen::Vector3f &vec, const Eigen::Vector3f &axis) {
-//    auto costheta = vec.dot(axis);
-//    return (2 * costheta * axis - vec).normalized();
-//}
+static Eigen::Vector3f reflect(const Eigen::Vector3f &vec, const Eigen::Vector3f &axis) {
+    auto costheta = vec.dot(axis);
+    return (2 * costheta * axis - vec).normalized();
+}
 
 // TODO Remove me
-/*
+
 Eigen::Vector3f texture_fragment_shader(const fragment_shader_payload &payload) {
     Eigen::Vector3f return_color = {0, 0, 0};
     if (payload.texture) {
@@ -171,7 +171,7 @@ Eigen::Vector3f texture_fragment_shader(const fragment_shader_payload &payload) 
     // [0-1] --> [0-255]
     return result_color * 255.0f;
 }
-*/
+
 
 int main(int argc, const char **argv) {
 
