@@ -11,7 +11,7 @@
 #include "global.hpp"
 #include "rasterizer.hpp"
 
-#define EYE_POS {0, 0, -5}
+#define EYE_POS {0, 0.5, 0.5}
 
 // Eye (camera) position. 
 // It need to be used in multiple places, so it's a global variable.
@@ -98,22 +98,23 @@ Eigen::Vector3f vertex_shader(const vertex_shader_payload &payload) {
     return payload.position;
 }
 
-Vector3f reflect(const Vector3f &I, const Vector3f &N){
-    return I - 2 * I.dot(N) * N;
+//Vector3f reflect(const Vector3f &I, const Vector3f &N){
+//    return I - 2 * I.dot(N) * N;
+//}
+
+static Eigen::Vector3f reflect(const Eigen::Vector3f &vec, const Eigen::Vector3f &axis) {
+    auto costheta = vec.dot(axis);
+    return (2 * costheta * axis - vec).normalized();
 }
 
-//static Eigen::Vector3f reflect(const Eigen::Vector3f &vec, const Eigen::Vector3f &axis) {
-//    auto costheta = vec.dot(axis);
-//    return (2 * costheta * axis - vec).normalized();
-//}
 
 Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &payload) {
 
     Eigen::Vector3f ka = Eigen::Vector3f(0.005, 0.005, 0.005);
     Eigen::Vector3f Kd = payload.color;
-    Eigen::Vector3f Ks = Eigen::Vector3f(0.2, 0.2, 0.2);
+    //Eigen::Vector3f Ks = Eigen::Vector3f(0.2, 0.2, 0.2);
 
-    //Eigen::Vector3f Ks = Eigen::Vector3f(0.7937, 0.7937, 0.7937);
+    Eigen::Vector3f Ks = Eigen::Vector3f(0.7937, 0.7937, 0.7937);
     //std::cout << Kd.transpose() << std::endl;
 
     Eigen::Vector3f amb_light_intensity {10, 10, 10};
@@ -197,18 +198,25 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &payload) {
 
             // Is = ks * I * (V dot R) ** a if V dot R > 0 and N dot L > 0; 0 otherwise
 
-            //Eigen::Vector3f R = reflect(L, N);
+        Eigen::Vector3f R = reflect(L, N);
             //Vector3f V = dir.normalized();
 
-            //float VR = V.dot(R);
-            //if(VR > 0 && NL > 0){
+        float VR = V.dot(R);
+
+        Eigen::Vector3f Ls = {0, 0, 0};
+        if(VR > 0 && NL > 0){
                 //std::cout << 233 << std::endl;
                 //Is[0] += Ks[0] * Ir2[0] * pow(VR, a);
                 //Is[1] += Ks[1] * Ir2[1] * pow(VR, a);
                 //Is[2] += Ks[2] * Ir2[2] * pow(VR, a);
                 //std::cout << Is << std::endl;
                 //std::cout << Ks << " " << I << " " << VR << " " << a << std::endl;
-            //}
+
+            Ls = Ks.array() * Ir2.array() * pow(VR, a);
+            //std::cout << VR << std::endl;
+        }
+
+        result_color += Ls;
         
 
         
@@ -225,6 +233,8 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &payload) {
     //result_color += La;
     return result_color * 255.f;
 }
+
+
 
 Eigen::Vector3f blinn_phong_fragment_shader(const fragment_shader_payload &payload) {
 
@@ -262,11 +272,11 @@ Eigen::Vector3f blinn_phong_fragment_shader(const fragment_shader_payload &paylo
 
         // kd, Ir2 element-wise multiplication
         Eigen::Vector3f Ld = kd.array() * Ir2.array() * std::max(0.0f, nl);
-        //result_color += Ld;
+        result_color += Ld;
 
-        if(Ld.norm() > 0){
-            std::cout << kd.transpose() << std::endl;
-        }
+        //if(Ld.norm() > 0){
+        //    std::cout << kd.transpose() << std::endl;
+        //}
         
         
         // Ls = ks * (I/r^2) * (max(0, n dot h))^p, h = (v+l) / norm(v+l)
@@ -283,7 +293,7 @@ Eigen::Vector3f blinn_phong_fragment_shader(const fragment_shader_payload &paylo
         
     }
 
-    //result_color += La;
+    result_color += La;
     return result_color * 255.f;
 }
 
@@ -358,7 +368,7 @@ Eigen::Vector3f texture_fragment_shader(const fragment_shader_payload &payload) 
 int main(int argc, const char **argv) {
     std::vector<Triangle *> TriangleList;
 
-    float angle = 0.0;
+    float angle = 140.0;
     bool command_line = false;
 
     std::string filename = "output.png";
@@ -368,8 +378,8 @@ int main(int argc, const char **argv) {
 
     // Load .obj File
     //bool loadout = Loader.LoadFile("../../common_models/spot.obj");
-    //bool loadout = Loader.LoadFile("../../common_models/stanford-bunny.obj");
-    bool loadout = Loader.LoadFile("../models/spot/spot_triangulated_good.obj");
+    bool loadout = Loader.LoadFile("../../common_models/stanford-bunny.obj");
+    //bool loadout = Loader.LoadFile("../models/spot/spot_triangulated_good.obj");
     for (auto mesh : Loader.LoadedMeshes) {
         for (int i = 0; i < mesh.Vertices.size(); i += 3) {
             Triangle *t = new Triangle();
@@ -392,47 +402,8 @@ int main(int argc, const char **argv) {
 
     std::function<Eigen::Vector3f(fragment_shader_payload)> active_shader = phong_fragment_shader;
 
-    /*
-    if (argc < 3) {
-        std::cout << "Usage: [Shader (texture, normal, blinn-phong, bump)] [Shading "
-                     "Frequency (Flat, Gouraud, Phong)]  [savename.png]"
-                  << std::endl;
-        return 1;
-    } else {
-        if (argc == 4) {
-            command_line = true;
-            filename = std::string(argv[3]);
-        }
-        if (std::string(argv[1]) == "texture") {
-            std::cout << "Rasterizing using the texture shader\n";
-            active_shader = texture_fragment_shader;
-            texture_path = "spot_texture.png";
-            r.set_texture(Texture(obj_path + texture_path));
-        } else if (std::string(argv[1]) == "normal") {
-            std::cout << "Rasterizing using the normal shader\n";
-            active_shader = normal_fragment_shader;
-        } else if (std::string(argv[1]) == "blinn-phong") {
-            std::cout << "Rasterizing using the phong shader\n";
-            active_shader = blinn_phong_fragment_shader;
-        } else if (std::string(argv[1]) == "bump") {
-            std::cout << "Rasterizing using the bump shader\n";
-            active_shader = bump_fragment_shader;
-        }
 
-        if (std::string(argv[2]) == "Flat") {
-            std::cout << "Rasterizing using Flat shading\n";
-            shading = rst::Shading::Flat;
-        } else if (std::string(argv[2]) == "Gouraud") {
-            std::cout << "Rasterizing using Goround shading\n";
-            shading = rst::Shading::Gouraud;
-        } else if (std::string(argv[2]) == "Phong") {
-            std::cout << "Rasterizing using Phong shading\n";
-            shading = rst::Shading::Phong;
-        }
-    }
-    */
-
-    /*
+    
     //rst::Shading shading = rst::Shading::Phong;
     auto l1 = light{{ 5,  5,  5}, {50, 50, 50}};
     auto l2 = light{{ 5,  5, -5}, {50, 50, 50}};
@@ -445,13 +416,13 @@ int main(int argc, const char **argv) {
 
     Eigen::Vector3f eye_pos = EYE_POS;
 
-    //std::vector<light> lights = {l1, l2, l3, l4, l5, l6, l7, l8};
-    std::vector<light> lights = {l1, l3, l5, l7};
-    */
+    std::vector<light> lights = {l1, l2, l3, l4, l5, l6, l7, l8};
+    //std::vector<light> lights = {l1, l3, l5, l7};
+    
 
-    auto l1 = light{{-5, 5, 5}, {10, 10, 10}};
-    auto l2 = light{{-20, 20, 0}, {20, 20, 20}};
-    std::vector<light> lights = {l1, l2};
+    //auto l1 = light{{-5, 5, 5}, {50, 50, 50}};
+    //auto l2 = light{{-20, 20, 0}, {100, 100, 100}};
+    //std::vector<light> lights = {l1, l2};
 
 
     r.set_vertex_shader(vertex_shader);
