@@ -7,6 +7,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O3")
 
 find_package(OpenCV REQUIRED)
 find_package(Eigen3 REQUIRED)
+# find_package(Boost  REQUIRED)
 
 include_directories(${EIGEN3_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS})
 
@@ -17,5 +18,5 @@ include_directories(${EIGEN3_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS})
 # add_executable(task2 task2.cpp rasterizer.hpp rasterizer.cpp global.hpp Triangle.hpp Triangle.cpp Texture.hpp Texture.cpp Shader.hpp OBJ_Loader.h)
 # target_link_libraries(task2 ${OpenCV_LIBRARIES})
 
-add_executable(snow main.cpp rasterizer.hpp rasterizer.cpp global.hpp Triangle.hpp Triangle.cpp Texture.hpp Texture.cpp Shader.hpp OBJ_Loader.h)
+add_executable(snow main.cpp rasterizer.hpp rasterizer.cpp global.hpp Triangle.hpp Triangle.cpp Texture.hpp Texture.cpp Shader.hpp OBJ_Loader.h MVP.cpp MVP.hpp)
 target_link_libraries(snow ${OpenCV_LIBRARIES})

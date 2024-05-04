@@ -3,6 +3,9 @@
 #include <string>
 #include <vector>
 
+//#include <boost/property_tree/ptree.hpp>
+//#include <boost/property_tree/ini_parser.hpp>
+
 #include "Eigen/Dense"
 #include "OBJ_Loader.h"
 #include "Shader.hpp"
@@ -11,32 +14,16 @@
 #include "global.hpp"
 #include "rasterizer.hpp"
 
-#define EYE_POS {0, 0.5, 0.5}
+#include "MVP.hpp"
+
+
+#define EYE_POS {0.5, 0.35, -0.5}
 
 // Eye (camera) position. 
 // It need to be used in multiple places, so it's a global variable.
 Eigen::Vector3f eye_pos = EYE_POS;
 
-Eigen::Matrix4f get_rotation(float rotation_angle, const Eigen::Vector3f &axis) {
-    // Calculate a rotation matrix from rotation axis and angle.
-    // Note: rotation_angle is in degree.
-    Eigen::Matrix4f rotation_matrix = Eigen::Matrix4f::Identity();
 
-    float rotation_angle_rad = rotation_angle * MY_PI / 180.0;
-    float cos_theta = cos(rotation_angle_rad);
-    float sin_theta = sin(rotation_angle_rad);
-
-    Eigen::Vector3f axis_ = axis.normalized();
-    Eigen::Matrix3f identity = Eigen::Matrix3f::Identity();
-    Eigen::Matrix3f ux;
-    ux << 0, -axis_.z(), axis_.y(), axis_.z(), 0, -axis_.x(), -axis_.y(), axis_.x(), 0;
-
-    Eigen::Matrix3f rotation_matrix_3x3 =
-        cos_theta * identity + (1 - cos_theta) * (axis_ * axis_.transpose()) + sin_theta * ux;
-    rotation_matrix.block<3, 3>(0, 0) = rotation_matrix_3x3;
-
-    return rotation_matrix;
-}
 
 // Calculate a transformation matrix of given translation vector.
 Eigen::Matrix4f get_translation(const Eigen::Vector3f &translation) {
@@ -297,99 +284,45 @@ Eigen::Vector3f blinn_phong_fragment_shader(const fragment_shader_payload &paylo
     return result_color * 255.f;
 }
 
-Eigen::Vector3f texture_fragment_shader(const fragment_shader_payload &payload) {
-    Eigen::Vector3f return_color = {0, 0, 0};
-    if (payload.texture) {
-
-        // Get the current u and v
-        float u = payload.tex_coords[0];
-        float v = payload.tex_coords[1];
-
-        // Boundary check
-        if(u < 0.0f)   u = 0.0f;
-        if(u > 1.0f)   u = 1.0f;
-        if(v < 0.0f)   v = 0.0f;
-        if(v > 1.0f)   v = 1.0f;
-
-        // Perform u-v mapping
-        return_color = payload.texture->getColor(u, v);
-    }
-
-    // Set texture color
-    Eigen::Vector3f texture_color;
-    texture_color << return_color.x(), return_color.y(), return_color.z();
-
-    Eigen::Vector3f ka = Eigen::Vector3f(0.005, 0.005, 0.005);
-    Eigen::Vector3f kd = texture_color / 255.0f;    // [0-255] --> [0-1]
-    Eigen::Vector3f ks = Eigen::Vector3f(0.7937, 0.7937, 0.7937);
-
-    Eigen::Vector3f amb_light_intensity{10, 10, 10};
-    float p = 150;
-
-    std::vector<light> lights = payload.view_lights;
-    Eigen::Vector3f color = texture_color;
-    Eigen::Vector3f point = payload.view_pos;
-    Eigen::Vector3f normal = payload.normal;
-
-    Eigen::Vector3f result_color = {0, 0, 0};
-    Eigen::Vector3f La = ka.cwiseProduct(amb_light_intensity);  // cwiseProduct--dot product
-
-    Eigen::Vector3f n = normal.normalized();
-    Eigen::Vector3f v = (eye_pos - point).normalized();
-    
-    // Iterate all lights
-    for (auto &light : lights) {
-
-        Eigen::Vector3f l = light.position - point;
-
-        // Square of the distance r
-        float r2 = std::pow(l.norm(), 2.0f);
-
-        Eigen::Vector3f I = light.intensity;
-        Eigen::Vector3f Ir2 = I / r2;
-        float nl = n.dot(l);
-        Eigen::Vector3f Ld = kd.array() * Ir2.array() * std::max(0.0f, nl);
-        result_color += Ld;
-
-        Eigen::Vector3f h = (v + l).normalized();
-        float nh = n.dot(h);
-        float nhp = std::pow(std::max(0.0f, nh), p);
-
-        Eigen::Vector3f Ls = ks.array() * Ir2.array() * nhp;
-        result_color += Ls;        
-    }
-    result_color += La;
-
-    // [0-1] --> [0-255]
-    return result_color * 255.0f;
-}
-
-
 int main(int argc, const char **argv) {
+
+    // Load configurations
+    /*
+    boost::property_tree::ptree pt;
+    try {
+        boost::property_tree::ini_parser::read_ini("config.ini", pt);
+        std::string host = pt.get<std::string>("Database.host");
+        int port = pt.get<int>("Database.port");
+
+        std::cout << "Host: " << host << std::endl;
+        std::cout << "Port: " << port << std::endl;
+    } catch(const boost::property_tree::ini_parser::ini_parser_error& e) {
+        std::cout << "Error: " << e.what() << std::endl;
+    }
+    */
+
     std::vector<Triangle *> TriangleList;
 
-    float angle = 140.0;
-    bool command_line = false;
+    float angle = 140.0;    // TODO INI 
 
-    std::string filename = "output.png";
+    std::string filename = "output.png";    // TODO INI 
     rst::Shading shading = rst::Shading::Phong;
     objl::Loader Loader;
-    std::string obj_path = "../models/spot/";
+    //std::string obj_path = "../models/spot/";
 
-    // Load .obj File
-    //bool loadout = Loader.LoadFile("../../common_models/spot.obj");
+    // Load .obj File TODO INI 
+    //bool loadout = Loader.LoadFile("../../common_models/happy.obj");
     bool loadout = Loader.LoadFile("../../common_models/stanford-bunny.obj");
     //bool loadout = Loader.LoadFile("../models/spot/spot_triangulated_good.obj");
+
+    // Load meshes
     for (auto mesh : Loader.LoadedMeshes) {
         for (int i = 0; i < mesh.Vertices.size(); i += 3) {
             Triangle *t = new Triangle();
             for (int j = 0; j < 3; j++) {
-                t->setVertex(j, Vector4f(mesh.Vertices[i + j].Position.X, mesh.Vertices[i + j].Position.Y,
-                                         mesh.Vertices[i + j].Position.Z, 1.0));
-                t->setNormal(j, Vector3f(mesh.Vertices[i + j].Normal.X, mesh.Vertices[i + j].Normal.Y,
-                                         mesh.Vertices[i + j].Normal.Z));
-                t->setTexCoord(
-                    j, Vector2f(mesh.Vertices[i + j].TextureCoordinate.X, mesh.Vertices[i + j].TextureCoordinate.Y));
+                t->setVertex(j, Vector4f(mesh.Vertices[i + j].Position.X, mesh.Vertices[i + j].Position.Y, mesh.Vertices[i + j].Position.Z, 1.0));
+                t->setNormal(j, Vector3f(mesh.Vertices[i + j].Normal.X, mesh.Vertices[i + j].Normal.Y, mesh.Vertices[i + j].Normal.Z));
+                t->setTexCoord(j, Vector2f(mesh.Vertices[i + j].TextureCoordinate.X, mesh.Vertices[i + j].TextureCoordinate.Y));
             }
             TriangleList.push_back(t);
         }
@@ -397,32 +330,20 @@ int main(int argc, const char **argv) {
 
     rst::rasterizer r(700, 700);
 
-    auto texture_path = "hmap.jpg";
-    r.set_texture(Texture(obj_path + texture_path));
+    //auto texture_path = "hmap.jpg";
+    //r.set_texture(Texture(obj_path + texture_path));
 
     std::function<Eigen::Vector3f(fragment_shader_payload)> active_shader = phong_fragment_shader;
 
-
-    
-    //rst::Shading shading = rst::Shading::Phong;
-    auto l1 = light{{ 5,  5,  5}, {50, 50, 50}};
-    auto l2 = light{{ 5,  5, -5}, {50, 50, 50}};
-    auto l3 = light{{ 5, -5,  5}, {50, 50, 50}};
-    auto l4 = light{{ 5, -5, -5}, {50, 50, 50}};
-    auto l5 = light{{-5,  5,  5}, {50, 50, 50}};
-    auto l6 = light{{-5,  5, -5}, {50, 50, 50}};
-    auto l7 = light{{-5, -5,  5}, {50, 50, 50}};
-    auto l8 = light{{-5, -5, -5}, {50, 50, 50}};
-
     Eigen::Vector3f eye_pos = EYE_POS;
 
-    std::vector<light> lights = {l1, l2, l3, l4, l5, l6, l7, l8};
+    //std::vector<light> lights = {l1, l2, l3, l4, l5, l6, l7, l8};
     //std::vector<light> lights = {l1, l3, l5, l7};
     
 
-    //auto l1 = light{{-5, 5, 5}, {50, 50, 50}};
-    //auto l2 = light{{-20, 20, 0}, {100, 100, 100}};
-    //std::vector<light> lights = {l1, l2};
+    auto l1 = light{{-5, 5, 5}, {50, 50, 50}};
+    auto l2 = light{{5, 0, 0}, {50, 50, 50}};
+    std::vector<light> lights = {l1, l2};
 
 
     r.set_vertex_shader(vertex_shader);
@@ -430,22 +351,6 @@ int main(int argc, const char **argv) {
 
     int key = 0;
     int frame_count = 0;
-
-    if (command_line) {
-        r.clear(rst::Buffers::Color | rst::Buffers::Depth);
-        r.set_model(get_model_matrix(angle, {0, 1, 0}, {0, 0, 0}));
-        r.set_view(get_view_matrix(eye_pos));
-        r.set_projection(get_projection_matrix(45.0, 1, 0.1, 50));
-        r.set_lights(lights);
-
-        r.draw(TriangleList, true, shading);
-        cv::Mat image(700, 700, CV_32FC3, r.frame_buffer().data());
-        image.convertTo(image, CV_8UC3, 1.0f);
-        cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
-        cv::imwrite(filename, image);
-
-        return 0;
-    }
 
     while (key != 27) {
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
@@ -463,8 +368,22 @@ int main(int argc, const char **argv) {
         cv::imshow("image", image);
         cv::imwrite(filename, image);
         key = cv::waitKey(10);
-        angle += 5;
+        //angle += 5;
+        //std::cout << "frame count: " << frame_count++ << std::endl;
+
+        // Key operations
+        if      (key == 'a') { eye_pos.x() -= 0.1; } 
+        else if (key == 'd') { eye_pos.x() += 0.1; } 
+        else if (key == 'w') { eye_pos.y() += 0.1; } 
+        else if (key == 's') { eye_pos.y() -= 0.1; } 
+        else if (key == 'q') { eye_pos.z() -= 0.1; } 
+        else if (key == 'e') { eye_pos.z() += 0.1; } 
+        else if (key == 'j') { angle += 10; } 
+        else if (key == 'k') { angle -= 10; }
+
         std::cout << "frame count: " << frame_count++ << std::endl;
+        std::cout << "eye_pos: " << eye_pos.transpose() << std::endl;
+
     }
     return 0;
 }
