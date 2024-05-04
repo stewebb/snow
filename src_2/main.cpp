@@ -11,9 +11,11 @@
 #include "global.hpp"
 #include "rasterizer.hpp"
 
+#define EYE_POS {0.3, 0.3, 0.3}
+
 // Eye (camera) position. 
 // It need to be used in multiple places, so it's a global variable.
-Eigen::Vector3f eye_pos = {7, 7, 7};
+Eigen::Vector3f eye_pos = EYE_POS;
 
 Eigen::Matrix4f get_rotation(float rotation_angle, const Eigen::Vector3f &axis) {
     // Calculate a rotation matrix from rotation axis and angle.
@@ -108,6 +110,7 @@ Eigen::Vector3f blinn_phong_fragment_shader(const fragment_shader_payload &paylo
     Eigen::Vector3f ks = Eigen::Vector3f(0.7937, 0.7937, 0.7937);
     Eigen::Vector3f amb_light_intensity {10, 10, 10};
     float p = 150;
+    p = 10;
 
     auto lights = payload.view_lights;
     Eigen::Vector3f color = payload.color;
@@ -146,6 +149,11 @@ Eigen::Vector3f blinn_phong_fragment_shader(const fragment_shader_payload &paylo
         float nhp = std::pow(std::max(0.0f, nh), p);
         Eigen::Vector3f Ls = ks.array() * Ir2.array() * nhp;
         result_color += Ls;        
+
+        //if(Ls.norm() > 0){
+        //    std::cout << Ls.transpose() << std::endl;
+        //}
+        
     }
 
     result_color += La;
@@ -221,6 +229,144 @@ Eigen::Vector3f texture_fragment_shader(const fragment_shader_payload &payload) 
 
 
 int main(int argc, const char **argv) {
+    std::vector<Triangle *> TriangleList;
+
+    float angle = 0.0;
+    bool command_line = false;
+
+    std::string filename = "output.png";
+    rst::Shading shading = rst::Shading::Phong;
+    objl::Loader Loader;
+    std::string obj_path = "../models/spot/";
+
+    // Load .obj File
+    //bool loadout = Loader.LoadFile("../../common_models/happy.obj");
+    bool loadout = Loader.LoadFile("../../common_models/stanford-bunny.obj");
+    for (auto mesh : Loader.LoadedMeshes) {
+        for (int i = 0; i < mesh.Vertices.size(); i += 3) {
+            Triangle *t = new Triangle();
+            for (int j = 0; j < 3; j++) {
+                t->setVertex(j, Vector4f(mesh.Vertices[i + j].Position.X, mesh.Vertices[i + j].Position.Y,
+                                         mesh.Vertices[i + j].Position.Z, 1.0));
+                t->setNormal(j, Vector3f(mesh.Vertices[i + j].Normal.X, mesh.Vertices[i + j].Normal.Y,
+                                         mesh.Vertices[i + j].Normal.Z));
+                t->setTexCoord(
+                    j, Vector2f(mesh.Vertices[i + j].TextureCoordinate.X, mesh.Vertices[i + j].TextureCoordinate.Y));
+            }
+            TriangleList.push_back(t);
+        }
+    }
+
+    rst::rasterizer r(700, 700);
+
+    auto texture_path = "hmap.jpg";
+    r.set_texture(Texture(obj_path + texture_path));
+
+    std::function<Eigen::Vector3f(fragment_shader_payload)> active_shader = blinn_phong_fragment_shader;
+
+    /*
+    if (argc < 3) {
+        std::cout << "Usage: [Shader (texture, normal, blinn-phong, bump)] [Shading "
+                     "Frequency (Flat, Gouraud, Phong)]  [savename.png]"
+                  << std::endl;
+        return 1;
+    } else {
+        if (argc == 4) {
+            command_line = true;
+            filename = std::string(argv[3]);
+        }
+        if (std::string(argv[1]) == "texture") {
+            std::cout << "Rasterizing using the texture shader\n";
+            active_shader = texture_fragment_shader;
+            texture_path = "spot_texture.png";
+            r.set_texture(Texture(obj_path + texture_path));
+        } else if (std::string(argv[1]) == "normal") {
+            std::cout << "Rasterizing using the normal shader\n";
+            active_shader = normal_fragment_shader;
+        } else if (std::string(argv[1]) == "blinn-phong") {
+            std::cout << "Rasterizing using the phong shader\n";
+            active_shader = blinn_phong_fragment_shader;
+        } else if (std::string(argv[1]) == "bump") {
+            std::cout << "Rasterizing using the bump shader\n";
+            active_shader = bump_fragment_shader;
+        }
+
+        if (std::string(argv[2]) == "Flat") {
+            std::cout << "Rasterizing using Flat shading\n";
+            shading = rst::Shading::Flat;
+        } else if (std::string(argv[2]) == "Gouraud") {
+            std::cout << "Rasterizing using Goround shading\n";
+            shading = rst::Shading::Gouraud;
+        } else if (std::string(argv[2]) == "Phong") {
+            std::cout << "Rasterizing using Phong shading\n";
+            shading = rst::Shading::Phong;
+        }
+    }
+    */
+
+    //rst::Shading shading = rst::Shading::Phong;
+    auto l1 = light{{ 5,  5,  5}, {50, 50, 50}};
+    auto l2 = light{{ 5,  5, -5}, {50, 50, 50}};
+    auto l3 = light{{ 5, -5,  5}, {50, 50, 50}};
+    auto l4 = light{{ 5, -5, -5}, {50, 50, 50}};
+    auto l5 = light{{-5,  5,  5}, {50, 50, 50}};
+    auto l6 = light{{-5,  5, -5}, {50, 50, 50}};
+    auto l7 = light{{-5, -5,  5}, {50, 50, 50}};
+    auto l8 = light{{-5, -5, -5}, {50, 50, 50}};
+
+    Eigen::Vector3f eye_pos = EYE_POS;
+
+    //std::vector<light> lights = {l1, l2, l3, l4, l5, l6, l7, l8};
+    std::vector<light> lights = {l1, l3, l5, l7};
+
+
+    r.set_vertex_shader(vertex_shader);
+    r.set_fragment_shader(active_shader);
+
+    int key = 0;
+    int frame_count = 0;
+
+    if (command_line) {
+        r.clear(rst::Buffers::Color | rst::Buffers::Depth);
+        r.set_model(get_model_matrix(angle, {0, 1, 0}, {0, 0, 0}));
+        r.set_view(get_view_matrix(eye_pos));
+        r.set_projection(get_projection_matrix(45.0, 1, 0.1, 50));
+        r.set_lights(lights);
+
+        r.draw(TriangleList, true, shading);
+        cv::Mat image(700, 700, CV_32FC3, r.frame_buffer().data());
+        image.convertTo(image, CV_8UC3, 1.0f);
+        cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
+        cv::imwrite(filename, image);
+
+        return 0;
+    }
+
+    while (key != 27) {
+        r.clear(rst::Buffers::Color | rst::Buffers::Depth);
+
+        r.set_model(get_model_matrix(angle, {0, 1, 0}, {0, 0, 0}));
+        r.set_view(get_view_matrix(eye_pos));
+        r.set_projection(get_projection_matrix(45.0, 1, 0.1, 50));
+        r.set_lights(lights);
+
+        r.draw(TriangleList, true, shading);
+        cv::Mat image(700, 700, CV_32FC3, r.frame_buffer().data());
+        image.convertTo(image, CV_8UC3, 1.0f);
+        cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
+
+        cv::imshow("image", image);
+        cv::imwrite(filename, image);
+        key = cv::waitKey(10);
+        angle += 5;
+        std::cout << "frame count: " << frame_count++ << std::endl;
+    }
+    return 0;
+}
+
+
+/*
+int main(int argc, const char **argv) {
 
     std::vector<Triangle *> TriangleList;
 
@@ -231,7 +377,7 @@ int main(int argc, const char **argv) {
     std::string texture_path = "../models/scene.png";
 
     // Load .obj File
-    bool loadout = Loader.LoadFile("../models/scene.obj");
+    bool loadout = Loader.LoadFile("../../common_models/spot.obj");
     for (auto mesh : Loader.LoadedMeshes) {
         for (int i = 0; i < mesh.Vertices.size(); i += 3) {
             Triangle *t = new Triangle();
@@ -249,18 +395,18 @@ int main(int argc, const char **argv) {
 
     // Only the texture fragment shader is used in task 3.
     rst::rasterizer r(700, 700);
-    r.set_fragment_shader(texture_fragment_shader);
+    r.set_fragment_shader(blinn_phong_fragment_shader);
     r.set_texture(Texture(texture_path));
     r.set_vertex_shader(vertex_shader);
 
     // Only one light in this scene
     Eigen::Vector3f light_position = {5, 5, 5};
-    Eigen::Vector3f light_intensity = {10, 10, 10};
+    Eigen::Vector3f light_intensity = {50, 50, 50};
     std::vector<light> lights = {light{light_position, light_intensity}};
 
     int key = 0;
     int frame_count = 0;
-    bool shadow = true;
+    bool shadow = false;
 
     while (key != 27) {
 
@@ -317,3 +463,4 @@ int main(int argc, const char **argv) {
     }
     return 0;
 }
+*/
