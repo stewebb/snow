@@ -7,7 +7,6 @@
 #include <array>
 #include <opencv2/opencv.hpp>
 #include <vector>
-#include <random>
 
 #include "Shader.hpp"
 #include "Triangle.hpp"
@@ -240,7 +239,7 @@ void rst::rasterizer::draw(pos_buf_id pos_buffer, ind_buf_id ind_buffer, col_buf
     }
 }
 
-void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, rst::Shading shading, bool shadow, bool snow) {
+void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, rst::Shading shading, bool shadow) {
     float f1 = (50 - 0.1) / 2.0;
     float f2 = (50 + 0.1) / 2.0;
     culling = true;
@@ -354,6 +353,12 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, bool anti_aliasing) 
         if(y > y_max)   y_max = y;
     }
 
+    int padding = 5;
+    x_min = std::max(x_min-padding, 0);
+    y_min = std::max(y_min-padding, 0);
+    x_max = std::min(x_max+padding, width);
+    y_max = std::min(y_max+padding, height);
+
     // Anti-aliasing is ENABLED.
     if(anti_aliasing){
 
@@ -431,19 +436,8 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, bool anti_aliasing) 
     }
 }
 
-float rst::rasterizer::inclination_function(const Eigen::Vector3f &normal) {
-    double n = inclination_dis(inclination_gen);
-    return 0;
-}
-
-float rst::rasterizer::prediction_function(const Eigen::Vector3f &shading_coords, const Eigen::Vector3f &normal, Eigen::Vector2f &dE) {
-    float fe = exposure_function(shading_coords, dE);
-    float finc = inclination_function(normal);
-    return fe * finc;
-}
-
 // Task2 Implement this function
-void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eigen::Vector3f, 3> &view_pos, const std::vector<light> &view_lights, rst::Shading shading, bool shadow, bool snow) {
+void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eigen::Vector3f, 3> &view_pos, const std::vector<light> &view_lights, rst::Shading shading, bool shadow) {
     auto v = t.toVector4();
 
     int x_min = std::numeric_limits<int>::max();
@@ -460,6 +454,12 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
         if(y < y_min)   y_min = y;
         if(y > y_max)   y_max = y;
     }
+
+    int padding = 5;
+    x_min = std::max(x_min-padding, 0);
+    y_min = std::max(y_min-padding, 0);
+    x_max = std::min(x_max+padding, width);
+    y_max = std::min(y_max+padding, height);
    
     // Flat shading
     if (shading == rst::Shading::Flat) {
@@ -574,7 +574,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
                         // Call the fragment shader to get the pixel color
                         auto pixel_color = fragment_shader(payload);
                         
-                        if (shadow || snow) {
+                        if (shadow) {
 
                             // Find the relative position to the light source (by given shadow_projection and shadow_view)
                             Eigen::Vector4f view_pos {shadingcoords[0], shadingcoords[1], shadingcoords[2], 1.0f};
@@ -593,14 +593,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
                             float z_B = v.z() * f1 + f2;
 
                             // Draw shadow
-                            if(shadow && z_B > z_A)   pixel_color *= 0.3;
-
-                            // Draw snow
-                            if (snow) {
-                                Eigen::Vector2f dE;
-                                float fp = prediction_function(shadingcoords, normal, dE);
-                                pixel_color = full_snow(pixel_color, normal, dE, fp);
-                            }
+                            if(z_B > z_A)   pixel_color *= 0.3;
                         }
                         
                         set_pixel(Vector2i(x, y), pixel_color);
@@ -637,11 +630,6 @@ void rst::rasterizer::set_shadow_buffer(const std::vector<float> &shadow_buffer)
     std::copy(shadow_buffer.begin(), shadow_buffer.end(), this->shadow_buf.begin());
 }
 
-void rst::rasterizer::save_frame_buf() {
-    std::copy(frame_buf.begin(), frame_buf.end(), this->frame_buf2);
-    //std::copy(frame_buf.begin(), frame_buf.end(), std::back_inserter(this->frame_buf2));
-}
-
 void rst::rasterizer::clear(rst::Buffers buff) {
     if ((buff & rst::Buffers::Color) == rst::Buffers::Color) {
         std::fill(frame_buf.begin(), frame_buf.end(), Eigen::Vector3f{0, 0, 0});
@@ -652,7 +640,6 @@ void rst::rasterizer::clear(rst::Buffers buff) {
         std::fill(ssaa_depth_buf.begin(), ssaa_depth_buf.end(), std::numeric_limits<float>::infinity());
     }
 }
-
 
 rst::rasterizer::rasterizer(int w, int h) : width(w), height(h) {
     frame_buf.resize(w * h);
