@@ -11,7 +11,7 @@
 #include "global.hpp"
 #include "rasterizer.hpp"
 
-#define EYE_POS {0.3, 0.3, 0.3}
+#define EYE_POS {0, 0, -5}
 
 // Eye (camera) position. 
 // It need to be used in multiple places, so it's a global variable.
@@ -98,9 +98,132 @@ Eigen::Vector3f vertex_shader(const vertex_shader_payload &payload) {
     return payload.position;
 }
 
-static Eigen::Vector3f reflect(const Eigen::Vector3f &vec, const Eigen::Vector3f &axis) {
-    auto costheta = vec.dot(axis);
-    return (2 * costheta * axis - vec).normalized();
+Vector3f reflect(const Vector3f &I, const Vector3f &N){
+    return I - 2 * I.dot(N) * N;
+}
+
+//static Eigen::Vector3f reflect(const Eigen::Vector3f &vec, const Eigen::Vector3f &axis) {
+//    auto costheta = vec.dot(axis);
+//    return (2 * costheta * axis - vec).normalized();
+//}
+
+Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &payload) {
+
+    Eigen::Vector3f ka = Eigen::Vector3f(0.005, 0.005, 0.005);
+    Eigen::Vector3f Kd = payload.color;
+    Eigen::Vector3f Ks = Eigen::Vector3f(0.2, 0.2, 0.2);
+
+    //Eigen::Vector3f Ks = Eigen::Vector3f(0.7937, 0.7937, 0.7937);
+    //std::cout << Kd.transpose() << std::endl;
+
+    Eigen::Vector3f amb_light_intensity {10, 10, 10};
+    float a = 150;
+
+    auto lights = payload.view_lights;
+    Eigen::Vector3f color = payload.color;
+    Eigen::Vector3f point = payload.view_pos;
+    Eigen::Vector3f normal = payload.normal;
+
+    Eigen::Vector3f result_color = {0, 0, 0};
+    Eigen::Vector3f eye_pos = EYE_POS;
+
+    // n, v need to be normalized!
+    Eigen::Vector3f N = normal.normalized();
+    Eigen::Vector3f V = (eye_pos - point).normalized();
+
+    Eigen::Vector3f Ia = ka.cwiseProduct(amb_light_intensity);  // cwiseProduct--dot product
+    //Eigen::Vector3f Id = {0, 0, 0};
+    //Eigen::Vector3f Is = {0, 0, 0};
+
+    
+    for (auto &light : lights) {
+
+
+        Eigen::Vector3f l = light.position - point;
+        Eigen::Vector3f L = l.normalized();
+        float r2 = std::pow(l.norm(), 2.0f);
+
+        //r2 = 1.0;
+
+        Eigen::Vector3f I = light.intensity;
+        Eigen::Vector3f Ir2 = I / r2;
+
+        float NL = N.dot(L);
+        Eigen::Vector3f Ld = Kd.array() * Ir2.array() * std::max(0.0f, NL);
+        
+
+        if(Ld.norm() > 0){
+            //std::cout << Kd.transpose() << std::endl;
+        }
+
+        result_color += Ld;
+        
+        //Eigen::Vector3f Ir2 = I / r2;
+
+        // l also needs to be normalized!
+        //l = l.normalized();
+            
+
+            // Id = kd * I * (N dot L) if N dot L > 0; 0 otherwise
+            //Vector3f I = light.intensity;
+            //Vector3f L = (light.position - point).normalized();
+
+        
+
+            //float L2 = dotProduct(L, L);
+            //float tnear = INFINITY;
+
+            //Ray shadowRay(hitPoint + EPSILON * normalize(L), normalize(L));
+            //bool isInShadow = false;
+            // Check for intersections with any object up to the distance of the light source
+            //if (intersect(shadowRay).happened) {
+                //isInShadow = true; // The ray intersects an object before hitting the light, so hitPoint is in shadow
+                //std::cout << 123 << std::endl;
+            //    continue;
+            //}
+
+
+        
+
+            //if(NL > 0){
+            //    Id[0] += Kd[0] * I[0] * NL;
+            //    Id[1] += Kd[1] * I[1] * NL;
+            //    Id[2] += Kd[2] * I[2] * NL;
+            //}
+
+        
+
+            //std::cout << Id.transpose() << std::endl;
+
+            // Is = ks * I * (V dot R) ** a if V dot R > 0 and N dot L > 0; 0 otherwise
+
+            //Eigen::Vector3f R = reflect(L, N);
+            //Vector3f V = dir.normalized();
+
+            //float VR = V.dot(R);
+            //if(VR > 0 && NL > 0){
+                //std::cout << 233 << std::endl;
+                //Is[0] += Ks[0] * Ir2[0] * pow(VR, a);
+                //Is[1] += Ks[1] * Ir2[1] * pow(VR, a);
+                //Is[2] += Ks[2] * Ir2[2] * pow(VR, a);
+                //std::cout << Is << std::endl;
+                //std::cout << Ks << " " << I << " " << VR << " " << a << std::endl;
+            //}
+        
+
+        
+    }
+
+    
+    result_color += Ia;
+    //result_color += Id;
+    //result_color += Is;
+
+    //std::cout << Ia.transpose() << " " << Id.transpose() << " " << Is.transpose() << std::endl;
+
+
+    //result_color += La;
+    return result_color * 255.f;
 }
 
 Eigen::Vector3f blinn_phong_fragment_shader(const fragment_shader_payload &payload) {
@@ -109,8 +232,7 @@ Eigen::Vector3f blinn_phong_fragment_shader(const fragment_shader_payload &paylo
     Eigen::Vector3f kd = payload.color;
     Eigen::Vector3f ks = Eigen::Vector3f(0.7937, 0.7937, 0.7937);
     Eigen::Vector3f amb_light_intensity {10, 10, 10};
-    float p = 150;
-    p = 10;
+    float p = 10;
 
     auto lights = payload.view_lights;
     Eigen::Vector3f color = payload.color;
@@ -118,7 +240,7 @@ Eigen::Vector3f blinn_phong_fragment_shader(const fragment_shader_payload &paylo
     Eigen::Vector3f normal = payload.normal;
 
     Eigen::Vector3f result_color = {0, 0, 0};
-    Eigen::Vector3f eye_pos = {0.0f, 0.0f, 5.0f};
+    Eigen::Vector3f eye_pos = EYE_POS;
 
     // n, v need to be normalized!
     Eigen::Vector3f n = normal.normalized();
@@ -140,7 +262,12 @@ Eigen::Vector3f blinn_phong_fragment_shader(const fragment_shader_payload &paylo
 
         // kd, Ir2 element-wise multiplication
         Eigen::Vector3f Ld = kd.array() * Ir2.array() * std::max(0.0f, nl);
-        result_color += Ld;
+        //result_color += Ld;
+
+        if(Ld.norm() > 0){
+            std::cout << kd.transpose() << std::endl;
+        }
+        
         
         // Ls = ks * (I/r^2) * (max(0, n dot h))^p, h = (v+l) / norm(v+l)
         Eigen::Vector3f h = (v + l).normalized();
@@ -156,7 +283,7 @@ Eigen::Vector3f blinn_phong_fragment_shader(const fragment_shader_payload &paylo
         
     }
 
-    result_color += La;
+    //result_color += La;
     return result_color * 255.f;
 }
 
@@ -240,8 +367,9 @@ int main(int argc, const char **argv) {
     std::string obj_path = "../models/spot/";
 
     // Load .obj File
-    //bool loadout = Loader.LoadFile("../../common_models/happy.obj");
-    bool loadout = Loader.LoadFile("../../common_models/stanford-bunny.obj");
+    //bool loadout = Loader.LoadFile("../../common_models/spot.obj");
+    //bool loadout = Loader.LoadFile("../../common_models/stanford-bunny.obj");
+    bool loadout = Loader.LoadFile("../models/spot/spot_triangulated_good.obj");
     for (auto mesh : Loader.LoadedMeshes) {
         for (int i = 0; i < mesh.Vertices.size(); i += 3) {
             Triangle *t = new Triangle();
@@ -262,7 +390,7 @@ int main(int argc, const char **argv) {
     auto texture_path = "hmap.jpg";
     r.set_texture(Texture(obj_path + texture_path));
 
-    std::function<Eigen::Vector3f(fragment_shader_payload)> active_shader = blinn_phong_fragment_shader;
+    std::function<Eigen::Vector3f(fragment_shader_payload)> active_shader = phong_fragment_shader;
 
     /*
     if (argc < 3) {
@@ -304,6 +432,7 @@ int main(int argc, const char **argv) {
     }
     */
 
+    /*
     //rst::Shading shading = rst::Shading::Phong;
     auto l1 = light{{ 5,  5,  5}, {50, 50, 50}};
     auto l2 = light{{ 5,  5, -5}, {50, 50, 50}};
@@ -318,6 +447,11 @@ int main(int argc, const char **argv) {
 
     //std::vector<light> lights = {l1, l2, l3, l4, l5, l6, l7, l8};
     std::vector<light> lights = {l1, l3, l5, l7};
+    */
+
+    auto l1 = light{{-5, 5, 5}, {10, 10, 10}};
+    auto l2 = light{{-20, 20, 0}, {20, 20, 20}};
+    std::vector<light> lights = {l1, l2};
 
 
     r.set_vertex_shader(vertex_shader);
