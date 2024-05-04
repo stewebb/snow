@@ -10,10 +10,8 @@ struct light {
     Eigen::Vector3f intensity;
 };
 
-struct fragment_shader_payload
-{
-    fragment_shader_payload()
-    {
+struct fragment_shader_payload{
+    fragment_shader_payload(){
         texture = nullptr;
     }
 
@@ -29,10 +27,12 @@ struct fragment_shader_payload
     Texture* texture;
 };
 
-struct vertex_shader_payload
-{
+struct vertex_shader_payload{
     Eigen::Vector3f position;
 };
 
 
 #endif //RASTERIZER_SHADER_H
+
+
+Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &payload);

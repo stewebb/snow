@@ -5,7 +5,7 @@
 typedef unsigned char u08;
 #define MY_PI 3.1415926
 #define TWO_PI (2.0* MY_PI)
-
+#define EYE_POS {0.5, 0.35, -0.5}
 
 
 #endif //RASTERIZER_GLOBAL_H

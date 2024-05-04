@@ -18,5 +18,5 @@ include_directories(${EIGEN3_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS})
 # add_executable(task2 task2.cpp rasterizer.hpp rasterizer.cpp global.hpp Triangle.hpp Triangle.cpp Texture.hpp Texture.cpp Shader.hpp OBJ_Loader.h)
 # target_link_libraries(task2 ${OpenCV_LIBRARIES})
 
-add_executable(snow main.cpp rasterizer.hpp rasterizer.cpp global.hpp Triangle.hpp Triangle.cpp Texture.hpp Texture.cpp Shader.hpp OBJ_Loader.h MVP.cpp MVP.hpp)
+add_executable(snow main.cpp rasterizer.hpp rasterizer.cpp global.hpp Triangle.hpp Triangle.cpp Texture.hpp Texture.cpp Shader.cpp Shader.hpp OBJ_Loader.h MVP.cpp MVP.hpp)
 target_link_libraries(snow ${OpenCV_LIBRARIES})
