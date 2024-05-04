@@ -101,6 +101,57 @@ static Eigen::Vector3f reflect(const Eigen::Vector3f &vec, const Eigen::Vector3f
     return (2 * costheta * axis - vec).normalized();
 }
 
+Eigen::Vector3f blinn_phong_fragment_shader(const fragment_shader_payload &payload) {
+
+    Eigen::Vector3f ka = Eigen::Vector3f(0.005, 0.005, 0.005);
+    Eigen::Vector3f kd = payload.color;
+    Eigen::Vector3f ks = Eigen::Vector3f(0.7937, 0.7937, 0.7937);
+    Eigen::Vector3f amb_light_intensity {10, 10, 10};
+    float p = 150;
+
+    auto lights = payload.view_lights;
+    Eigen::Vector3f color = payload.color;
+    Eigen::Vector3f point = payload.view_pos;
+    Eigen::Vector3f normal = payload.normal;
+
+    Eigen::Vector3f result_color = {0, 0, 0};
+    Eigen::Vector3f eye_pos = {0.0f, 0.0f, 5.0f};
+
+    // n, v need to be normalized!
+    Eigen::Vector3f n = normal.normalized();
+    Eigen::Vector3f v = (eye_pos - point).normalized();
+    Eigen::Vector3f La = ka.cwiseProduct(amb_light_intensity);  // cwiseProduct--dot product
+
+    for (auto &light : lights) {
+
+        // Ld = kd * (I/r^2) * max (0, n dot l)
+        Eigen::Vector3f l = light.position - point;
+        float r2 = std::pow(l.norm(), 2.0f);
+
+        Eigen::Vector3f I = light.intensity;
+        Eigen::Vector3f Ir2 = I / r2;
+
+        // l also needs to be normalized!
+        l = l.normalized();
+        float nl = n.dot(l);
+
+        // kd, Ir2 element-wise multiplication
+        Eigen::Vector3f Ld = kd.array() * Ir2.array() * std::max(0.0f, nl);
+        result_color += Ld;
+        
+        // Ls = ks * (I/r^2) * (max(0, n dot h))^p, h = (v+l) / norm(v+l)
+        Eigen::Vector3f h = (v + l).normalized();
+
+        float nh = n.dot(h);
+        float nhp = std::pow(std::max(0.0f, nh), p);
+        Eigen::Vector3f Ls = ks.array() * Ir2.array() * nhp;
+        result_color += Ls;        
+    }
+
+    result_color += La;
+    return result_color * 255.f;
+}
+
 Eigen::Vector3f texture_fragment_shader(const fragment_shader_payload &payload) {
     Eigen::Vector3f return_color = {0, 0, 0};
     if (payload.texture) {
