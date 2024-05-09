@@ -10,6 +10,10 @@ static Eigen::Vector3f reflect(const Eigen::Vector3f &vec, const Eigen::Vector3f
     return (2 * costheta * axis - vec).normalized();
 }
 
+/**
+ * Normal Phong Shader
+*/
+
 Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &payload) {
 
     Eigen::Vector3f ka = Eigen::Vector3f(0.005, 0.005, 0.005);
@@ -60,6 +64,76 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &payload) {
 
     result_color += Ia;
     return result_color * 255.0f;
+}
+
+/**
+ * The modified Phong Shader for snow.
+*/
+
+Eigen::Vector3f snow_phong_fragment_shader(const fragment_shader_payload &payload) {
+        Eigen::Vector3f ka = Eigen::Vector3f(0.005, 0.005, 0.005);
+    Eigen::Vector3f Kd = payload.color;
+    Eigen::Vector3f Ks = Eigen::Vector3f(0.7937, 0.7937, 0.7937);
+
+    Eigen::Vector3f amb_light_intensity {10, 10, 10};
+    float a = 150;
+
+    auto lights = payload.view_lights;
+    Eigen::Vector3f color = payload.color;
+    Eigen::Vector3f point = payload.view_pos;
+    Eigen::Vector3f normal = payload.normal;
+
+    Eigen::Vector3f result_color = {0, 0, 0};
+    Eigen::Vector3f eye_pos = EYE_POS;
+
+    // Normalize vectors
+    Eigen::Vector3f N = normal.normalized();
+    Eigen::Vector3f V = (eye_pos - point).normalized();
+
+    // Ambient light contribution
+    Eigen::Vector3f Ia = ka.cwiseProduct(amb_light_intensity);  
+
+    // TODO: Implement noise vector `n` and compute `dE`
+    // Eigen::Vector3f n = compute_noise_vector();  
+    // FIXME: Use Perlin Noise
+    // Eigen::Vector3f dE = compute_exposure_derivative_vector();
+    // FIXME:
+    
+
+    // TODO: Modify normal `N` using noise `n` and exposure derivative `dE`
+    // float alpha = 0.4; // or 0.8 for specular component
+    // N = N + alpha * n - dE;
+    // N.normalize(); // Ensure N remains a unit vector
+
+    for (auto &light : lights) {
+        Eigen::Vector3f l = light.position - point;
+        Eigen::Vector3f L = l.normalized();
+        float r2 = std::pow(l.norm(), 2.0f);
+
+        Eigen::Vector3f I = light.intensity;
+        Eigen::Vector3f Ir2 = I / r2;
+
+        float NL = N.dot(L);
+        Eigen::Vector3f Ld = Kd.array() * Ir2.array() * std::max(0.0f, NL);
+        result_color += Ld;
+
+        Eigen::Vector3f R = reflect(L, N);
+        float VR = V.dot(R);
+        Eigen::Vector3f Ls = {0, 0, 0};
+
+        if (VR > 0 && NL > 0) {
+            Ls = Ks.array() * Ir2.array() * pow(VR, a);
+        }
+        result_color += Ls;
+    }
+
+    // Add ambient component
+    result_color += Ia;
+
+    // TODO: Adjust the color to increase the blue component for snow effect
+    // result_color.z() *= 1.1; // Assuming 'z' is the blue component in Eigen::Vector3f
+
+    return result_color * 255.0f;  // Scale color to 0-255 range
 }
 
 Eigen::Vector3f blinn_phong_fragment_shader(const fragment_shader_payload &payload) {
