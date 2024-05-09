@@ -17,12 +17,32 @@ float inclination(Eigen::Vector3f U, Eigen::Vector3f N, float n){
 
     // U.dot(n) is cos(Θ)
     float UN = U.dot(N);
-    return std::max(UN, 0.0f);
-
-    // angle = acos(U.dot(N) / (||U|| * ||N||))
-    //double angle_rad = acos(U.dot(N));
-    //double angle_deg = angle_rad * (180.0 / MY_PI);
-
-    //return (angle_deg >= 0 && angle_deg <= 90) ? cos(angle_rad) : 0.0f;
-
+    return UN >= 0 ? UN + n : 0.0f;
+    //return std::max(UN+n, 0.0f);
 }
+
+/**
+ * Calculate the exposure value f_c
+ * TODO FIXME Use correct value to replace the random value!!!
+*/
+
+float exposure(){
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+
+    // ---- FIXME ----
+    return dis(gen);
+    // ---- FIXME ----
+}
+
+//std::random_device rd;  // Will be used to obtain a seed for the random number engine
+//    std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
+    
+//    // Create a distribution in range [0, 1]
+//    std::uniform_real_distribution<> dis(0.0, 1.0);
+    
+//    // Generate and print 10 random numbers
+//    for (int n = 0; n < 10; ++n) {
+//        std::cout << dis(gen) << ' ';
+//    }
