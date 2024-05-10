@@ -40,12 +40,12 @@ typedef unsigned char u08;
 
 
 // Stanford Bunny
-//#define OBJ_FILE_LOCATION "../../common_models/stanford-bunny.obj"
-//#define EYE_POS {0.25, 0.15, -0.40}
+#define OBJ_FILE_LOCATION "../../common_models/stanford-bunny.obj"
+#define EYE_POS {0.25, 0.15, -0.40}
 
 // Football
-#define OBJ_FILE_LOCATION "../../common_models/football.obj"
-#define EYE_POS {2, 2, 2}
+//#define OBJ_FILE_LOCATION "../../common_models/football.obj"
+//#define EYE_POS {2, 2, 2}
 
 // Teapot
 //#define OBJ_FILE_LOCATION "../../common_models/teapot.obj"

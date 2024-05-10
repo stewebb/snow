@@ -5,11 +5,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS_DEBUG "-O3")
 
-# include_directories(/usr/include/)
+include_directories(/usr/include/libnoise)
+#set(CMAKE_PREFIX_PATH "/usr/include")
 
 find_package(OpenCV REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(libnoise REQUIRED)
+#find_package(noiseutils REQUIRED)
 #find_package(Boost  REQUIRED)
 
 include_directories(${EIGEN3_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS})

@@ -2,6 +2,7 @@
 #include <opencv2/opencv.hpp>
 #include <string>
 #include <vector>
+//#include <random>
 
 #include "Eigen/Dense"
 #include "OBJ_Loader.h"
@@ -14,6 +15,11 @@
 #include "MVP.hpp"
 
 int main(int argc, const char **argv) {
+
+    //std::random_device rd;
+    //std::mt19937 gen(rd());
+    
+
     std::vector<Triangle *> TriangleList;
 
     float angle = 140.0; 
