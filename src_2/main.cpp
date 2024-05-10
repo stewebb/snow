@@ -52,14 +52,17 @@ int main(int argc, const char **argv) {
     //std::vector<light> lights = {l1, l2, l3, l4, l5, l6, l7, l8};
     //std::vector<light> lights = {l1, l3, l5, l7};
     
-    float width = 12.5;
-    float height = 12.5;
+    //float width = 12.5;
+    //float height = 12.5;
 
-    auto l0 = light{{0, -height, 0}, {100, 100, 100}};
-    auto l1 = light{{width, -height, width}, {100, 100, 100}};
-    auto l2 = light{{width, -height, -width}, {100, 100, 100}};
-    auto l3 = light{{-width, -height, width}, {100, 100, 100}};
-    auto l4 = light{{-width, -height, -width}, {100, 100, 100}};
+    Eigen::Vector3f center_intensity {CENTER_INTENSITY, CENTER_INTENSITY, CENTER_INTENSITY};
+    Eigen::Vector3f side_intensity   {SIDE_INTENSITY, SIDE_INTENSITY, SIDE_INTENSITY};
+
+    auto L_E = light{{                    0, -CENTER_VERTICAL_DIST,                     0}, center_intensity};
+    auto L_A = light{{ SIDE_HORIZONTAL_DIST,   -SIDE_VERTICAL_DIST,  SIDE_HORIZONTAL_DIST}, side_intensity};
+    auto L_B = light{{ SIDE_HORIZONTAL_DIST,   -SIDE_VERTICAL_DIST, -SIDE_HORIZONTAL_DIST}, side_intensity};
+    auto L_C = light{{-SIDE_HORIZONTAL_DIST,   -SIDE_VERTICAL_DIST,  SIDE_HORIZONTAL_DIST}, side_intensity};
+    auto L_D = light{{-SIDE_HORIZONTAL_DIST,   -SIDE_VERTICAL_DIST, -SIDE_HORIZONTAL_DIST}, side_intensity};
 
     //auto l1 = light{{dist, 0, 0}, {100, 100, 100}};
     //auto l2 = light{{0, dist, 0}, {100, 100, 100}};
@@ -69,7 +72,7 @@ int main(int argc, const char **argv) {
     //auto l5 = light{{0, -dist, 0}, {100, 100, 100}};
     //auto l6 = light{{0, 0, -dist}, {100, 100, 100}};
 
-    std::vector<light> lights = {l0, l1, l2, l3, l4};
+    std::vector<light> lights = {L_E, L_A, L_B, L_C, L_D};
 
     //std::vector<light> lights = {l1, l2, l3};
     //std::vector<light> lights = {l4, l5, l6};

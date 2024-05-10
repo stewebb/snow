@@ -21,31 +21,31 @@ typedef unsigned char u08;
  * C ----------- D
  * 
  * v is the vertical distance of the light. 
- * v_A = v_B = v_C = v_D > 0; v_E = 0.
+ * v_A = v_B = v_C = v_D > 0; v_E > 0.
  * 
  * h is the horizontal distance of the light. 
- * h_A = h_B = h_C = h_D > 0; h_E > 0;
+ * h_A = h_B = h_C = h_D > 0; h_E = 0;
  * 
  * Tipically,
- * h_E > h_A; I_E > I_A = I_B = I_C = I_D (I is the light intensity)
- * All lights can be turned off.
+ * V_E > V_A; I_E > I_A = I_B = I_C = I_D (I is the light intensity)
+ * All lights can be turned off by setting to 0.
 */
 
-#define CENTER_LIGHT_INTENSITY = 100;       // I_E
-#define CENTER_LIGHT_HORIZONTAL_DIST = 10;  // h_E
+#define CENTER_INTENSITY        50      // I_E
+#define CENTER_VERTICAL_DIST    15      // h_E
 
-#define SIDE_LIGHT_INTENSITY = 100;         // I_A, I_B, I_C, I_D
-#define SIDE_LIGHT_HORIZONTAL_DIST = 10;    // h_A, h_B, h_C, h_D
-#define SIDE_LIGHT_VERTICAL_DIST = 10;      // v_A, v_B, v_C, v_D
+#define SIDE_INTENSITY          100     // I_A, I_B, I_C, I_D
+#define SIDE_HORIZONTAL_DIST    10      // h_A, h_B, h_C, h_D
+#define SIDE_VERTICAL_DIST      10      // v_A, v_B, v_C, v_D
 
 
 // Stanford Bunny
-#define OBJ_FILE_LOCATION "../../common_models/stanford-bunny.obj"
-#define EYE_POS {0.25, 0.15, -0.40}
+//#define OBJ_FILE_LOCATION "../../common_models/stanford-bunny.obj"
+//#define EYE_POS {0.25, 0.15, -0.40}
 
 // Football
-//#define OBJ_FILE_LOCATION "../../common_models/football.obj"
-//#define EYE_POS {2, 2, 2}
+#define OBJ_FILE_LOCATION "../../common_models/football.obj"
+#define EYE_POS {2, 2, 2}
 
 // Teapot
 //#define OBJ_FILE_LOCATION "../../common_models/teapot.obj"
