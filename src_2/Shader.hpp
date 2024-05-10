@@ -35,5 +35,7 @@ struct vertex_shader_payload{
 #endif //RASTERIZER_SHADER_H
 
 Eigen::Vector3f vertex_shader(const vertex_shader_payload &payload);
+
 Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &payload);
+Eigen::Vector3f snow_phong_fragment_shader(const fragment_shader_payload &payload);
 Eigen::Vector3f blinn_phong_fragment_shader(const fragment_shader_payload &payload);

@@ -71,9 +71,14 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &payload) {
 */
 
 Eigen::Vector3f snow_phong_fragment_shader(const fragment_shader_payload &payload) {
-        Eigen::Vector3f ka = Eigen::Vector3f(0.005, 0.005, 0.005);
-    Eigen::Vector3f Kd = payload.color;
+    
+    Eigen::Vector3f ka = Eigen::Vector3f(0.005, 0.005, 0.005);
+    //Eigen::Vector3f Kd = payload.color;
     Eigen::Vector3f Ks = Eigen::Vector3f(0.7937, 0.7937, 0.7937);
+
+    // Diffuse reflectance Kd is snow color (range: [0, 1])
+    Eigen::Vector3f Kd SNOW_COLOR;
+    Kd /= 255.0;
 
     Eigen::Vector3f amb_light_intensity {10, 10, 10};
     float a = 150;

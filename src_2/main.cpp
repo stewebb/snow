@@ -45,18 +45,35 @@ int main(int argc, const char **argv) {
     //r.set_texture(Texture(obj_path + texture_path));
     // TODO eye pos issue
 
-    std::function<Eigen::Vector3f(fragment_shader_payload)> active_shader = phong_fragment_shader;
+    std::function<Eigen::Vector3f(fragment_shader_payload)> active_shader = snow_phong_fragment_shader;
 
     Eigen::Vector3f eye_pos = EYE_POS;
 
     //std::vector<light> lights = {l1, l2, l3, l4, l5, l6, l7, l8};
     //std::vector<light> lights = {l1, l3, l5, l7};
     
+    float width = 12.5;
+    float height = 12.5;
 
-    auto l1 = light{{10, 0, 0}, {100, 100, 100}};
-    auto l2 = light{{0, 10, 0}, {100, 100, 100}};
-    auto l3 = light{{0, 0, 10}, {100, 100, 100}};
-    std::vector<light> lights = {l1, l2, l3};
+    auto l0 = light{{0, -height, 0}, {100, 100, 100}};
+    auto l1 = light{{width, -height, width}, {100, 100, 100}};
+    auto l2 = light{{width, -height, -width}, {100, 100, 100}};
+    auto l3 = light{{-width, -height, width}, {100, 100, 100}};
+    auto l4 = light{{-width, -height, -width}, {100, 100, 100}};
+
+    //auto l1 = light{{dist, 0, 0}, {100, 100, 100}};
+    //auto l2 = light{{0, dist, 0}, {100, 100, 100}};
+    //auto l3 = light{{0, 0, dist}, {100, 100, 100}};
+
+    //auto l4 = light{{-dist, 0, 0}, {100, 100, 100}};
+    //auto l5 = light{{0, -dist, 0}, {100, 100, 100}};
+    //auto l6 = light{{0, 0, -dist}, {100, 100, 100}};
+
+    std::vector<light> lights = {l0, l1, l2, l3, l4};
+
+    //std::vector<light> lights = {l1, l2, l3};
+    //std::vector<light> lights = {l4, l5, l6};
+    //std::vector<light> lights = {l1, l2, l3, l4, l5, l6};
 
 
     r.set_vertex_shader(vertex_shader);

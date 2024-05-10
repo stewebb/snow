@@ -6,10 +6,56 @@ typedef unsigned char u08;
 
 #define MY_PI 3.1415926
 #define TWO_PI (2.0* MY_PI)
-#define EYE_POS {0.5, 0.35, -0.5}
 
+/**
+ * There are 5 lights (A-E) and all of them are placed above the object.
+ * One of them (E) is right above the object.
+ * The rest 4 lights (A, B, C, D) are placed to the vertices of a square, whose center is E.
+ * 
+ * A ----------- B
+ * |             |
+ * |             |
+ * |      E - h -|
+ * |             |
+ * |             |
+ * C ----------- D
+ * 
+ * v is the vertical distance of the light. 
+ * v_A = v_B = v_C = v_D > 0; v_E = 0.
+ * 
+ * h is the horizontal distance of the light. 
+ * h_A = h_B = h_C = h_D > 0; h_E > 0;
+ * 
+ * Tipically,
+ * h_E > h_A; I_E > I_A = I_B = I_C = I_D (I is the light intensity)
+ * All lights can be turned off.
+*/
+
+#define CENTER_LIGHT_INTENSITY = 100;       // I_E
+#define CENTER_LIGHT_HORIZONTAL_DIST = 10;  // h_E
+
+#define SIDE_LIGHT_INTENSITY = 100;         // I_A, I_B, I_C, I_D
+#define SIDE_LIGHT_HORIZONTAL_DIST = 10;    // h_A, h_B, h_C, h_D
+#define SIDE_LIGHT_VERTICAL_DIST = 10;      // v_A, v_B, v_C, v_D
+
+
+// Stanford Bunny
 #define OBJ_FILE_LOCATION "../../common_models/stanford-bunny.obj"
-//#define OBJ_FILE_LOCATION "../../common_models/happy.obj"
+#define EYE_POS {0.25, 0.15, -0.40}
+
+// Football
+//#define OBJ_FILE_LOCATION "../../common_models/football.obj"
+//#define EYE_POS {2, 2, 2}
+
+// Teapot
+//#define OBJ_FILE_LOCATION "../../common_models/teapot.obj"
+//#define EYE_POS {5, 5, 5}
+
 //#define OBJ_FILE_LOCATION "../models/spot/spot_triangulated_good.obj"
+//#define OBJ_FILE_LOCATION "../../common_models/happy.obj"
+
+
+// Snow color, in RGB format
+#define SNOW_COLOR {240, 240, 255}
 
 #endif //RASTERIZER_GLOBAL_H
