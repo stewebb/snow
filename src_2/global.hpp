@@ -31,10 +31,10 @@ typedef unsigned char u08;
  * All lights can be turned off by setting to 0.
 */
 
-#define CENTER_INTENSITY        50      // I_E
-#define CENTER_VERTICAL_DIST    15      // h_E
+#define CENTER_INTENSITY        25      // I_E
+#define CENTER_VERTICAL_DIST    5      // h_E
 
-#define SIDE_INTENSITY          50     // I_A, I_B, I_C, I_D
+#define SIDE_INTENSITY          100     // I_A, I_B, I_C, I_D
 #define SIDE_HORIZONTAL_DIST    10      // h_A, h_B, h_C, h_D
 #define SIDE_VERTICAL_DIST      10      // v_A, v_B, v_C, v_D
 
@@ -44,12 +44,12 @@ typedef unsigned char u08;
 //#define EYE_POS {0.25, 0.25, 0.25}
 
 // Football
-#define OBJ_FILE_LOCATION "../../common_models/football.obj"
-#define EYE_POS {9, 6, 0}
+//#define OBJ_FILE_LOCATION "../../common_models/football.obj"
+//#define EYE_POS {9, 6, 0}
 
 // Teapot
-//#define OBJ_FILE_LOCATION "../../common_models/teapot.obj"
-//#define EYE_POS {10, 10, 10}
+#define OBJ_FILE_LOCATION "../../common_models/teapot.obj"
+#define EYE_POS {10, 10, 10}
 
 // Happy
 //#define OBJ_FILE_LOCATION "../../common_models/happy.obj"

@@ -49,7 +49,7 @@ int main(int argc, const char **argv) {
     bool loadout2 = Loader2.LoadFile("../../models/right.obj");
 
     // Define the Y offset
-    float yOffset = -2.0;
+    float yOffset = -0.0;
 
     // Load meshes
     for (auto mesh : Loader2.LoadedMeshes) {
