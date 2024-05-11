@@ -32,11 +32,11 @@ typedef unsigned char u08;
 */
 
 #define CENTER_INTENSITY        50      // I_E
-#define CENTER_VERTICAL_DIST    -15      // h_E
+#define CENTER_VERTICAL_DIST    15      // h_E
 
-#define SIDE_INTENSITY          100     // I_A, I_B, I_C, I_D
-#define SIDE_HORIZONTAL_DIST    -10      // h_A, h_B, h_C, h_D
-#define SIDE_VERTICAL_DIST      -10      // v_A, v_B, v_C, v_D
+#define SIDE_INTENSITY          50     // I_A, I_B, I_C, I_D
+#define SIDE_HORIZONTAL_DIST    10      // h_A, h_B, h_C, h_D
+#define SIDE_VERTICAL_DIST      10      // v_A, v_B, v_C, v_D
 
 
 // Stanford Bunny
@@ -44,25 +44,25 @@ typedef unsigned char u08;
 //#define EYE_POS {0.25, 0.25, 0.25}
 
 // Football
-//#define OBJ_FILE_LOCATION "../../common_models/football.obj"
-//#define EYE_POS {2, 2, 2}
+#define OBJ_FILE_LOCATION "../../common_models/football.obj"
+#define EYE_POS {9, 6, 0}
 
 // Teapot
 //#define OBJ_FILE_LOCATION "../../common_models/teapot.obj"
-//#define EYE_POS {5, 5, 5}
+//#define EYE_POS {10, 10, 10}
 
 // Happy
 //#define OBJ_FILE_LOCATION "../../common_models/happy.obj"
 //#define EYE_POS {0, 0.4, -0.2}
 
 // Spot
-#define OBJ_FILE_LOCATION "../models/spot/spot_triangulated_good.obj"
-#define EYE_POS {10, 10, 10}
+//#define OBJ_FILE_LOCATION "../models/spot/spot_triangulated_good.obj"
+//#define EYE_POS {10, 10, 10}
 
 
 // Snow color, in RGB format (white with a higher blue part)
 #define SNOW_COLOR {240, 240, 255}
 
-#define DISTORTION_SCALAR 0.0
+#define DISTORTION_SCALAR 0.1
 
 #endif //RASTERIZER_GLOBAL_H
