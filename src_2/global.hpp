@@ -27,7 +27,7 @@ typedef unsigned char u08;
  * h_A = h_B = h_C = h_D > 0; h_E = 0;
  * 
  * Tipically,
- * V_E > V_A; I_E > I_A = I_B = I_C = I_D (I is the light intensity)
+ * v_E > v_A; I_E > I_A = I_B = I_C = I_D (I is the light intensity)
  * All lights can be turned off by setting to 0.
 */
 
@@ -40,12 +40,12 @@ typedef unsigned char u08;
 
 
 // Stanford Bunny
-#define OBJ_FILE_LOCATION "../../common_models/stanford-bunny.obj"
-#define EYE_POS {0.25, 0.15, -0.40}
+//#define OBJ_FILE_LOCATION "../../common_models/stanford-bunny.obj"
+//#define EYE_POS {0.25, 0.15, -0.40}
 
 // Football
-//#define OBJ_FILE_LOCATION "../../common_models/football.obj"
-//#define EYE_POS {2, 2, 2}
+#define OBJ_FILE_LOCATION "../../common_models/football.obj"
+#define EYE_POS {2, 2, 2}
 
 // Teapot
 //#define OBJ_FILE_LOCATION "../../common_models/teapot.obj"
@@ -57,5 +57,7 @@ typedef unsigned char u08;
 
 // Snow color, in RGB format
 #define SNOW_COLOR {240, 240, 255}
+
+#define DISTORTION_SCALAR 0.1
 
 #endif //RASTERIZER_GLOBAL_H

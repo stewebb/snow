@@ -17,5 +17,5 @@ include_directories(${EIGEN3_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS})
 
 # include_directories(/usr/local/include ./include)
 
-add_executable(snow main.cpp rasterizer.hpp rasterizer.cpp global.hpp Triangle.hpp Triangle.cpp Texture.hpp Texture.cpp Shader.cpp Shader.hpp OBJ_Loader.h MVP.cpp MVP.hpp snow.cpp snow.hpp)
+add_executable(snow main.cpp rasterizer.hpp rasterizer.cpp global.hpp Triangle.hpp Triangle.cpp Texture.hpp Texture.cpp Shader.cpp Shader.hpp OBJ_Loader.h MVP.cpp MVP.hpp snow.cpp snow.hpp RandomNumber.cpp RandomNumber.hpp)
 target_link_libraries(snow ${OpenCV_LIBRARIES})

@@ -1,22 +1,7 @@
 #include "Shader.hpp"
 #include "global.hpp"
+#include "RandomNumber.hpp"
 
-#include <random>
-
-class RandomNumberGenerator {
-private:
-    std::random_device rd;
-    std::mt19937 gen;
-    std::uniform_real_distribution<double> distribution;
-
-public:
-    RandomNumberGenerator() : gen(rd()), distribution(-1.0, 1.0) {}
-
-    double generateRandomNumber() {
-        return distribution(gen);
-    }
-};
-    
 
 Eigen::Vector3f vertex_shader(const vertex_shader_payload &payload) {
     return payload.position;
@@ -87,7 +72,7 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &payload) {
  * The modified Phong Shader for snow.
 */
 
-RandomNumberGenerator rng;
+RandomNumber rn;
 
 
 Eigen::Vector3f snow_phong_fragment_shader(const fragment_shader_payload &payload) {
@@ -111,14 +96,7 @@ Eigen::Vector3f snow_phong_fragment_shader(const fragment_shader_payload &payloa
     Eigen::Vector3f result_color = {0, 0, 0};
     Eigen::Vector3f eye_pos = EYE_POS;
 
-    // Normalize vectors
     Eigen::Vector3f N = normal.normalized();
-
-    float alpha = 0.1;
-    Eigen::Vector3f n{rng.generateRandomNumber(), rng.generateRandomNumber(), rng.generateRandomNumber()};
-    N = (N + alpha*n).normalized();
-
-
     Eigen::Vector3f V = (eye_pos - point).normalized();
 
     // Ambient light contribution
@@ -137,6 +115,13 @@ Eigen::Vector3f snow_phong_fragment_shader(const fragment_shader_payload &payloa
     // float alpha = 0.4; // or 0.8 for specular component
     // N = N + alpha * n - dE;
     // N.normalize(); // Ensure N remains a unit vector
+
+    // N_α = N + αn − dE (Assuming N and n are normalized)
+    float alpha = DISTORTION_SCALAR;
+    Eigen::Vector3f n = rn.generate3DVector();
+
+    N = (N + alpha*n).normalized();
+
 
 
     for (auto &light : lights) {
