@@ -16,6 +16,8 @@
 
 // Function to load a model with XYZ offsets
 void loadModelWithOffsets(const std::string& filePath, float xOffset, float yOffset, float zOffset, std::vector<Triangle*>& TriangleList) {
+    
+    // TODO: FIXME: Use a vector for offset
     objl::Loader Loader;
     bool loadout = Loader.LoadFile(filePath);
     if (!loadout) {
@@ -47,63 +49,12 @@ void loadModelWithOffsets(const std::string& filePath, float xOffset, float yOff
 
 int main(int argc, const char **argv) {
 
-    //std::random_device rd;
-    //std::mt19937 gen(rd());
-    
-
+    // Load OBJ models
     std::vector<Triangle *> TriangleList;
+    loadModelWithOffsets(MODEL_OBJ_LOCATION, 0.0, 0.0, 0.0, TriangleList);
+    loadModelWithOffsets(GROUND_OBJ_LOCATION, 0.0, 0.0, 0.0, TriangleList);
 
     float angle = 0.0; 
-
-    //std::string filename = "output.png";
-    rst::Shading shading = rst::Shading::Phong;
-
-    /*
-    objl::Loader Loader;
-    //std::string obj_path = "../models/spot/";
-
-    // Load .obj File
-
-    bool loadout = Loader.LoadFile(OBJ_FILE_LOCATION);
-
-    // Load meshes
-    for (auto mesh : Loader.LoadedMeshes) {
-        for (int i = 0; i < mesh.Vertices.size(); i += 3) {
-            Triangle *t = new Triangle();
-            for (int j = 0; j < 3; j++) {
-                t->setVertex(j, Vector4f(mesh.Vertices[i + j].Position.X, mesh.Vertices[i + j].Position.Y, mesh.Vertices[i + j].Position.Z, 1.0));
-                t->setNormal(j, Vector3f(mesh.Vertices[i + j].Normal.X, mesh.Vertices[i + j].Normal.Y, mesh.Vertices[i + j].Normal.Z));
-                t->setTexCoord(j, Vector2f(mesh.Vertices[i + j].TextureCoordinate.X, mesh.Vertices[i + j].TextureCoordinate.Y));
-            }
-            TriangleList.push_back(t);
-        }
-    }
-
-    objl::Loader Loader2;
-    bool loadout2 = Loader2.LoadFile("../../models/right.obj");
-
-    // Define the Y offset
-    float yOffset = -0.0;
-
-    // Load meshes
-    for (auto mesh : Loader2.LoadedMeshes) {
-        for (int i = 0; i < mesh.Vertices.size(); i += 3) {
-            Triangle *t = new Triangle();
-            for (int j = 0; j < 3; j++) {
-                // Adjust the Y coordinate by adding yOffset
-                float adjustedY = mesh.Vertices[i + j].Position.Y + yOffset;
-                t->setVertex(j, Vector4f(mesh.Vertices[i + j].Position.X, adjustedY, mesh.Vertices[i + j].Position.Z, 1.0));
-                t->setNormal(j, Vector3f(mesh.Vertices[i + j].Normal.X, mesh.Vertices[i + j].Normal.Y, mesh.Vertices[i + j].Normal.Z));
-                t->setTexCoord(j, Vector2f(mesh.Vertices[i + j].TextureCoordinate.X, mesh.Vertices[i + j].TextureCoordinate.Y));
-            }
-            TriangleList.push_back(t);
-        }
-    }
-    */
-
-    loadModelWithOffsets(OBJ_FILE_LOCATION, 0.0, 0.0, 0.0, TriangleList);
-    loadModelWithOffsets("../../models/right.obj", 0.0, 0.0, 0.0, TriangleList);
-
     rst::rasterizer r(700, 700);
 
     //auto texture_path = "hmap.jpg";
@@ -140,7 +91,7 @@ int main(int argc, const char **argv) {
         r.set_projection(get_projection_matrix(45.0, 1, 0.1, 50));
         r.set_lights(lights);
 
-        r.draw(TriangleList, true, shading);
+        r.draw(TriangleList, true, rst::Shading::Phong);
         cv::Mat image(700, 700, CV_32FC3, r.frame_buffer().data());
         image.convertTo(image, CV_8UC3, 1.0f);
         cv::cvtColor(image, image, cv::COLOR_RGB2BGR);

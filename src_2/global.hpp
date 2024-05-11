@@ -8,6 +8,7 @@ typedef unsigned char u08;
 #define TWO_PI (2.0* MY_PI)
 
 /**
+ * Lights
  * There are 5 lights (A-E) and all of them are placed above the object.
  * One of them (E) is right above the object.
  * The rest 4 lights (A, B, C, D) are placed to the vertices of a square, whose center is E.
@@ -38,27 +39,36 @@ typedef unsigned char u08;
 #define SIDE_HORIZONTAL_DIST    10      // h_A, h_B, h_C, h_D
 #define SIDE_VERTICAL_DIST      10      // v_A, v_B, v_C, v_D
 
+/**
+ * Models
+ * Pick one or more models and place to the scene. 
+*/
 
 // Stanford Bunny
-//#define OBJ_FILE_LOCATION "../../common_models/stanford-bunny.obj"
+//#define MODEL_OBJ_LOCATION "../../common_models/stanford-bunny.obj"
 //#define EYE_POS {0.25, 0.25, 0.25}
 
 // Football
-//#define OBJ_FILE_LOCATION "../../common_models/football.obj"
+//#define MODEL_OBJ_LOCATION "../../common_models/football.obj"
 //#define EYE_POS {9, 6, 0}
 
 // Teapot
-#define OBJ_FILE_LOCATION "../../common_models/teapot.obj"
+#define MODEL_OBJ_LOCATION "../../common_models/teapot.obj"
 #define EYE_POS {10, 10, 10}
 
 // Happy
-//#define OBJ_FILE_LOCATION "../../common_models/happy.obj"
+//#define MODEL_OBJ_LOCATION "../../common_models/happy.obj"
 //#define EYE_POS {0, 0.4, -0.2}
 
 // Spot
-//#define OBJ_FILE_LOCATION "../models/spot/spot_triangulated_good.obj"
+//#define MODEL_OBJ_LOCATION "../models/spot/spot_triangulated_good.obj"
 //#define EYE_POS {10, 10, 10}
 
+/**
+ * Ground
+*/
+#define GROUND_OBJ_LOCATION "../../models/ground.obj"
+#define GROUND_OBJ_OFFSET {0, 0, 0}
 
 // Snow color, in RGB format (white with a higher blue part)
 #define SNOW_COLOR {240, 240, 255}
