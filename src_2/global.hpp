@@ -32,16 +32,16 @@ typedef unsigned char u08;
 */
 
 #define CENTER_INTENSITY        50      // I_E
-#define CENTER_VERTICAL_DIST    15      // h_E
+#define CENTER_VERTICAL_DIST    -15      // h_E
 
 #define SIDE_INTENSITY          100     // I_A, I_B, I_C, I_D
-#define SIDE_HORIZONTAL_DIST    10      // h_A, h_B, h_C, h_D
-#define SIDE_VERTICAL_DIST      10      // v_A, v_B, v_C, v_D
+#define SIDE_HORIZONTAL_DIST    -10      // h_A, h_B, h_C, h_D
+#define SIDE_VERTICAL_DIST      -10      // v_A, v_B, v_C, v_D
 
 
 // Stanford Bunny
 //#define OBJ_FILE_LOCATION "../../common_models/stanford-bunny.obj"
-//#define EYE_POS {0.25, 0.15, -0.40}
+//#define EYE_POS {0.25, 0.25, 0.25}
 
 // Football
 //#define OBJ_FILE_LOCATION "../../common_models/football.obj"

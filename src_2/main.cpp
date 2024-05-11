@@ -46,14 +46,19 @@ int main(int argc, const char **argv) {
     }
 
     objl::Loader Loader2;
-    bool loadout2 = Loader2.LoadFile("../../models/ground2.obj");
+    bool loadout2 = Loader2.LoadFile("../../models/right.obj");
+
+    // Define the Y offset
+    float yOffset = -2.0;
 
     // Load meshes
     for (auto mesh : Loader2.LoadedMeshes) {
         for (int i = 0; i < mesh.Vertices.size(); i += 3) {
             Triangle *t = new Triangle();
             for (int j = 0; j < 3; j++) {
-                t->setVertex(j, Vector4f(mesh.Vertices[i + j].Position.X, mesh.Vertices[i + j].Position.Y, mesh.Vertices[i + j].Position.Z, 1.0));
+                // Adjust the Y coordinate by adding yOffset
+                float adjustedY = mesh.Vertices[i + j].Position.Y + yOffset;
+                t->setVertex(j, Vector4f(mesh.Vertices[i + j].Position.X, adjustedY, mesh.Vertices[i + j].Position.Z, 1.0));
                 t->setNormal(j, Vector3f(mesh.Vertices[i + j].Normal.X, mesh.Vertices[i + j].Normal.Y, mesh.Vertices[i + j].Normal.Z));
                 t->setTexCoord(j, Vector2f(mesh.Vertices[i + j].TextureCoordinate.X, mesh.Vertices[i + j].TextureCoordinate.Y));
             }
@@ -108,12 +113,12 @@ int main(int argc, const char **argv) {
         angle += 5;
 
         // Key operations
-        if      (key == 'a') { eye_pos.x() -= 0.1; } 
-        else if (key == 'd') { eye_pos.x() += 0.1; } 
-        else if (key == 'w') { eye_pos.y() += 0.1; } 
-        else if (key == 's') { eye_pos.y() -= 0.1; } 
-        else if (key == 'q') { eye_pos.z() -= 0.1; } 
-        else if (key == 'e') { eye_pos.z() += 0.1; } 
+        if      (key == 'a') { eye_pos.x() -= 1; } 
+        else if (key == 'd') { eye_pos.x() += 1; } 
+        else if (key == 'w') { eye_pos.y() += 1; } 
+        else if (key == 's') { eye_pos.y() -= 1; } 
+        else if (key == 'q') { eye_pos.z() -= 1; } 
+        else if (key == 'e') { eye_pos.z() += 1; } 
         else if (key == 'j') { angle += 10; } 
         else if (key == 'k') { angle -= 10; }
 
