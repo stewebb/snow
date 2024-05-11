@@ -14,6 +14,37 @@
 
 #include "MVP.hpp"
 
+// Function to load a model with XYZ offsets
+void loadModelWithOffsets(const std::string& filePath, float xOffset, float yOffset, float zOffset, std::vector<Triangle*>& TriangleList) {
+    objl::Loader Loader;
+    bool loadout = Loader.LoadFile(filePath);
+    if (!loadout) {
+        std::cerr << "Failed to load the file: " << filePath << std::endl;
+        return;
+    }
+
+    // Load meshes and apply offsets
+    for (auto& mesh : Loader.LoadedMeshes) {
+        for (size_t i = 0; i < mesh.Vertices.size(); i += 3) {
+            Triangle* t = new Triangle();
+            for (int j = 0; j < 3; j++) {
+                // Adjust X, Y, and Z coordinates by adding the respective offsets
+                Eigen::Vector4f adjustedPosition(
+                    mesh.Vertices[i + j].Position.X + xOffset,
+                    mesh.Vertices[i + j].Position.Y + yOffset,
+                    mesh.Vertices[i + j].Position.Z + zOffset,
+                    1.0
+                );
+
+                t->setVertex(j, adjustedPosition);
+                t->setNormal(j, Eigen::Vector3f(mesh.Vertices[i + j].Normal.X, mesh.Vertices[i + j].Normal.Y, mesh.Vertices[i + j].Normal.Z));
+                t->setTexCoord(j, Eigen::Vector2f(mesh.Vertices[i + j].TextureCoordinate.X, mesh.Vertices[i + j].TextureCoordinate.Y));
+            }
+            TriangleList.push_back(t);
+        }
+    }
+}
+
 int main(int argc, const char **argv) {
 
     //std::random_device rd;
@@ -26,10 +57,13 @@ int main(int argc, const char **argv) {
 
     //std::string filename = "output.png";
     rst::Shading shading = rst::Shading::Phong;
+
+    /*
     objl::Loader Loader;
     //std::string obj_path = "../models/spot/";
 
     // Load .obj File
+
     bool loadout = Loader.LoadFile(OBJ_FILE_LOCATION);
 
     // Load meshes
@@ -65,6 +99,10 @@ int main(int argc, const char **argv) {
             TriangleList.push_back(t);
         }
     }
+    */
+
+    loadModelWithOffsets(OBJ_FILE_LOCATION, 0.0, 0.0, 0.0, TriangleList);
+    loadModelWithOffsets("../../models/right.obj", 0.0, 0.0, 0.0, TriangleList);
 
     rst::rasterizer r(700, 700);
 
