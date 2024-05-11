@@ -52,10 +52,12 @@ typedef unsigned char u08;
 //#define EYE_POS {5, 5, 5}
 
 // Happy
-#define OBJ_FILE_LOCATION "../../common_models/happy.obj"
-#define EYE_POS {0, 0.4, -0.2}
+//#define OBJ_FILE_LOCATION "../../common_models/happy.obj"
+//#define EYE_POS {0, 0.4, -0.2}
 
-//#define OBJ_FILE_LOCATION "../models/spot/spot_triangulated_good.obj"
+// Spot
+#define OBJ_FILE_LOCATION "../models/spot/spot_triangulated_good.obj"
+#define EYE_POS {10, 10, 10}
 
 
 // Snow color, in RGB format (white with a higher blue part)

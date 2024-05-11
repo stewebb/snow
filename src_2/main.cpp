@@ -46,7 +46,7 @@ int main(int argc, const char **argv) {
     }
 
     objl::Loader Loader2;
-    bool loadout2 = Loader2.LoadFile("../../models/ground.obj");
+    bool loadout2 = Loader2.LoadFile("../../models/ground2.obj");
 
     // Load meshes
     for (auto mesh : Loader2.LoadedMeshes) {
