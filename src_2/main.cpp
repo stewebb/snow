@@ -22,7 +22,7 @@ int main(int argc, const char **argv) {
 
     std::vector<Triangle *> TriangleList;
 
-    float angle = 140.0; 
+    float angle = 0.0; 
 
     //std::string filename = "output.png";
     rst::Shading shading = rst::Shading::Phong;
@@ -45,6 +45,22 @@ int main(int argc, const char **argv) {
         }
     }
 
+    objl::Loader Loader2;
+    bool loadout2 = Loader2.LoadFile("../../models/ground.obj");
+
+    // Load meshes
+    for (auto mesh : Loader2.LoadedMeshes) {
+        for (int i = 0; i < mesh.Vertices.size(); i += 3) {
+            Triangle *t = new Triangle();
+            for (int j = 0; j < 3; j++) {
+                t->setVertex(j, Vector4f(mesh.Vertices[i + j].Position.X, mesh.Vertices[i + j].Position.Y, mesh.Vertices[i + j].Position.Z, 1.0));
+                t->setNormal(j, Vector3f(mesh.Vertices[i + j].Normal.X, mesh.Vertices[i + j].Normal.Y, mesh.Vertices[i + j].Normal.Z));
+                t->setTexCoord(j, Vector2f(mesh.Vertices[i + j].TextureCoordinate.X, mesh.Vertices[i + j].TextureCoordinate.Y));
+            }
+            TriangleList.push_back(t);
+        }
+    }
+
     rst::rasterizer r(700, 700);
 
     //auto texture_path = "hmap.jpg";
@@ -55,12 +71,7 @@ int main(int argc, const char **argv) {
 
     Eigen::Vector3f eye_pos = EYE_POS;
 
-    //std::vector<light> lights = {l1, l2, l3, l4, l5, l6, l7, l8};
-    //std::vector<light> lights = {l1, l3, l5, l7};
-    
-    //float width = 12.5;
-    //float height = 12.5;
-
+    // Set up lights
     Eigen::Vector3f center_intensity {CENTER_INTENSITY, CENTER_INTENSITY, CENTER_INTENSITY};
     Eigen::Vector3f side_intensity   {SIDE_INTENSITY, SIDE_INTENSITY, SIDE_INTENSITY};
 
@@ -69,20 +80,7 @@ int main(int argc, const char **argv) {
     auto L_B = light{{ SIDE_HORIZONTAL_DIST,   -SIDE_VERTICAL_DIST, -SIDE_HORIZONTAL_DIST}, side_intensity};
     auto L_C = light{{-SIDE_HORIZONTAL_DIST,   -SIDE_VERTICAL_DIST,  SIDE_HORIZONTAL_DIST}, side_intensity};
     auto L_D = light{{-SIDE_HORIZONTAL_DIST,   -SIDE_VERTICAL_DIST, -SIDE_HORIZONTAL_DIST}, side_intensity};
-
-    //auto l1 = light{{dist, 0, 0}, {100, 100, 100}};
-    //auto l2 = light{{0, dist, 0}, {100, 100, 100}};
-    //auto l3 = light{{0, 0, dist}, {100, 100, 100}};
-
-    //auto l4 = light{{-dist, 0, 0}, {100, 100, 100}};
-    //auto l5 = light{{0, -dist, 0}, {100, 100, 100}};
-    //auto l6 = light{{0, 0, -dist}, {100, 100, 100}};
-
     std::vector<light> lights = {L_E, L_A, L_B, L_C, L_D};
-
-    //std::vector<light> lights = {l1, l2, l3};
-    //std::vector<light> lights = {l4, l5, l6};
-    //std::vector<light> lights = {l1, l2, l3, l4, l5, l6};
 
 
     r.set_vertex_shader(vertex_shader);

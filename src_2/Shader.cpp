@@ -102,26 +102,12 @@ Eigen::Vector3f snow_phong_fragment_shader(const fragment_shader_payload &payloa
     // Ambient light contribution
     Eigen::Vector3f Ia = ka.cwiseProduct(amb_light_intensity);  
 
-    // TODO: Implement noise vector `n` and compute `dE`
-    // Eigen::Vector3f n = compute_noise_vector();  
-    // FIXME: Use Perlin Noise
-    // Eigen::Vector3f dE = compute_exposure_derivative_vector();
-    // FIXME:
-
-    //std::cout << rng.generateRandomNumber() << std::endl;
-    
-
-    // TODO: Modify normal `N` using noise `n` and exposure derivative `dE`
-    // float alpha = 0.4; // or 0.8 for specular component
-    // N = N + alpha * n - dE;
-    // N.normalize(); // Ensure N remains a unit vector
-
+    // Calculate the distorted surface normal 
     // N_α = N + αn − dE (Assuming N and n are normalized)
     float alpha = DISTORTION_SCALAR;
     Eigen::Vector3f n = rn.generate3DVector();
-
-    N = (N + alpha*n).normalized();
-
+    Eigen::Vector3f dE = {0.0f, 0.0f, 0.0f};    // TODO: FIXME: Exposure Function E
+    N = (N + alpha*n - dE).normalized();
 
 
     for (auto &light : lights) {

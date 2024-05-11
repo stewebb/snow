@@ -44,20 +44,23 @@ typedef unsigned char u08;
 //#define EYE_POS {0.25, 0.15, -0.40}
 
 // Football
-#define OBJ_FILE_LOCATION "../../common_models/football.obj"
-#define EYE_POS {2, 2, 2}
+//#define OBJ_FILE_LOCATION "../../common_models/football.obj"
+//#define EYE_POS {2, 2, 2}
 
 // Teapot
 //#define OBJ_FILE_LOCATION "../../common_models/teapot.obj"
 //#define EYE_POS {5, 5, 5}
 
+// Happy
+#define OBJ_FILE_LOCATION "../../common_models/happy.obj"
+#define EYE_POS {0, 0.4, -0.2}
+
 //#define OBJ_FILE_LOCATION "../models/spot/spot_triangulated_good.obj"
-//#define OBJ_FILE_LOCATION "../../common_models/happy.obj"
 
 
-// Snow color, in RGB format
+// Snow color, in RGB format (white with a higher blue part)
 #define SNOW_COLOR {240, 240, 255}
 
-#define DISTORTION_SCALAR 0.1
+#define DISTORTION_SCALAR 0.0
 
 #endif //RASTERIZER_GLOBAL_H
