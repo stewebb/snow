@@ -64,16 +64,6 @@ int main(int argc, const char **argv) {
     TextureList.push_back(new Texture(MODEL_TEXTURE_MAP, MODEL_OBJECT_ID, MODEL_HAS_TEXTURE));
     TextureList.push_back(new Texture(GROUND_TEXTURE_MAP, GROUND_OBJECT_ID, GROUND_HAS_TEXTURE));
 
-
-    float angle = 0.0; 
-
-    // Window size is fixed to 700*700 (px)
-    rst::rasterizer r(700, 700);
-
-    std::function<Eigen::Vector3f(fragment_shader_payload)> active_shader = phong_fragment_shader;
-
-    Eigen::Vector3f eye_pos = EYE_POS;
-
     // Set up lights
     Eigen::Vector3f center_intensity {CENTER_INTENSITY, CENTER_INTENSITY, CENTER_INTENSITY};
     Eigen::Vector3f side_intensity   {SIDE_INTENSITY, SIDE_INTENSITY, SIDE_INTENSITY};
@@ -85,16 +75,18 @@ int main(int argc, const char **argv) {
     auto L_D = light{{-SIDE_HORIZONTAL_DIST,   SIDE_VERTICAL_DIST, -SIDE_HORIZONTAL_DIST}, side_intensity};
     std::vector<light> lights = {L_E, L_A, L_B, L_C, L_D};
 
-
+    // Set up scene
+    rst::rasterizer r(700, 700);
     r.set_vertex_shader(vertex_shader);
-    r.set_fragment_shader(active_shader);
-
-    //r.set_texture(Texture("../../models/grass.jpg"));
+    r.set_fragment_shader(phong_fragment_shader);
     r.setTextures(TextureList);
 
+    // Initialize some variables
+    float angle = 0.0; 
     int key = 0;
     int frame_count = 0;
     auto start = std::chrono::high_resolution_clock::now();
+    Eigen::Vector3f eye_pos = EYE_POS;
 
     while (key != 27) {
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
@@ -135,12 +127,7 @@ int main(int argc, const char **argv) {
         else if (key == 'e') { eye_pos.z() += 1; } 
         else if (key == 'j') { angle += 10; } 
         else if (key == 'k') { angle -= 10; }
-
-        //frame_count++;
-
-        //std::cout << "frame count: " << frame_count++ << std::endl;
-        //std::cout << "eye_pos: " << eye_pos.transpose() << std::endl;
-
     }
+
     return 0;
 }

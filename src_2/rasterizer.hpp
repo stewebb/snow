@@ -62,9 +62,9 @@ namespace rst {
 
         Eigen::Matrix4f shadow_projection;
 
-        void set_texture(Texture tex) {
-            texture = tex;
-        }
+        //void set_texture(Texture tex) {
+        //    texture = tex;
+        //}
 
         void setTextures(const std::vector<Texture*>& textures) {
             this->textures = textures;
@@ -87,7 +87,7 @@ namespace rst {
         std::vector<float>& depth_buffer() {
             return depth_buf;
         }
-        
+
     private:
         void draw_line(Eigen::Vector3f begin, Eigen::Vector3f end);
 
@@ -117,7 +117,7 @@ namespace rst {
         std::map<int, std::vector<Eigen::Vector3f>> col_buf;
         std::map<int, std::vector<Eigen::Vector3f>> nor_buf;
 
-        std::optional<Texture> texture;
+        //std::optional<Texture> texture;
         std::vector<Texture *> textures;
 
         std::function<Eigen::Vector3f(fragment_shader_payload)> fragment_shader;

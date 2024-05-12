@@ -395,7 +395,7 @@ rst::rasterizer::rasterizer(int w, int h) : width(w), height(h) {
     shadow_buf.resize(w * h);
     ssaa_frame_buf.resize(4 * w * h);
     ssaa_depth_buf.resize(4 * w * h);
-    texture = std::nullopt;
+    //texture = std::nullopt;
 }
 
 int rst::rasterizer::get_index(int x, int y) {
