@@ -55,9 +55,9 @@ typedef unsigned char u08;
 //#define MODEL_OBJ_OFFSET {0, 0, 0}
 
 // Football
-#define MODEL_OBJ_LOCATION "../../models/football.obj"
-#define EYE_POS {20, 20, 20}
-#define MODEL_OBJ_OFFSET {0, 1, 0}
+#define MODEL_OBJ_LOCATION "../../models/football2.obj"
+#define EYE_POS {10, 10, 10}
+#define MODEL_OBJ_OFFSET {0, 1.5, 0}
 
 // Teapot
 //#define MODEL_OBJ_LOCATION "../../common_models/teapot.obj"
@@ -76,8 +76,8 @@ typedef unsigned char u08;
 /**
  * Ground
 */
-#define GROUND_OBJ_LOCATION "../../models/grass5.obj"
-#define GROUND_OBJ_OFFSET {0, 0, 0}
+#define GROUND_OBJ_LOCATION "../../models/grass7.obj"
+#define GROUND_OBJ_OFFSET {0, -1, 0}
 
 // Snow color, in RGB format (white with a higher blue part)
 #define SNOW_COLOR {240, 240, 255}
