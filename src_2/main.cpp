@@ -56,14 +56,17 @@ int main(int argc, const char **argv) {
 
     // Load OBJ models
     // TODO: FIXME: LOAD MULTIPLE MODELS ON THE SAME SCREEN.
+
     std::vector<Triangle *> TriangleList;
+    std::vector<Texture *> TextureList;
 
     //TriangleList.at
 
-    //loadModel(MODEL_OBJ_LOCATION, MODEL_OBJ_OFFSET, TriangleList);
+    loadModel(MODEL_OBJECT_ID, MODEL_OBJ_LOCATION, MODEL_OBJ_OFFSET, TriangleList);
 
     loadModel(GROUND_OBJECT_ID, GROUND_OBJ_LOCATION, GROUND_OBJ_OFFSET, TriangleList);
-    
+    TextureList.push_back(new Texture("../../models/grass.jpg", GROUND_OBJECT_ID, true));
+
 
     float angle = 0.0; 
 
@@ -91,7 +94,8 @@ int main(int argc, const char **argv) {
 
 
 
-    r.set_texture(Texture("../../models/grass.jpg"));
+    //r.set_texture(Texture("../../models/grass.jpg"));
+    r.setTextures(TextureList);
 
     int key = 0;
     int frame_count = 0;

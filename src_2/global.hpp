@@ -78,7 +78,7 @@ typedef unsigned char u08;
  * Ground
 */
 
-#define GROUND_OBJECT_ID 0
+#define GROUND_OBJECT_ID 999
 #define GROUND_OBJ_LOCATION "../../models/d.obj"
 #define GROUND_OBJ_OFFSET {0, -1, 0}
 

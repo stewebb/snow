@@ -1,15 +1,24 @@
 #include "Texture.hpp"
 
-Texture::Texture(const std::string& name) {
+Texture::Texture(const std::string& name, int objectId, bool hasTexture) {
+
+    this->objectId = objectId;
+    this->hasTexture = hasTexture;
+
+    // Stop loading texture map if the object is labelled as "No Texture"
+    if(!hasTexture){
+        return;
+    }
+
     image_data = cv::imread(name);
     if (image_data.empty()) {
         std::cerr << "Error loading texture from file: " << name << std::endl;
-        hasTexture = false;
+        this->hasTexture = false;
     } else {
         cv::cvtColor(image_data, image_data, cv::COLOR_RGB2BGR);
         width = image_data.cols;
         height = image_data.rows;
-        hasTexture = true;
+        this->hasTexture = true;
     }
 }
 

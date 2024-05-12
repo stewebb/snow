@@ -65,6 +65,10 @@ public:
         texture = tex;
     }
 
+    void setTextures(const std::vector<Texture*>& textures) {
+        this->textures = textures;
+    }
+
     void set_vertex_shader(
         std::function<Eigen::Vector3f(vertex_shader_payload)> vert_shader);
     void set_fragment_shader(
@@ -115,6 +119,7 @@ private:
     std::map<int, std::vector<Eigen::Vector3f>> nor_buf;
 
     std::optional<Texture> texture;
+    std::vector<Texture *> textures;
 
     std::function<Eigen::Vector3f(fragment_shader_payload)> fragment_shader;
     std::function<Eigen::Vector3f(vertex_shader_payload)> vertex_shader;

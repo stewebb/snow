@@ -441,6 +441,17 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, bool anti_aliasing) 
 
 // Task2 Implement this function
 void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eigen::Vector3f, 3> &view_pos, const std::vector<light> &view_lights, rst::Shading shading, bool shadow) {
+    
+    Texture* currentTexture = nullptr;
+    for (Texture* texture : textures) {
+        if (texture != nullptr && texture->getObjectId() == t.objectId && texture->getHasTexture()) {
+            currentTexture = texture;
+        }
+    }
+
+    //std::cout << currentTexture << std::endl;
+    
+    
     auto v = t.toVector4();
 
     int x_min = std::numeric_limits<int>::max();
@@ -572,7 +583,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
                         
                         // pass them to the fragment_shader_payload
                         fragment_shader_payload payload(
-                            color, normal.normalized(), texcoords, view_lights, texture ? &*texture : nullptr
+                            color, normal.normalized(), texcoords, view_lights, currentTexture// ? &*currentTexture : nullptr
                         ); 
                         payload.view_pos = shadingcoords;
 
