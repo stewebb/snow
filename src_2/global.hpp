@@ -55,9 +55,9 @@ typedef unsigned char u08;
 //#define MODEL_OBJ_OFFSET {0, 0, 0}
 
 // Football
-//#define MODEL_OBJ_LOCATION "../../common_models/football.obj"
-//#define EYE_POS {10, 10, 10}
-//#define MODEL_OBJ_OFFSET {0, 1, 0}
+#define MODEL_OBJ_LOCATION "../../models/football.obj"
+#define EYE_POS {10, 10, 10}
+#define MODEL_OBJ_OFFSET {0, 1, 0}
 
 // Teapot
 //#define MODEL_OBJ_LOCATION "../../common_models/teapot.obj"
@@ -69,9 +69,9 @@ typedef unsigned char u08;
 //#define EYE_POS {0, 0.4, -0.2}
 
 // Spot
-#define MODEL_OBJ_LOCATION "../models/spot/spot_triangulated_good.obj"
-#define EYE_POS {10, 10, 10}
-#define MODEL_OBJ_OFFSET {0, 0, 0}
+//#define MODEL_OBJ_LOCATION "../../common_models/spot_good.obj"
+//#define EYE_POS {10, 10, 10}
+//#define MODEL_OBJ_OFFSET {0, 1, 0}
 
 /**
  * Ground

@@ -60,7 +60,7 @@ int main(int argc, const char **argv) {
     // Window size is fixed to 700*700 (px)
     rst::rasterizer r(700, 700);
 
-    std::function<Eigen::Vector3f(fragment_shader_payload)> active_shader = snow_phong_fragment_shader;
+    std::function<Eigen::Vector3f(fragment_shader_payload)> active_shader = phong_fragment_shader;
 
     Eigen::Vector3f eye_pos = EYE_POS;
 
@@ -68,11 +68,11 @@ int main(int argc, const char **argv) {
     Eigen::Vector3f center_intensity {CENTER_INTENSITY, CENTER_INTENSITY, CENTER_INTENSITY};
     Eigen::Vector3f side_intensity   {SIDE_INTENSITY, SIDE_INTENSITY, SIDE_INTENSITY};
     
-    auto L_E = light{{                    0, -CENTER_VERTICAL_DIST,                     0}, center_intensity};
-    auto L_A = light{{ SIDE_HORIZONTAL_DIST,   -SIDE_VERTICAL_DIST,  SIDE_HORIZONTAL_DIST}, side_intensity};
-    auto L_B = light{{ SIDE_HORIZONTAL_DIST,   -SIDE_VERTICAL_DIST, -SIDE_HORIZONTAL_DIST}, side_intensity};
-    auto L_C = light{{-SIDE_HORIZONTAL_DIST,   -SIDE_VERTICAL_DIST,  SIDE_HORIZONTAL_DIST}, side_intensity};
-    auto L_D = light{{-SIDE_HORIZONTAL_DIST,   -SIDE_VERTICAL_DIST, -SIDE_HORIZONTAL_DIST}, side_intensity};
+    auto L_E = light{{                    0, CENTER_VERTICAL_DIST,                     0}, center_intensity};
+    auto L_A = light{{ SIDE_HORIZONTAL_DIST,   SIDE_VERTICAL_DIST,  SIDE_HORIZONTAL_DIST}, side_intensity};
+    auto L_B = light{{ SIDE_HORIZONTAL_DIST,   SIDE_VERTICAL_DIST, -SIDE_HORIZONTAL_DIST}, side_intensity};
+    auto L_C = light{{-SIDE_HORIZONTAL_DIST,   SIDE_VERTICAL_DIST,  SIDE_HORIZONTAL_DIST}, side_intensity};
+    auto L_D = light{{-SIDE_HORIZONTAL_DIST,   SIDE_VERTICAL_DIST, -SIDE_HORIZONTAL_DIST}, side_intensity};
     std::vector<light> lights = {L_E, L_A, L_B, L_C, L_D};
 
 
@@ -110,8 +110,8 @@ int main(int argc, const char **argv) {
         else if (key == 'j') { angle += 10; } 
         else if (key == 'k') { angle -= 10; }
 
-        std::cout << "frame count: " << frame_count++ << std::endl;
-        std::cout << "eye_pos: " << eye_pos.transpose() << std::endl;
+        //std::cout << "frame count: " << frame_count++ << std::endl;
+        //std::cout << "eye_pos: " << eye_pos.transpose() << std::endl;
 
     }
     return 0;
