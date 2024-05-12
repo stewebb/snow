@@ -37,7 +37,7 @@ typedef unsigned char u08;
 
 // Intensity and distance definitions for central light (E)
 #define CENTER_INTENSITY        25   // Intensity of light E
-#define CENTER_VERTICAL_DIST    5    // Vertical distance of light E
+#define CENTER_VERTICAL_DIST    10   // Vertical distance of light E
 
 // Intensity and distance definitions for side lights (A, B, C, D)
 #define SIDE_INTENSITY          100  // Intensity of lights A, B, C, D
@@ -59,6 +59,8 @@ typedef unsigned char u08;
 #define MODEL_OBJ_LOCATION "../../models/football2.obj"
 #define EYE_POS {10, 10, 10}
 #define MODEL_OBJ_OFFSET {0, 1.5, 0}
+#define MODEL_HAS_TEXTURE false
+#define MODEL_TEXTURE_MAP ""
 
 // Teapot
 //#define MODEL_OBJ_LOCATION "../../common_models/teapot.obj"
@@ -78,9 +80,11 @@ typedef unsigned char u08;
  * Ground
 */
 
-#define GROUND_OBJECT_ID 999
+#define GROUND_OBJECT_ID 0
 #define GROUND_OBJ_LOCATION "../../models/d.obj"
 #define GROUND_OBJ_OFFSET {0, -1, 0}
+#define GROUND_HAS_TEXTURE true
+#define GROUND_TEXTURE_MAP "../../models/grass.jpg"
 
 // Snow color, in RGB format (white with a higher blue part)
 #define SNOW_COLOR {240, 240, 255}

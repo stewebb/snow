@@ -54,18 +54,15 @@ void loadModel(int objectId, const std::string& filePath, Eigen::Vector3f offset
 
 int main(int argc, const char **argv) {
 
-    // Load OBJ models
-    // TODO: FIXME: LOAD MULTIPLE MODELS ON THE SAME SCREEN.
-
+    // Load OBJ models and set textures
     std::vector<Triangle *> TriangleList;
     std::vector<Texture *> TextureList;
 
-    //TriangleList.at
-
     loadModel(MODEL_OBJECT_ID, MODEL_OBJ_LOCATION, MODEL_OBJ_OFFSET, TriangleList);
-
     loadModel(GROUND_OBJECT_ID, GROUND_OBJ_LOCATION, GROUND_OBJ_OFFSET, TriangleList);
-    TextureList.push_back(new Texture("../../models/grass.jpg", GROUND_OBJECT_ID, true));
+
+    TextureList.push_back(new Texture(MODEL_TEXTURE_MAP, MODEL_OBJECT_ID, MODEL_HAS_TEXTURE));
+    TextureList.push_back(new Texture(GROUND_TEXTURE_MAP, GROUND_OBJECT_ID, GROUND_HAS_TEXTURE));
 
 
     float angle = 0.0; 

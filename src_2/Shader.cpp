@@ -49,8 +49,8 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &payload) {
     //Eigen::Vector3f Kd = payload.color;
     Eigen::Vector3f Ks = Eigen::Vector3f(0.7937, 0.7937, 0.7937);
 
-    //Eigen::Vector3f Kd = payload.texture ? return_color / 255.0 : payload.color;
-    Eigen::Vector3f Kd = return_color / 255.0;
+    Eigen::Vector3f Kd = payload.texture ? return_color / 255.0 : payload.color;
+    //Eigen::Vector3f Kd = return_color / 255.0;
 
     //std::cout << Kd.transpose() * 255 << std::endl;
 
