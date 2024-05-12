@@ -41,6 +41,15 @@ void loadModel(const std::string& filePath, Eigen::Vector3f offset, std::vector<
                 t->setVertex(j, adjustedPosition);
                 t->setNormal(j, Eigen::Vector3f(mesh.Vertices[i + j].Normal.X, mesh.Vertices[i + j].Normal.Y, mesh.Vertices[i + j].Normal.Z));
                 t->setTexCoord(j, Eigen::Vector2f(mesh.Vertices[i + j].TextureCoordinate.X, mesh.Vertices[i + j].TextureCoordinate.Y));
+                
+                // Kd in mtl is between 0 and 1, scale it to [0, 255].
+                for(int k=0; k<3; k++){
+                    t->setColor(k, mesh.MeshMaterial.Kd.X * 255, mesh.MeshMaterial.Kd.Y * 255, mesh.MeshMaterial.Kd.Z * 255);
+                }
+                //t->setColor(0, mesh.MeshMaterial.Kd.X*255, mesh.MeshMaterial.Kd.Y*255, mesh.MeshMaterial.Kd.Z*255);
+                //t->setColor(1, mesh.MeshMaterial.Kd.X*255, mesh.MeshMaterial.Kd.Y*255, mesh.MeshMaterial.Kd.Z*255);
+                //t->setColor(2, mesh.MeshMaterial.Kd.X*255, mesh.MeshMaterial.Kd.Y*255, mesh.MeshMaterial.Kd.Z*255);
+                //std::cout << mesh.MeshMaterial.Kd.X << std::endl;
             }
             TriangleList.push_back(t);
         }

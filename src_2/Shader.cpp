@@ -22,6 +22,8 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &payload) {
     Eigen::Vector3f Kd = payload.color;
     Eigen::Vector3f Ks = Eigen::Vector3f(0.7937, 0.7937, 0.7937);
 
+    //std::cout << Kd.transpose() * 255 << std::endl;
+
     Eigen::Vector3f amb_light_intensity {10, 10, 10};
     float a = 150;
 
@@ -141,6 +143,7 @@ Eigen::Vector3f snow_phong_fragment_shader(const fragment_shader_payload &payloa
     return result_color * 255.0f;  // Scale color to 0-255 range
 }
 
+/*
 Eigen::Vector3f blinn_phong_fragment_shader(const fragment_shader_payload &payload) {
 
     Eigen::Vector3f ka = Eigen::Vector3f(0.005, 0.005, 0.005);
@@ -191,3 +194,4 @@ Eigen::Vector3f blinn_phong_fragment_shader(const fragment_shader_payload &paylo
     result_color += La;
     return result_color * 255.0f;
 }
+*/

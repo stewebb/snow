@@ -310,9 +310,9 @@ void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, 
             newtri.setNormal(i, n[i].head<3>());
         }
 
-        newtri.setColor(0, 148, 121.0, 92.0);
-        newtri.setColor(1, 148, 121.0, 92.0);
-        newtri.setColor(2, 148, 121.0, 92.0);
+        //newtri.setColor(0, 0, 0, 255);
+        //newtri.setColor(1, 0, 0, 255);
+        //newtri.setColor(2, 0, 0, 255);
 
         // Also pass view space vertice position
         rasterize_triangle(newtri, viewspace_pos, viewspace_lights, shading, shadow);
