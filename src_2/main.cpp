@@ -57,8 +57,13 @@ int main(int argc, const char **argv) {
     // Load OBJ models
     // TODO: FIXME: LOAD MULTIPLE MODELS ON THE SAME SCREEN.
     std::vector<Triangle *> TriangleList;
+
+    //TriangleList.at
+
     //loadModel(MODEL_OBJ_LOCATION, MODEL_OBJ_OFFSET, TriangleList);
+
     loadModel(GROUND_OBJECT_ID, GROUND_OBJ_LOCATION, GROUND_OBJ_OFFSET, TriangleList);
+    
 
     float angle = 0.0; 
 
@@ -83,6 +88,9 @@ int main(int argc, const char **argv) {
 
     r.set_vertex_shader(vertex_shader);
     r.set_fragment_shader(active_shader);
+
+
+
     r.set_texture(Texture("../../models/grass.jpg"));
 
     int key = 0;
