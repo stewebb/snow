@@ -15,15 +15,19 @@
 #include "MVP.hpp"
 
 // Function to load a model with XYZ offsets
-void loadModelWithOffsets(const std::string& filePath, float xOffset, float yOffset, float zOffset, std::vector<Triangle*>& TriangleList) {
+void loadModelWithOffsets(const std::string& filePath, Eigen::Vector3f offset, std::vector<Triangle*>& TriangleList) {
     
     // TODO: FIXME: Use a vector for offset
     objl::Loader Loader;
-    bool loadout = Loader.LoadFile(filePath);
-    if (!loadout) {
-        std::cerr << "Failed to load the file: " << filePath << std::endl;
-        return;
-    }
+    bool loadOut = Loader.LoadFile(filePath);
+
+    // If you see "Assertion `loadOut == true' failed. Aborted (core dumped)"
+    // This means that the obj model cannot be loaded (e.g., file does not exist).
+    assert(loadOut == true);
+    //if (!loadout) {
+    //    std::cerr << "Failed to load the file: " << filePath << std::endl;
+    //    return;
+    //}
 
     // Load meshes and apply offsets
     for (auto& mesh : Loader.LoadedMeshes) {
@@ -32,9 +36,9 @@ void loadModelWithOffsets(const std::string& filePath, float xOffset, float yOff
             for (int j = 0; j < 3; j++) {
                 // Adjust X, Y, and Z coordinates by adding the respective offsets
                 Eigen::Vector4f adjustedPosition(
-                    mesh.Vertices[i + j].Position.X + xOffset,
-                    mesh.Vertices[i + j].Position.Y + yOffset,
-                    mesh.Vertices[i + j].Position.Z + zOffset,
+                    mesh.Vertices[i + j].Position.X + offset.x(),
+                    mesh.Vertices[i + j].Position.Y + offset.y(),
+                    mesh.Vertices[i + j].Position.Z + offset.z(),
                     1.0
                 );
 
@@ -50,16 +54,15 @@ void loadModelWithOffsets(const std::string& filePath, float xOffset, float yOff
 int main(int argc, const char **argv) {
 
     // Load OBJ models
+    // TODO: FIXME: LOAD MULTIPLE MODELS ON THE SAME SCREEN.
     std::vector<Triangle *> TriangleList;
-    loadModelWithOffsets(MODEL_OBJ_LOCATION, 0.0, 0.0, 0.0, TriangleList);
-    loadModelWithOffsets(GROUND_OBJ_LOCATION, 0.0, 0.0, 0.0, TriangleList);
+    loadModelWithOffsets(MODEL_OBJ_LOCATION, MODEL_OBJ_OFFSET, TriangleList);
+    loadModelWithOffsets(GROUND_OBJ_LOCATION, GROUND_OBJ_OFFSET, TriangleList);
 
     float angle = 0.0; 
-    rst::rasterizer r(700, 700);
 
-    //auto texture_path = "hmap.jpg";
-    //r.set_texture(Texture(obj_path + texture_path));
-    // TODO eye pos issue
+    // Window size is fixed to 700*700 (px)
+    rst::rasterizer r(700, 700);
 
     std::function<Eigen::Vector3f(fragment_shader_payload)> active_shader = snow_phong_fragment_shader;
 
@@ -68,7 +71,7 @@ int main(int argc, const char **argv) {
     // Set up lights
     Eigen::Vector3f center_intensity {CENTER_INTENSITY, CENTER_INTENSITY, CENTER_INTENSITY};
     Eigen::Vector3f side_intensity   {SIDE_INTENSITY, SIDE_INTENSITY, SIDE_INTENSITY};
-
+    
     auto L_E = light{{                    0, -CENTER_VERTICAL_DIST,                     0}, center_intensity};
     auto L_A = light{{ SIDE_HORIZONTAL_DIST,   -SIDE_VERTICAL_DIST,  SIDE_HORIZONTAL_DIST}, side_intensity};
     auto L_B = light{{ SIDE_HORIZONTAL_DIST,   -SIDE_VERTICAL_DIST, -SIDE_HORIZONTAL_DIST}, side_intensity};
