@@ -74,8 +74,8 @@ public:
 
     void clear(Buffers buff);
 
-    void draw(pos_buf_id pos_buffer, ind_buf_id ind_buffer, col_buf_id col_buffer,
-              Primitive type, bool culling = false, bool anti_aliasing = false);
+    //void draw(pos_buf_id pos_buffer, ind_buf_id ind_buffer, col_buf_id col_buffer,
+    //          Primitive type, bool culling = false, bool anti_aliasing = false);
     void draw(std::vector<Triangle*>& TriangleList, bool culling = false,
               Shading shading = Shading::Phong, bool shadown=false);
 
@@ -88,7 +88,7 @@ public:
 private:
     void draw_line(Eigen::Vector3f begin, Eigen::Vector3f end);
 
-    void rasterize_triangle(const Triangle& t, bool anti_aliasing = false);
+    //void rasterize_triangle(const Triangle& t, bool anti_aliasing = false);
     void rasterize_triangle(const Triangle& t,
                             const std::array<Eigen::Vector3f, 3>& world_pos,
                             const std::vector<light>& viewspace_lights,

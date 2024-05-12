@@ -14,26 +14,22 @@
 
 #include "MVP.hpp"
 
-// Function to load a model with XYZ offsets
+// Load a model with XYZ offsets.
 void loadModelWithOffsets(const std::string& filePath, Eigen::Vector3f offset, std::vector<Triangle*>& TriangleList) {
     
-    // TODO: FIXME: Use a vector for offset
     objl::Loader Loader;
     bool loadOut = Loader.LoadFile(filePath);
 
-    // If you see "Assertion `loadOut == true' failed. Aborted (core dumped)"
+    // If you see "Assertion `loadOut == true' failed. Aborted (core dumped)" error.
     // This means that the obj model cannot be loaded (e.g., file does not exist).
     assert(loadOut == true);
-    //if (!loadout) {
-    //    std::cerr << "Failed to load the file: " << filePath << std::endl;
-    //    return;
-    //}
 
     // Load meshes and apply offsets
     for (auto& mesh : Loader.LoadedMeshes) {
         for (size_t i = 0; i < mesh.Vertices.size(); i += 3) {
             Triangle* t = new Triangle();
             for (int j = 0; j < 3; j++) {
+                
                 // Adjust X, Y, and Z coordinates by adding the respective offsets
                 Eigen::Vector4f adjustedPosition(
                     mesh.Vertices[i + j].Position.X + offset.x(),

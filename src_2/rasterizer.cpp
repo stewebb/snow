@@ -162,6 +162,7 @@ static std::tuple<float, float, float> computeBarycentric2D(float x, float y, co
 }
 
 // Task1 Implement this function
+/*
 void rst::rasterizer::draw(pos_buf_id pos_buffer, ind_buf_id ind_buffer, col_buf_id col_buffer, Primitive type, bool culling, bool anti_aliasing) {
     
     auto &buf = pos_buf[pos_buffer.pos_id];
@@ -231,14 +232,15 @@ void rst::rasterizer::draw(pos_buf_id pos_buffer, ind_buf_id ind_buffer, col_buf
         t.setColor(1, col_y[0], col_y[1], col_y[2]);
         t.setColor(2, col_z[0], col_z[1], col_z[2]);
 
-        /*************** update below *****************/
         rasterize_triangle(t, anti_aliasing);
     }
     if (anti_aliasing){
         post_process_buffer();
     }
 }
+*/
 
+/**/
 void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, rst::Shading shading, bool shadow) {
     float f1 = (50 - 0.1) / 2.0;
     float f2 = (50 + 0.1) / 2.0;
@@ -263,7 +265,6 @@ void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, 
 
         std::transform(mm.begin(), mm.end(), viewspace_pos.begin(), [](auto &v) { return v.template head<3>(); });
 
-        // TODO: Task1 Enable back face culling
         if (culling) {
 
             Eigen::Vector3f A = viewspace_pos[0];
@@ -335,6 +336,7 @@ static Eigen::Vector2f interpolate(float alpha, float beta, float gamma, const E
 }
 
 // Task1: Implement this function
+/*
 void rst::rasterizer::rasterize_triangle(const Triangle &t, bool anti_aliasing) {
 
     auto v = t.toVector4();
@@ -435,6 +437,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, bool anti_aliasing) 
         }
     }
 }
+*/
 
 // Task2 Implement this function
 void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eigen::Vector3f, 3> &view_pos, const std::vector<light> &view_lights, rst::Shading shading, bool shadow) {
@@ -461,6 +464,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
     x_max = std::min(x_max+padding, width);
     y_max = std::min(y_max+padding, height);
    
+    /*
     // Flat shading
     if (shading == rst::Shading::Flat) {
 
@@ -543,8 +547,9 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
         }
     } 
     
+    */
     // Phong shading
-    else if (shading == rst::Shading::Phong) {
+    if (shading == rst::Shading::Phong) {
                 
         for(int x=x_min; x<x_max; x++){
             for(int y=y_min; y<y_max; y++){           
