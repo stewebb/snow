@@ -161,90 +161,10 @@ static std::tuple<float, float, float> computeBarycentric2D(float x, float y, co
     return {c1, c2, c3};
 }
 
-// Task1 Implement this function
-/*
-void rst::rasterizer::draw(pos_buf_id pos_buffer, ind_buf_id ind_buffer, col_buf_id col_buffer, Primitive type, bool culling, bool anti_aliasing) {
-    
-    auto &buf = pos_buf[pos_buffer.pos_id];
-    auto &ind = ind_buf[ind_buffer.ind_id];
-    auto &col = col_buf[col_buffer.col_id];
-
-    float f1 = (50 - 0.1) / 2.0;
-    float f2 = (50 + 0.1) / 2.0;
-
-    Eigen::Matrix4f mvp = projection * view * model;
-
-    for (auto &i : ind) {
-        Triangle t;
-
-        std::array<Eigen::Vector4f, 3> mm{view * model * to_vec4(buf[i[0]], 1.0f),
-                                          view * model * to_vec4(buf[i[1]], 1.0f),
-                                          view * model * to_vec4(buf[i[2]], 1.0f)};
-
-        std::array<Eigen::Vector3f, 3> viewspace_pos;
-
-        std::transform(mm.begin(), mm.end(), viewspace_pos.begin(), [](auto &v) { return v.template head<3>(); });
-
-        // Task1 Enable back face culling
-        if (culling) {
-
-            // Get the vertices of this triangle.
-            Eigen::Vector3f A = viewspace_pos[0];
-            Eigen::Vector3f B = viewspace_pos[1];
-            Eigen::Vector3f C = viewspace_pos[2];
-
-            // For a triangle ABC, the normal of it is N = AB cross product AC.
-            Eigen::Vector3f AB = B - A;
-            Eigen::Vector3f AC = C - A;
-            Eigen::Vector3f N = AB.cross(AC);
-
-            // The eye (camera) direction, which is negative Z (-Z)
-            Eigen::Vector3f P = Eigen::Vector3f {0, 0, -1};
-
-            // Discard triangles if N dot product P >= 0
-            // This means the triangle is facing away or perpendicular with camera direction.
-            if(N.dot(P) >= 0)   continue;
-        }
-
-        Eigen::Vector4f v[] = {mvp * to_vec4(buf[i[0]], 1.0f), mvp * to_vec4(buf[i[1]], 1.0f),
-                               mvp * to_vec4(buf[i[2]], 1.0f)};
-
-        // Homogeneous division
-        for (auto &vec : v) {
-            vec /= vec.w();
-        }
-        // Viewport transformation
-        for (auto &vert : v) {
-            vert.x() = 0.5 * width * (vert.x() + 1.0);
-            vert.y() = 0.5 * height * (vert.y() + 1.0);
-            vert.z() = vert.z() * f1 + f2;
-        }
-
-        for (int i = 0; i < 3; ++i) {
-            t.setVertex(i, v[i]);
-        }
-
-        auto col_x = col[i[0]];
-        auto col_y = col[i[1]];
-        auto col_z = col[i[2]];
-
-        t.setColor(0, col_x[0], col_x[1], col_x[2]);
-        t.setColor(1, col_y[0], col_y[1], col_y[2]);
-        t.setColor(2, col_z[0], col_z[1], col_z[2]);
-
-        rasterize_triangle(t, anti_aliasing);
-    }
-    if (anti_aliasing){
-        post_process_buffer();
-    }
-}
-*/
-
-/**/
 void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, rst::Shading shading, bool shadow) {
     float f1 = (50 - 0.1) / 2.0;
     float f2 = (50 + 0.1) / 2.0;
-    culling = true;
+    //culling = false;
 
     Eigen::Matrix4f mvp = projection * view * model;
 
@@ -265,6 +185,8 @@ void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, 
 
         std::transform(mm.begin(), mm.end(), viewspace_pos.begin(), [](auto &v) { return v.template head<3>(); });
 
+        // FIXME: The following Back-face culling code is partially incorrect.
+        // I can't disable it, otherwise the FPS is too low.
         if (culling) {
 
             Eigen::Vector3f A = viewspace_pos[0];
@@ -282,6 +204,7 @@ void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, 
         }
 
         Eigen::Vector4f v[] = {mvp * t->v[0], mvp * t->v[1], mvp * t->v[2]};
+
         // Homogeneous division
         for (auto &vec : v) {
             vec.x() /= vec.w();
@@ -290,8 +213,11 @@ void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, 
         }
 
         Eigen::Matrix4f inv_trans = (view * model).inverse().transpose();
-        Eigen::Vector4f n[] = {inv_trans * to_vec4(t->normal[0], 0.0f), inv_trans * to_vec4(t->normal[1], 0.0f),
-                               inv_trans * to_vec4(t->normal[2], 0.0f)};
+        Eigen::Vector4f n[] = {
+            inv_trans * to_vec4(t->normal[0], 0.0f), 
+            inv_trans * to_vec4(t->normal[1], 0.0f),
+            inv_trans * to_vec4(t->normal[2], 0.0f)
+        };
 
         // Viewport transformation
         for (auto &vert : v) {
@@ -309,12 +235,7 @@ void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, 
             // view space normal
             newtri.setNormal(i, n[i].head<3>());
         }
-
-        //newtri.setColor(0, 0, 0, 255);
-        //newtri.setColor(1, 0, 0, 255);
-        //newtri.setColor(2, 0, 0, 255);
-
-        // Also pass view space vertice position
+        
         rasterize_triangle(newtri, viewspace_pos, viewspace_lights, shading, shadow);
     }
 }
@@ -335,21 +256,19 @@ static Eigen::Vector2f interpolate(float alpha, float beta, float gamma, const E
     return Eigen::Vector2f(u, v);
 }
 
-// Task2 Implement this function
 void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eigen::Vector3f, 3> &view_pos, const std::vector<light> &view_lights, rst::Shading shading, bool shadow) {
     
+    // Find the texture of current object.
     Texture* currentTexture = nullptr;
     for (Texture* texture : textures) {
         if (texture != nullptr && texture->getObjectId() == t.objectId && texture->getHasTexture()) {
             currentTexture = texture;
         }
-    }
-
-    //std::cout << currentTexture << std::endl;
-    
+    }    
     
     auto v = t.toVector4();
 
+    // Find the boundary box.
     int x_min = std::numeric_limits<int>::max();
     int x_max = std::numeric_limits<int>::min();
     int y_min = std::numeric_limits<int>::max();
@@ -372,66 +291,67 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
     y_max = std::min(y_max+padding, height);
    
     // Phong shading
-    if (shading == rst::Shading::Phong) {
                 
-        for(int x=x_min; x<x_max; x++){
-            for(int y=y_min; y<y_max; y++){           
-                if(insideTriangle(x, y, t.v)){
+    for(int x=x_min; x<x_max; x++){
+        for(int y=y_min; y<y_max; y++){     
 
-                    auto[alpha, beta, gamma] = computeBarycentric2D(x+0.5, y+0.5, t.v);
-                    float w_reciprocal = 1.0/(alpha / v[0].w() + beta / v[1].w() + gamma /v[2].w());
-                    float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w(); 
-                    z_interpolated *= w_reciprocal;
+            if(insideTriangle(x, y, t.v)){
 
-                    // Interpolate everything for each pixel.
-                    Eigen::Vector3f color = alpha * t.color[0] + beta * t.color[1] + gamma * t.color[2];
-                    Eigen::Vector3f normal = alpha * t.normal[0] + beta * t.normal[1] + gamma * t.normal[2];
-                    Eigen::Vector2f texcoords = alpha * t.tex_coords[0] + beta * t.tex_coords[1] + gamma * t.tex_coords[2];
-                    Eigen::Vector3f shadingcoords = alpha * view_pos[0] + beta * view_pos[1] + gamma * view_pos[2];
+                auto[alpha, beta, gamma] = computeBarycentric2D(x+0.5, y+0.5, t.v);
+                float w_reciprocal = 1.0/(alpha / v[0].w() + beta / v[1].w() + gamma /v[2].w());
+                float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w(); 
+                z_interpolated *= w_reciprocal;
 
-                    int index = get_index(x, y);
-                    if(z_interpolated < depth_buf[index]){
-                        depth_buf[index] = z_interpolated;
+                // Interpolate everything for each pixel.
+                Eigen::Vector3f color = alpha * t.color[0] + beta * t.color[1] + gamma * t.color[2];
+                Eigen::Vector3f normal = alpha * t.normal[0] + beta * t.normal[1] + gamma * t.normal[2];
+                Eigen::Vector2f texcoords = alpha * t.tex_coords[0] + beta * t.tex_coords[1] + gamma * t.tex_coords[2];
+                Eigen::Vector3f shadingcoords = alpha * view_pos[0] + beta * view_pos[1] + gamma * view_pos[2];
+
+                // Z-buffer
+                int index = get_index(x, y);
+                if(z_interpolated < depth_buf[index]){
+                    depth_buf[index] = z_interpolated;
                         
-                        // pass them to the fragment_shader_payload
-                        fragment_shader_payload payload(
-                            color, normal.normalized(), texcoords, view_lights, currentTexture// ? &*currentTexture : nullptr
-                        ); 
-                        payload.view_pos = shadingcoords;
+                    // pass them to the fragment_shader_payload
+                    fragment_shader_payload payload(color, normal.normalized(), texcoords, view_lights, currentTexture); 
+                    payload.view_pos = shadingcoords;
 
-                        // Call the fragment shader to get the pixel color
-                        auto pixel_color = fragment_shader(payload);
+                    // Call the fragment shader to get the pixel color
+                    auto pixel_color = fragment_shader(payload);
                         
-                        if (shadow) {
+                    /*
+                    if (shadow) {
 
-                            // Find the relative position to the light source (by given shadow_projection and shadow_view)
-                            Eigen::Vector4f view_pos {shadingcoords[0], shadingcoords[1], shadingcoords[2], 1.0f};
-                            Eigen::Matrix4f mvp = shadow_projection * shadow_view * model.inverse();
-                            Eigen::Vector4f v = mvp * view_pos;
+                        // Find the relative position to the light source (by given shadow_projection and shadow_view)
+                        Eigen::Vector4f view_pos {shadingcoords[0], shadingcoords[1], shadingcoords[2], 1.0f};
+                        Eigen::Matrix4f mvp = shadow_projection * shadow_view * model.inverse();
+                        Eigen::Vector4f v = mvp * view_pos;
 
-                            // To homogeneous form!
-                            v = v / v[3];   
+                        // To homogeneous form!
+                        v = v / v[3];   
 
-                            // Depth value of shadow depth map
-                            float z_A = shadow_buf[index];
+                        // Depth value of shadow depth map
+                        float z_A = shadow_buf[index];
 
-                            // Depth value of the relative position 
-                            float f1 = (50 - 0.1) / 2.0;
-                            float f2 = (50 + 0.1) / 2.0;
-                            float z_B = v.z() * f1 + f2;
+                        // Depth value of the relative position 
+                        float f1 = (50 - 0.1) / 2.0;
+                        float f2 = (50 + 0.1) / 2.0;
+                        float z_B = v.z() * f1 + f2;
 
-                            // Draw shadow
-                            if(z_B > z_A)   pixel_color *= 0.3;
-                        }
-                        
-                        set_pixel(Vector2i(x, y), pixel_color);
+                        // Draw shadow
+                        if(z_B > z_A)   pixel_color *= 0.3;
                     }
-
+                    */
+                        
+                    set_pixel(Vector2i(x, y), pixel_color);
                 }
+
             }
         }
-        
     }
+        
+    
 }
 
 void rst::rasterizer::set_model(const Eigen::Matrix4f &m) {
@@ -463,6 +383,7 @@ void rst::rasterizer::clear(rst::Buffers buff) {
         std::fill(frame_buf.begin(), frame_buf.end(), Eigen::Vector3f{0, 0, 0});
         std::fill(ssaa_frame_buf.begin(), ssaa_frame_buf.end(), Eigen::Vector3f{0, 0, 0});
     }
+
     if ((buff & rst::Buffers::Depth) == rst::Buffers::Depth) {
         std::fill(depth_buf.begin(), depth_buf.end(), std::numeric_limits<float>::infinity());
         std::fill(ssaa_depth_buf.begin(), ssaa_depth_buf.end(), std::numeric_limits<float>::infinity());
