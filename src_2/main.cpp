@@ -89,8 +89,6 @@ int main(int argc, const char **argv) {
     r.set_vertex_shader(vertex_shader);
     r.set_fragment_shader(active_shader);
 
-
-
     //r.set_texture(Texture("../../models/grass.jpg"));
     r.setTextures(TextureList);
 

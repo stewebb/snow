@@ -44,44 +44,24 @@ typedef unsigned char u08;
 #define SIDE_HORIZONTAL_DIST    10   // Horizontal distance for lights A, B, C, D
 #define SIDE_VERTICAL_DIST      10   // Vertical distance for lights A, B, C, D
 
+#define EYE_POS {10, 10, 10}
+
 /**
- * Models
- * Pick ONE MODEL ONLY and place to the scene. 
+ * A football model
 */
 
-// Stanford Bunny
-//#define MODEL_OBJ_LOCATION "../../common_models/stanford-bunny.obj"
-//#define EYE_POS {10, 10, 10}
-//#define MODEL_OBJ_OFFSET {0, 0, 0}
-
-// Football
 #define MODEL_OBJECT_ID 1
-#define MODEL_OBJ_LOCATION "../../models/football2.obj"
-#define EYE_POS {10, 10, 10}
+#define MODEL_OBJ_LOCATION "../../models/football.obj"
 #define MODEL_OBJ_OFFSET {0, 1.5, 0}
 #define MODEL_HAS_TEXTURE false
 #define MODEL_TEXTURE_MAP ""
 
-// Teapot
-//#define MODEL_OBJ_LOCATION "../../common_models/teapot.obj"
-//#define EYE_POS {10, 10, 10}
-//#define MODEL_OBJ_OFFSET {0, 0, 0}
-
-// Happy
-//#define MODEL_OBJ_LOCATION "../../common_models/happy.obj"
-//#define EYE_POS {0, 0.4, -0.2}
-
-// Spot
-//#define MODEL_OBJ_LOCATION "../../common_models/spot_good.obj"
-//#define EYE_POS {10, 10, 10}
-//#define MODEL_OBJ_OFFSET {0, 1, 0}
-
 /**
- * Ground
+ * A grass ground model
 */
 
 #define GROUND_OBJECT_ID 0
-#define GROUND_OBJ_LOCATION "../../models/d.obj"
+#define GROUND_OBJ_LOCATION "../../models/grass.obj"
 #define GROUND_OBJ_OFFSET {0, -1, 0}
 #define GROUND_HAS_TEXTURE true
 #define GROUND_TEXTURE_MAP "../../models/grass.jpg"
