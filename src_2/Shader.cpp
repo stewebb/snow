@@ -26,7 +26,7 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &payload) {
         float u = payload.tex_coords[0];
         float v = payload.tex_coords[1];
 
-        std::cout << u << " " << v << std::endl;
+        //std::cout << u << " " << v << std::endl;
 
         // u-v should between [0, 1], restrain values to avoid errors.
         if(u < 0.0f)   u = 0.0f;

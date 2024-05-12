@@ -76,7 +76,7 @@ typedef unsigned char u08;
 /**
  * Ground
 */
-#define GROUND_OBJ_LOCATION "../../models/grass8.obj"
+#define GROUND_OBJ_LOCATION "../../models/d.obj"
 #define GROUND_OBJ_OFFSET {0, -1, 0}
 
 // Snow color, in RGB format (white with a higher blue part)
