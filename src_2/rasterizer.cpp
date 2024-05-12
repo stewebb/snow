@@ -161,7 +161,7 @@ static std::tuple<float, float, float> computeBarycentric2D(float x, float y, co
     return {c1, c2, c3};
 }
 
-void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, rst::Shading shading, bool shadow) {
+void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, bool shadow) {
     float f1 = (50 - 0.1) / 2.0;
     float f2 = (50 + 0.1) / 2.0;
     //culling = false;
@@ -236,7 +236,7 @@ void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, 
             newtri.setNormal(i, n[i].head<3>());
         }
         
-        rasterize_triangle(newtri, viewspace_pos, viewspace_lights, shading, shadow);
+        rasterize_triangle(newtri, viewspace_pos, viewspace_lights, shadow);
     }
 }
 
@@ -256,7 +256,7 @@ static Eigen::Vector2f interpolate(float alpha, float beta, float gamma, const E
     return Eigen::Vector2f(u, v);
 }
 
-void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eigen::Vector3f, 3> &view_pos, const std::vector<light> &view_lights, rst::Shading shading, bool shadow) {
+void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eigen::Vector3f, 3> &view_pos, const std::vector<light> &view_lights, bool shadow) {
     
     // Find the texture of current object.
     Texture* currentTexture = nullptr;
@@ -290,8 +290,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
     x_max = std::min(x_max+padding, width);
     y_max = std::min(y_max+padding, height);
    
-    // Phong shading
-                
+    // Perform Phong shading           
     for(int x=x_min; x<x_max; x++){
         for(int y=y_min; y<y_max; y++){     
 

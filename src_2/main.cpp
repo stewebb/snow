@@ -94,6 +94,7 @@ int main(int argc, const char **argv) {
 
     int key = 0;
     int frame_count = 0;
+    auto start = std::chrono::high_resolution_clock::now();
 
     while (key != 27) {
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
@@ -103,14 +104,26 @@ int main(int argc, const char **argv) {
         r.set_projection(get_projection_matrix(45.0, 1, 0.1, 50));
         r.set_lights(lights);
 
-        r.draw(TriangleList, true, rst::Shading::Phong);
+        r.draw(TriangleList, true);
         cv::Mat image(700, 700, CV_32FC3, r.frame_buffer().data());
         image.convertTo(image, CV_8UC3, 1.0f);
         cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
 
-        cv::imshow("image", image);
-        //cv::imwrite(filename, image);
-        key = cv::waitKey(16);  // 60 FPS
+        // Calculate FPS (Frames per second)
+        frame_count++;
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = end - start;
+        float fps = 1.0 / elapsed.count();
+        start = end;
+
+        // Display statistical information.
+        std::string eyePosText = "Eye Position: (" + std::to_string(int(eye_pos.x())) + ", " + std::to_string(int(eye_pos.y())) + ", " + std::to_string(int(eye_pos.z())) + ")";
+        std::string fpsText = "FPS: " + std::to_string(int(fps));
+        cv::putText(image, eyePosText, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+        cv::putText(image, fpsText, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+
+        cv::imshow("Snow", image);
+        key = cv::waitKey(16);
         angle += 5;
 
         // Key operations
@@ -122,6 +135,8 @@ int main(int argc, const char **argv) {
         else if (key == 'e') { eye_pos.z() += 1; } 
         else if (key == 'j') { angle += 10; } 
         else if (key == 'k') { angle -= 10; }
+
+        //frame_count++;
 
         //std::cout << "frame count: " << frame_count++ << std::endl;
         //std::cout << "eye_pos: " << eye_pos.transpose() << std::endl;
