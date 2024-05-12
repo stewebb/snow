@@ -12,6 +12,9 @@ public:
     Texture(const std::string& name)
     {
         image_data = cv::imread(name);
+
+        //std::cout << image_data << std::endl;
+
         cv::cvtColor(image_data, image_data, cv::COLOR_RGB2BGR);
         width = image_data.cols;
         height = image_data.rows;
