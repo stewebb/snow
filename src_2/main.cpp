@@ -127,6 +127,7 @@ int main(int argc, const char **argv) {
         else if (key == 'e') { eye_pos.z() += 1; } 
         else if (key == 'j') { angle += 10; } 
         else if (key == 'k') { angle -= 10; }
+        else if (key == ' ') {cv::imwrite("snow.png", image); }
     }
 
     return 0;
