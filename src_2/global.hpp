@@ -1,6 +1,6 @@
 
-#ifndef RASTERIZER_GLOBAL_H
-#define RASTERIZER_GLOBAL_H
+#ifndef GLOBAL_H
+#define GLOBAL_H
 
 typedef unsigned char u08;
 
@@ -51,24 +51,27 @@ typedef unsigned char u08;
 
 // Stanford Bunny
 //#define MODEL_OBJ_LOCATION "../../common_models/stanford-bunny.obj"
-//#define EYE_POS {0.25, 0.25, 0.25}
+//#define EYE_POS {10, 10, 10}
+//#define MODEL_OBJ_OFFSET {0, 0, 0}
 
 // Football
 //#define MODEL_OBJ_LOCATION "../../common_models/football.obj"
-//#define EYE_POS {9, 6, 0}
+//#define EYE_POS {10, 10, 10}
+//#define MODEL_OBJ_OFFSET {0, 1, 0}
 
 // Teapot
-#define MODEL_OBJ_LOCATION "../../common_models/teapot.obj"
-#define EYE_POS {10, 10, 10}
-#define MODEL_OBJ_OFFSET {0, 0, 0}
+//#define MODEL_OBJ_LOCATION "../../common_models/teapot.obj"
+//#define EYE_POS {10, 10, 10}
+//#define MODEL_OBJ_OFFSET {0, 0, 0}
 
 // Happy
 //#define MODEL_OBJ_LOCATION "../../common_models/happy.obj"
 //#define EYE_POS {0, 0.4, -0.2}
 
 // Spot
-//#define MODEL_OBJ_LOCATION "../models/spot/spot_triangulated_good.obj"
-//#define EYE_POS {10, 10, 10}
+#define MODEL_OBJ_LOCATION "../models/spot/spot_triangulated_good.obj"
+#define EYE_POS {10, 10, 10}
+#define MODEL_OBJ_OFFSET {0, 0, 0}
 
 /**
  * Ground
@@ -81,4 +84,4 @@ typedef unsigned char u08;
 
 #define DISTORTION_SCALAR 0.1
 
-#endif //RASTERIZER_GLOBAL_H
+#endif // GLOBAL_H

@@ -15,7 +15,7 @@
 #include "MVP.hpp"
 
 // Load a model with XYZ offsets.
-void loadModelWithOffsets(const std::string& filePath, Eigen::Vector3f offset, std::vector<Triangle*>& TriangleList) {
+void loadModel(const std::string& filePath, Eigen::Vector3f offset, std::vector<Triangle*>& TriangleList) {
     
     objl::Loader Loader;
     bool loadOut = Loader.LoadFile(filePath);
@@ -52,8 +52,8 @@ int main(int argc, const char **argv) {
     // Load OBJ models
     // TODO: FIXME: LOAD MULTIPLE MODELS ON THE SAME SCREEN.
     std::vector<Triangle *> TriangleList;
-    loadModelWithOffsets(MODEL_OBJ_LOCATION, MODEL_OBJ_OFFSET, TriangleList);
-    loadModelWithOffsets(GROUND_OBJ_LOCATION, GROUND_OBJ_OFFSET, TriangleList);
+    loadModel(MODEL_OBJ_LOCATION, MODEL_OBJ_OFFSET, TriangleList);
+    loadModel(GROUND_OBJ_LOCATION, GROUND_OBJ_OFFSET, TriangleList);
 
     float angle = 0.0; 
 
