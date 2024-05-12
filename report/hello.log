@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.5.12)  12 MAY 2024 20:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.5.12)  12 MAY 2024 20:47
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -63,9 +63,9 @@ Here is how much of TeX's memory you used:
  14 hyphenation exceptions out of 8191
  34i,5n,38p,169b,117s stack positions out of 5000i,500n,10000p,200000b,80000s
  </usr/share/texlive/texmf-dist/fonts/pk/ljfour/public/cm/dpi600/cmr10.pk>
-Output written on hello.pdf (1 page, 5096 bytes).
+Output written on hello.pdf (1 page, 5755 bytes).
 PDF statistics:
- 27 PDF objects out of 1000 (max. 8388607)
+ 29 PDF objects out of 1000 (max. 8388607)
  8 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)

@@ -2,7 +2,6 @@
 #include <opencv2/opencv.hpp>
 #include <string>
 #include <vector>
-//#include <random>
 
 #include "Eigen/Dense"
 #include "OBJ_Loader.h"
@@ -15,7 +14,7 @@
 #include "MVP.hpp"
 
 // Load a model with XYZ offsets.
-void loadModel(const std::string& filePath, Eigen::Vector3f offset, std::vector<Triangle*>& TriangleList) {
+void loadModel(int objectId, const std::string& filePath, Eigen::Vector3f offset, std::vector<Triangle*>& TriangleList) {
     
     objl::Loader Loader;
     bool loadOut = Loader.LoadFile(filePath);
@@ -38,6 +37,7 @@ void loadModel(const std::string& filePath, Eigen::Vector3f offset, std::vector<
                     1.0
                 );
 
+                t->setObjectId(objectId);
                 t->setVertex(j, adjustedPosition);
                 t->setNormal(j, Eigen::Vector3f(mesh.Vertices[i + j].Normal.X, mesh.Vertices[i + j].Normal.Y, mesh.Vertices[i + j].Normal.Z));
                 t->setTexCoord(j, Eigen::Vector2f(mesh.Vertices[i + j].TextureCoordinate.X, mesh.Vertices[i + j].TextureCoordinate.Y));
@@ -46,10 +46,6 @@ void loadModel(const std::string& filePath, Eigen::Vector3f offset, std::vector<
                 for(int k=0; k<3; k++){
                     t->setColor(k, mesh.MeshMaterial.Kd.X * 255, mesh.MeshMaterial.Kd.Y * 255, mesh.MeshMaterial.Kd.Z * 255);
                 }
-                //t->setColor(0, mesh.MeshMaterial.Kd.X*255, mesh.MeshMaterial.Kd.Y*255, mesh.MeshMaterial.Kd.Z*255);
-                //t->setColor(1, mesh.MeshMaterial.Kd.X*255, mesh.MeshMaterial.Kd.Y*255, mesh.MeshMaterial.Kd.Z*255);
-                //t->setColor(2, mesh.MeshMaterial.Kd.X*255, mesh.MeshMaterial.Kd.Y*255, mesh.MeshMaterial.Kd.Z*255);
-                //std::cout << mesh.MeshMaterial.Kd.X << std::endl;
             }
             TriangleList.push_back(t);
         }
@@ -62,7 +58,7 @@ int main(int argc, const char **argv) {
     // TODO: FIXME: LOAD MULTIPLE MODELS ON THE SAME SCREEN.
     std::vector<Triangle *> TriangleList;
     //loadModel(MODEL_OBJ_LOCATION, MODEL_OBJ_OFFSET, TriangleList);
-    loadModel(GROUND_OBJ_LOCATION, GROUND_OBJ_OFFSET, TriangleList);
+    loadModel(GROUND_OBJECT_ID, GROUND_OBJ_LOCATION, GROUND_OBJ_OFFSET, TriangleList);
 
     float angle = 0.0; 
 

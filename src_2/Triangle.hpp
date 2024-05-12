@@ -9,6 +9,7 @@ using namespace Eigen;
   class Triangle {
 
 public:
+  int objectId;
   Vector4f v[3]; /*the original coordinates of the triangle, v0, v1, v2 in
                     counter clockwise order*/
   /*Per vertex values*/
@@ -23,6 +24,7 @@ public:
   Eigen::Vector4f b() const { return v[1]; }
   Eigen::Vector4f c() const { return v[2]; }
 
+  void setObjectId(int objectId);
   void setVertex(int ind, Vector4f ver); /*set i-th vertex coordinates */
   void setNormal(int ind, Vector3f n);   /*set i-th vertex normal vector*/
   void setColor(int ind, float r, float g, float b); /*set i-th vertex color*/
