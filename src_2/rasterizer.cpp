@@ -185,8 +185,6 @@ void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, 
 
         std::transform(mm.begin(), mm.end(), viewspace_pos.begin(), [](auto &v) { return v.template head<3>(); });
 
-        // FIXME: The following Back-face culling code is partially incorrect.
-        // I can't disable it, otherwise the FPS is too low.
         if (culling) {
 
             Eigen::Vector3f A = viewspace_pos[0];
@@ -197,8 +195,7 @@ void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, 
             Eigen::Vector3f AC = C - A;
             Eigen::Vector3f N = AB.cross(AC);
 
-            Eigen::Vector3f P = Eigen::Vector3f {0, 0, -1};
-            if(N.dot(P) >= 0){
+            if(N.dot(A) >= 0){
                 continue;
             }
         }
