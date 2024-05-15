@@ -76,7 +76,7 @@ int main(int argc, const char **argv) {
     std::vector<light> lights = {L_E, L_A, L_B, L_C, L_D};
 
     // Set up scene
-    rst::rasterizer r(700, 700);
+    rst::rasterizer r(WINDOW_WIDTH, WINDOW_HEIGHT);
     r.set_vertex_shader(vertex_shader);
     r.set_fragment_shader(phong_fragment_shader);
     r.setTextures(TextureList);
@@ -97,7 +97,7 @@ int main(int argc, const char **argv) {
         r.set_lights(lights);
 
         r.draw(TriangleList, true);
-        cv::Mat image(700, 700, CV_32FC3, r.frame_buffer().data());
+        cv::Mat image(WINDOW_HEIGHT, WINDOW_WIDTH, CV_32FC3, r.frame_buffer().data());
         image.convertTo(image, CV_8UC3, 1.0f);
         cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
 
@@ -130,5 +130,6 @@ int main(int argc, const char **argv) {
         else if (key == ' ') {cv::imwrite("snow.png", image); }
     }
 
+    cv::destroyWindow("Snow");
     return 0;
 }

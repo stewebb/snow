@@ -8,6 +8,13 @@ typedef unsigned char u08;
 #define TWO_PI (2.0* MY_PI)
 
 /**
+ * Window width and height. They should equal.
+*/
+
+#define WINDOW_WIDTH    512
+#define WINDOW_HEIGHT   512
+
+/**
  * Lighting Configuration for Object Illumination
  *
  * This setup includes five lights (A-E) arranged to optimally illuminate an object from above.
