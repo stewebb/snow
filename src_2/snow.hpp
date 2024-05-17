@@ -4,4 +4,6 @@
 #include <Eigen/Eigen>
 #include <random>
 
+float inclination(Eigen::Vector3f N);
+
 #endif // SHOW_HPP

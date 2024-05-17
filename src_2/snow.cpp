@@ -1,5 +1,6 @@
 #include "snow.hpp"
 #include "global.hpp"
+#include <iostream>
 
 /**
  * Calculate the inclination value f_inc.
@@ -9,16 +10,19 @@
  * @return The inclination value.
 */
 
-float inclination(Eigen::Vector3f U, Eigen::Vector3f N, float n){
+std::random_device rd;
+std::uniform_real_distribution<> inclination_random_dis(0.0, 0.4);
+std::mt19937 inclination_random_gen(rd());
 
-    // Normalize vectors, ||U|| = ||N|| = 1
-    U = U.normalized();
-    N = N.normalized();
+float inclination(Eigen::Vector3f N){
+    float mag = N.norm();
+    if (mag < 0.001) return 0.0f;
+    Eigen::Vector3f U = Eigen::Vector3f(0, 0, 1);
+    float cosTheta = U.dot(N) / N.norm();
+    if (cosTheta < 0) return 0.0f;
 
-    // U.dot(n) is cos(Θ)
-    float UN = U.dot(N);
-    return UN >= 0 ? UN + n : 0.0f;
-    //return std::max(UN+n, 0.0f);
+    float n = inclination_random_dis(inclination_random_gen);
+    return std::min(cosTheta + n, 1.0f);
 }
 
 /**
@@ -27,13 +31,13 @@ float inclination(Eigen::Vector3f U, Eigen::Vector3f N, float n){
 */
 
 float exposure(){
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<> dis(0.0, 1.0);
+}
 
-    // ---- FIXME: ----
-    return dis(gen);
-    // ---- FIXME: ----
+/**
+ * Calculate the prediction value f_p
+*/
+float prediction(Eigen::Vector3f N) {
+    return exposure() * inclination(N);
 }
 
 //std::random_device rd;  // Will be used to obtain a seed for the random number engine

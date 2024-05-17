@@ -88,15 +88,22 @@ int main(int argc, const char **argv) {
     auto start = std::chrono::high_resolution_clock::now();
     Eigen::Vector3f eye_pos = EYE_POS;
 
+    r.set_occlusion_view(get_view_matrix(Eigen::Vector3f(0, 0, 1)));
+
     while (key != 27) {
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
 
         r.set_model(get_model_matrix(angle, {0, 1, 0}, {0, 0, 0}));
+
+        // calculate occlusion map
+        r.set_occlusion_view(get_view_matrix({0, 0, 100}));
+        r.draw_occlusion_map(TriangleList, false);
+
         r.set_view(get_view_matrix(eye_pos));
         r.set_projection(get_projection_matrix(45.0, 1, 0.1, 50));
         r.set_lights(lights);
 
-        r.draw(TriangleList, true);
+        r.draw(TriangleList, true, false, true);
         cv::Mat image(WINDOW_HEIGHT, WINDOW_WIDTH, CV_32FC3, r.frame_buffer().data());
         image.convertTo(image, CV_8UC3, 1.0f);
         cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
