@@ -225,7 +225,7 @@ void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, 
             newtri.setNormal(i, n[i].head<3>());
         }
         
-        rasterize_triangle(newtri, viewspace_pos, viewspace_lights, shadow, snow);
+        rasterize_triangle(newtri, t->a(), viewspace_pos, viewspace_lights, shadow, snow);
     }
 }
 
@@ -235,6 +235,9 @@ void rst::rasterizer::draw_occlusion_map(std::vector<Triangle *> &TriangleList, 
 
     Eigen::Matrix4f mvp = occlusion_view * model;
     for (const auto &t : TriangleList) {
+
+        //std::cout << t->a().transpose() << std::endl;
+
         Triangle newtri = *t;
 
         std::array<Eigen::Vector4f, 3> mm{(occlusion_view * model * t->v[0]),
@@ -247,6 +250,13 @@ void rst::rasterizer::draw_occlusion_map(std::vector<Triangle *> &TriangleList, 
                        [](auto &v) { return v.template head<3>(); });
 
         /**/
+
+        Eigen::Vector3f A = occlusionspace_pos[0];
+        Eigen::Vector3f B = occlusionspace_pos[1];
+        Eigen::Vector3f C = occlusionspace_pos[2];
+
+        //std::cout << A.z() << " " << B.z() << " " << C.z() << std::endl;
+
         if (culling) {
 
             Eigen::Vector3f A = occlusionspace_pos[0];
@@ -341,7 +351,11 @@ struct rast_px_info_all {
     }
 };
 
-void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eigen::Vector3f, 3> &view_pos, const std::vector<light> &view_lights, bool shadow, bool snow) {
+void rst::rasterizer::rasterize_triangle(const Triangle &t, 
+                                            Eigen::Vector4f real_3d_pos,
+                                            const std::array<Eigen::Vector3f, 3> &view_pos, 
+                                            const std::vector<light> &view_lights, 
+                                            bool shadow, bool snow) {
     
     // Find the texture of current object.
     Texture* currentTexture = nullptr;
@@ -388,9 +402,18 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
         for (int y = y_min; y <= y_max; y++){     
 
             if (insideTriangle(x + 0.5, y + 0.5, t.v)){
+
                 // Z-buffer
                 float z_interpolated = cur_px.z_numerator / cur_px.w_denominator;
                 int index = get_index(x, y);
+
+                if(!snow){
+                    if(real_3d_pos.z() > occlusion_buf[index]){
+                        //std::cout << occlusion_buf[index] << std::endl;
+                        occlusion_buf[index] = real_3d_pos.z();
+                    }
+                }
+
                 if(z_interpolated < depth_buf[index]){
                     depth_buf[index] = z_interpolated;
 
@@ -474,9 +497,46 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
                         pixel_color = fp * snow_color + (1 - fp) * pixel_color;
                         if (iters % 1000000 == 1) std::cout << "pixel_color: " << pixel_color << std::endl;
                     }
+
+                    //if(snow && z_interpolated < occlusion_buf[index]){
+                    //    std::cout << "234" << std::endl;
+                    //}
                         
                     //std::cout << pixel_color << std::endl;
+                    //std::cout << depth_buf[index] << std::endl;
+
+                    //auto max_it = std::max_element(depth_buf.begin(), depth_buf.end());
+
+                    //if (max_it != depth_buf.end()) {
+                    //    std::cout << "The maximum value is " << *max_it << std::endl;
+
+                        //if(depth_buf[index] == max_it){
+
+                        //}
+                    //}
+
+
+                    //if(depth_buf[index] == max_it.){
+                        //std::cout << depth_buf[index] << std::endl;
+                        //set_pixel(Vector2i(x, y), Eigen::Vector3f(255, 0, 0));
+                    //}
+                    //else{
+
+                    //std::cout << real_3d_pos.z() << " " << occlusion_buf[index] << std::endl;
+
+                    //if(snow && z_interpolated < occlusion_buf[index]){
+                    //    set_pixel(Vector2i(x, y), Eigen::Vector3f(255, 0, 0));
+                    //}
+
+                    if(real_3d_pos.z() < occlusion_buf[index]){
+                        std::cout << real_3d_pos.z() << " " << occlusion_buf[index] << std::endl;
+                        set_pixel(Vector2i(x, y), Eigen::Vector3f(255, 0, 0));
+                        //occlusion_buf[index] = real_3d_pos.z();
+                    }
+
+                    else{
                     set_pixel(Vector2i(x, y), pixel_color);
+                    }
                 }
             }
             // update interpolated values for next pixel
@@ -592,6 +652,14 @@ void rst::rasterizer::set_shadow_buffer(const std::vector<float> &shadow_buffer)
     std::copy(shadow_buffer.begin(), shadow_buffer.end(), this->occlusion_map.begin());
 }
 
+void rst::rasterizer::set_occlusion_buffer(const std::vector<float> &occlusion_buffer) {
+    std::fill(occlusion_buf.begin(), occlusion_buf.end(), std::numeric_limits<float>::infinity() * -1);
+    //std::copy(occlusion_buffer.begin(), occlusion_buffer.end(), this->occlusion_buf.begin());
+    //occlusion_buf.resize(w * h);
+
+    //std::cout << occlusion_buf[0] << "1111111111111" << std::endl;
+}
+
 void rst::rasterizer::clear(rst::Buffers buff) {
     if ((buff & rst::Buffers::Color) == rst::Buffers::Color) {
         std::fill(frame_buf.begin(), frame_buf.end(), Eigen::Vector3f(BACKGROUND_COLOR));
@@ -599,6 +667,9 @@ void rst::rasterizer::clear(rst::Buffers buff) {
     }
 
     if ((buff & rst::Buffers::Depth) == rst::Buffers::Depth) {
+
+        //std::fill(occlusion_buf.begin(), occlusion_buf.end(), std::numeric_limits<float>::infinity());
+
         std::fill(depth_buf.begin(), depth_buf.end(), std::numeric_limits<float>::infinity());
         std::fill(ssaa_depth_buf.begin(), ssaa_depth_buf.end(), std::numeric_limits<float>::infinity());
     }
@@ -607,6 +678,8 @@ void rst::rasterizer::clear(rst::Buffers buff) {
 rst::rasterizer::rasterizer(int w, int h) : width(w), height(h) {
     frame_buf.resize(w * h);
     depth_buf.resize(w * h);
+    occlusion_buf.resize(w * h);
+
     occlusion_map.resize(w * h);
     ssaa_frame_buf.resize(4 * w * h);
     ssaa_depth_buf.resize(4 * w * h);

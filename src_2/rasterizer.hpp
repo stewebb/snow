@@ -60,6 +60,7 @@ namespace rst {
         void set_occlusion_view(const Eigen::Matrix4f& s);
         void set_view_to_occlusion();
         void set_shadow_buffer(const std::vector<float>& shadow_buffer);
+        void set_occlusion_buffer(const std::vector<float>& occlusion);
 
         Eigen::Matrix4f shadow_projection;
 
@@ -91,7 +92,7 @@ namespace rst {
         }
 
         std::vector<float>&occlusion_buffer(){
-            return occlusion_map;
+            return occlusion_buf;
         }
 
     private:
@@ -99,6 +100,7 @@ namespace rst {
 
         //void rasterize_triangle(const Triangle& t, bool anti_aliasing = false);
         void rasterize_triangle(const Triangle& t,
+                                Eigen::Vector4f real_3d_pos,
                                 const std::array<Eigen::Vector3f, 3>& world_pos,
                                 const std::vector<light>& viewspace_lights,
                                 bool shadow=false,
