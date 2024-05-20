@@ -472,6 +472,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
                         if (iters % 1000000 == 1) std::cout << "pixel_color: " << pixel_color << std::endl;
                     }
                         
+                    //std::cout << pixel_color << std::endl;
                     set_pixel(Vector2i(x, y), pixel_color);
                 }
             }
@@ -590,8 +591,8 @@ void rst::rasterizer::set_shadow_buffer(const std::vector<float> &shadow_buffer)
 
 void rst::rasterizer::clear(rst::Buffers buff) {
     if ((buff & rst::Buffers::Color) == rst::Buffers::Color) {
-        std::fill(frame_buf.begin(), frame_buf.end(), Eigen::Vector3f{0, 0, 0});
-        std::fill(ssaa_frame_buf.begin(), ssaa_frame_buf.end(), Eigen::Vector3f{0, 0, 0});
+        std::fill(frame_buf.begin(), frame_buf.end(), Eigen::Vector3f(BACKGROUND_COLOR));
+        std::fill(ssaa_frame_buf.begin(), ssaa_frame_buf.end(), Eigen::Vector3f(BACKGROUND_COLOR));
     }
 
     if ((buff & rst::Buffers::Depth) == rst::Buffers::Depth) {

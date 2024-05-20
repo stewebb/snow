@@ -4,7 +4,7 @@ You may experience the following error on some **Linux-based** operating systems
 symbol lookup error: /snap/core20/current/lib/x86_64-linux-gnu/libpthread.so.0: undefined symbol: __libc_pthread_init, version GLIBC_PRIVATE
 ```
 
-To solve the issue, **run the following command **below before **running** the c**ode**.
+To solve the issue, **run the following command below before running the code**.
 
 ```sh
 unset GTK_PATH
