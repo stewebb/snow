@@ -115,28 +115,36 @@ int main(int argc, const char **argv) {
 
 
         bool snow = true;
-        if(snow){
+        bool shadow = true;
+
+        /*
+        
+        if(shadow){
 
             r.clear(rst::Buffers::Color | rst::Buffers::Depth);
             r.set_model(get_model_matrix(angle, {0, 1, 0}, {0, 0, 0}));
 
             // Eye position is the light source
-            //Eigen::Vector3f shadow_eye_pos = light_position;
-            //Eigen::Matrix4f shadow_view = get_view_matrix(shadow_eye_pos);
-            //Eigen::Matrix4f shadow_proj = get_projection_matrix(45.0, 1, 0.1, 50);
+            Eigen::Vector3f shadow_eye_pos = eye_pos;
+            Eigen::Matrix4f shadow_view = get_view_matrix(shadow_eye_pos);
+            Eigen::Matrix4f shadow_proj = get_projection_matrix(45.0, 1, 0.1, 50);
 
-            r.set_view(get_view_matrix(eye_pos));
-            r.set_projection(get_projection_matrix(45.0, 1, 0.1, 50));
+            r.set_view(shadow_view);
+            r.set_projection(shadow_proj);
             r.set_lights(lights);
-            r.set_occlusion_buffer(r.depth_buffer());
             r.draw(TriangleList, true, false, false);
 
             // Set and store shadow depth buffer, shadow view and shadow projection.
-            //r.set_shadow_buffer(r.depth_buffer());
-            //r.set_shadow_view(shadow_view);
-            //r.shadow_projection = shadow_proj;
+            r.set_shadow_buffer(r.depth_buffer());
+            r.set_shadow_view(shadow_view);
+            r.shadow_projection = shadow_proj;
         }
 
+        */
+
+
+
+        
         int minute_count = frame_count % 1440;
         auto current_minute = data[minute_count];
 
@@ -145,52 +153,17 @@ int main(int argc, const char **argv) {
         r.set_model(get_model_matrix(angle, {0, 1, 0}, {0, 0, 0}));
 
         // calculate occlusion map
-        r.set_occlusion_view(get_view_matrix({0, 0, 100}));
-
-
+        r.set_occlusion_view(get_view_matrix({0, 0, 10}));
         r.draw_occlusion_map(TriangleList, false);
-        //std::cout << r.occlusion_buffer() << std::endl;
+
 
         r.set_view(get_view_matrix(eye_pos));
         r.set_projection(get_projection_matrix(45.0, 1, 0.1, 50));
+
         r.set_lights(lights);
 
-        //r.draw(TriangleList, true, false, true);
-
-
-        //auto of = r.occlusion_buffer();
-        //for(float o : of){
-        //    //if(o != 0){
-        //        std::cout << o << " ";
-        //    //}
-        //}
-        //std::cout << std::endl;
-
-        //std::vector<float> depth = r.depth_buffer();
-        //auto max_depth = std::max_element(depth.begin(), depth.end());
-        //std::cout << *max_depth << std::endl;
-
-        //std::sort(depth.begin(), depth.end());
-        // Access the second-to-last element
-        //std::cout << "The second maximum value is " << depth[depth.size() - 2] << std::endl;
-
-        //for(float o : df){
-        //    if(o < 100){
-        //        std::cout << o << " " << std::endl;
-        //    }
-        //}
-        //std::cout << std::endl;
-
-        //r.set_occlusion_buffer(r.depth_buffer());
-        //auto of = r.occlusion_buffer();
-        //for(float o : of){
-        //    if(o < 1000){
-        //        std::cout << o << " ";
-        //    }
-        //}
-        //std::cout << std::endl;
-
-        r.draw(TriangleList, true, false, true);
+        r.draw(TriangleList, true, shadow, snow);
+        
 
 
         cv::Mat image(WINDOW_HEIGHT, WINDOW_WIDTH, CV_32FC3, r.frame_buffer().data());
@@ -208,7 +181,7 @@ int main(int argc, const char **argv) {
         // Display statistical information.
         std::string fpsText = "FPS: " + std::to_string(int(fps));
         std::string eyePosText = "Eye Position: (" + std::to_string(int(eye_pos.x())) + ", " + std::to_string(int(eye_pos.y())) + ", " + std::to_string(int(eye_pos.z())) + ")";
-        std::string timeText = "Clock: " + current_minute.time;
+        //std::string timeText = "Clock: " + current_minute.time;
 
         cv::putText(image, fpsText, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
         cv::putText(image, eyePosText, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);

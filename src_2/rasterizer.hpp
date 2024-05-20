@@ -57,6 +57,8 @@ namespace rst {
         void set_view(const Eigen::Matrix4f& v);
         void set_projection(const Eigen::Matrix4f& p);
         void set_lights(const std::vector<light>& lights);
+
+        void set_shadow_view(const Eigen::Matrix4f& s);
         void set_occlusion_view(const Eigen::Matrix4f& s);
         void set_view_to_occlusion();
         void set_shadow_buffer(const std::vector<float>& shadow_buffer);
@@ -117,6 +119,7 @@ namespace rst {
         Eigen::Matrix4f view;
         Eigen::Matrix4f projection;
         Eigen::Matrix4f occlusion_view;
+        Eigen::Matrix4f shadow_view;
         Eigen::Matrix4f view_to_occlusion;
 
         std::vector<light> lights;  // or light lights[MAX_LIGHTS];
@@ -137,6 +140,7 @@ namespace rst {
         std::vector<Eigen::Vector3f> frame_buf;
         std::vector<float> depth_buf;
         std::vector<float> occlusion_buf;
+        std::vector<float> shadow_buf;
         std::vector<Eigen::Vector3f> ssaa_frame_buf;
         std::vector<float> ssaa_depth_buf;
 

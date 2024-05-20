@@ -407,12 +407,12 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t,
                 float z_interpolated = cur_px.z_numerator / cur_px.w_denominator;
                 int index = get_index(x, y);
 
-                if(!snow){
-                    if(real_3d_pos.z() > occlusion_buf[index]){
-                        //std::cout << occlusion_buf[index] << std::endl;
-                        occlusion_buf[index] = real_3d_pos.z();
-                    }
-                }
+                //if(!snow){
+                //    if(real_3d_pos.y() > occlusion_buf[index]){
+                //        //std::cout << occlusion_buf[index] << std::endl;
+                //        //occlusion_buf[index] = real_3d_pos.y();
+                //    }
+                //}
 
                 if(z_interpolated < depth_buf[index]){
                     depth_buf[index] = z_interpolated;
@@ -433,7 +433,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t,
                     if (shadow) {
 
                         // Find the relative position to the light source (by given shadow_projection and shadow_view)
-                        Eigen::Vector4f view_pos {shadingcoords[0], shadingcoords[1], shadingcoords[2], 1.0f};
+                        Eigen::Vector4f view_pos {cur_px.interpolated_shadingcoords[0], cur_px.interpolated_shadingcoords[1], cur_px.interpolated_shadingcoords[2], 1.0f};
                         Eigen::Matrix4f mvp = shadow_projection * shadow_view * model.inverse();
                         Eigen::Vector4f v = mvp * view_pos;
 
@@ -452,6 +452,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t,
                         if(z_B > z_A)   pixel_color *= 0.3;
                     }
                     */
+                    
 
                     if (snow) {
                         auto snow_color = snow_phong_fragment_shader(payload);
@@ -498,45 +499,17 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t,
                         if (iters % 1000000 == 1) std::cout << "pixel_color: " << pixel_color << std::endl;
                     }
 
-                    //if(snow && z_interpolated < occlusion_buf[index]){
-                    //    std::cout << "234" << std::endl;
-                    //}
-                        
-                    //std::cout << pixel_color << std::endl;
-                    //std::cout << depth_buf[index] << std::endl;
-
-                    //auto max_it = std::max_element(depth_buf.begin(), depth_buf.end());
-
-                    //if (max_it != depth_buf.end()) {
-                    //    std::cout << "The maximum value is " << *max_it << std::endl;
-
-                        //if(depth_buf[index] == max_it){
-
-                        //}
-                    //}
-
-
-                    //if(depth_buf[index] == max_it.){
-                        //std::cout << depth_buf[index] << std::endl;
-                        //set_pixel(Vector2i(x, y), Eigen::Vector3f(255, 0, 0));
-                    //}
-                    //else{
-
-                    //std::cout << real_3d_pos.z() << " " << occlusion_buf[index] << std::endl;
-
-                    //if(snow && z_interpolated < occlusion_buf[index]){
-                    //    set_pixel(Vector2i(x, y), Eigen::Vector3f(255, 0, 0));
-                    //}
-
-                    if(real_3d_pos.z() < occlusion_buf[index]){
-                        std::cout << real_3d_pos.z() << " " << occlusion_buf[index] << std::endl;
+                    //std::cout << depth_buf[index] << " " << occlusion_buf[index] << std::endl;
+                    /*
+                    if(depth_buf[index] < occlusion_buf[index]){
+                        //std::cout << real_3d_pos.y() << " " << occlusion_buf[index] << std::endl;
                         set_pixel(Vector2i(x, y), Eigen::Vector3f(255, 0, 0));
                         //occlusion_buf[index] = real_3d_pos.z();
                     }
+                    */
 
-                    else{
+                    //else{
                     set_pixel(Vector2i(x, y), pixel_color);
-                    }
                 }
             }
             // update interpolated values for next pixel
@@ -648,13 +621,17 @@ void rst::rasterizer::set_occlusion_view(const Eigen::Matrix4f &v) {
     occlusion_view = v;
 }
 
+void rst::rasterizer::set_shadow_view(const Eigen::Matrix4f &v) {
+    shadow_view = v;
+}
+
 void rst::rasterizer::set_shadow_buffer(const std::vector<float> &shadow_buffer) {
     std::copy(shadow_buffer.begin(), shadow_buffer.end(), this->occlusion_map.begin());
 }
 
 void rst::rasterizer::set_occlusion_buffer(const std::vector<float> &occlusion_buffer) {
     std::fill(occlusion_buf.begin(), occlusion_buf.end(), std::numeric_limits<float>::infinity() * -1);
-    //std::copy(occlusion_buffer.begin(), occlusion_buffer.end(), this->occlusion_buf.begin());
+    std::copy(occlusion_buffer.begin(), occlusion_buffer.end(), this->occlusion_buf.begin());
     //occlusion_buf.resize(w * h);
 
     //std::cout << occlusion_buf[0] << "1111111111111" << std::endl;
