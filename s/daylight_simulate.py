@@ -1,49 +1,72 @@
-import numpy as np
 import pandas as pd
+import numpy as np
 
-def interpolate_rgb(color1, color2, mix):
-    return tuple([int(color1[i] * (1 - mix) + color2[i] * mix) for i in range(3)])
+# Set up the time range
+times = pd.date_range("00:00", "23:59", freq='T').time
+minute_count = np.arange(1440)
 
-def interpolate_angle(angle1, angle2, mix):
-    if angle1 is None or angle2 is None:
-        return None
-    return angle1 * (1 - mix) + angle2 * mix
+# Sunlight intensity and color calculations
+intensity_R = np.where(((minute_count >= 360) & (minute_count <= 420)) | ((minute_count >= 1020) & (minute_count <= 1080)),
+                       255 * (np.sin(np.pi * (minute_count % 60) / 60)),  # Sunrise/Sunset transition
+                       np.where(((minute_count > 420) & (minute_count < 1020)), 255, 0))  # Daytime peak
+intensity_G = intensity_R
+intensity_B = np.where(intensity_R == 255, 255, intensity_R * 0.5)
 
-def interpolate_sunlight_rgb(time, sunrise, noon, sunset):
-    if time <= sunrise:  # Before sunrise
-        return (255, 204, 153)  # Orange
-    elif sunrise < time < noon:  # Sunrise to noon
-        progress = (time - sunrise) / (noon - sunrise)
-        return interpolate_rgb((255, 204, 153), (255, 255, 255), progress)  # Orange to white
-    elif noon <= time < sunset:  # Noon to sunset
-        progress = (time - noon) / (sunset - noon)
-        return interpolate_rgb((255, 255, 255), (255, 204, 153), progress)  # White to orange
-    else:  # After sunset
-        return (255, 204, 153)  # Orange
+# Light source angle calculations
+light_source_angle = np.where(((minute_count >= 360) & (minute_count <= 1080)),
+                              (minute_count - 360) * (180 / (1080 - 360)),  # from 0 at sunrise to 180 at sunset
+                              np.where(minute_count < 360, 0, 180))
 
-def get_sky_color(minute, sunrise, noon, sunset):
-    if minute <= sunrise or minute >= sunset:
-        return interpolate_rgb((25, 25, 112), (255, 204, 153), np.sin(np.pi * (minute - 0) / (sunrise - 0))) if minute <= sunrise else (25, 25, 112)
-    elif sunrise < minute < noon:
-        return interpolate_rgb((255, 204, 153), (135, 206, 235), np.sin(np.pi * (minute - sunrise) / (noon - sunrise)))
-    else:
-        return interpolate_rgb((135, 206, 235), (255, 204, 153), np.sin(np.pi * (minute - noon) / (sunset - noon)))
+# Night sky color considering light pollution
+night_color_R, night_color_G, night_color_B = 32, 32, 64
 
-minutes_in_day = 1440
-sunrise = 360
-noon = 720
-sunset = 1080
-intensities = np.zeros(minutes_in_day)
-angles = np.zeros(minutes_in_day)
-sky_colors = np.zeros((minutes_in_day, 3), dtype=int)
-sunlight_colors = np.zeros((minutes_in_day, 3), dtype=int)
+# Transition values for dawn and dusk
+transition_R_start = np.linspace(night_color_R, 255 * 0.75, 31)
+transition_G_start = np.linspace(night_color_G, 255 * 0.85, 31)
+transition_B_start = np.linspace(night_color_B, 255 * 1.5, 31)
 
-for minute in range(minutes_in_day):
-    sky_colors[minute] = get_sky_color(minute, sunrise, noon, sunset)
-    sunlight_colors[minute] = interpolate_sunlight_rgb(minute, sunrise, noon, sunset)
+transition_R_end = np.linspace(255 * 0.75, night_color_R, 31)
+transition_G_end = np.linspace(255 * 0.85, night_color_G, 31)
+transition_B_end = np.linspace(255 * 1.5, night_color_B, 31)
 
-results = [(minute, intensity, 'None' if np.isnan(angle) else angle, tuple(sky_color), tuple(sunlight_color)) 
-           for minute, intensity, angle, sky_color, sunlight_color in zip(range(minutes_in_day), intensities, angles, sky_colors, sunlight_colors)]
+background_R = np.zeros(1440)
+background_G = np.zeros(1440)
+background_B = np.zeros(1440)
 
-df = pd.DataFrame(results, columns=['Minute', 'Light Intensity', 'Light Direction', 'Sky Color RGB', 'Sunlight Color RGB'])
-df.to_csv('Simulated_Daylight_Cycle.csv', index=False)
+# Apply transitions
+for idx, minute in enumerate(minute_count):
+    if 330 <= minute <= 360:
+        index = minute - 330
+        background_R[idx] = transition_R_start[index]
+        background_G[idx] = transition_G_start[index]
+        background_B[idx] = transition_B_start[index]
+    elif 1080 <= minute <= 1110:
+        index = minute - 1080
+        background_R[idx] = transition_R_end[index]
+        background_G[idx] = transition_G_end[index]
+        background_B[idx] = transition_B_end[index]
+    elif minute < 330 or minute > 1110:
+        background_R[idx] = night_color_R
+        background_G[idx] = night_color_G
+        background_B[idx] = night_color_B
+    elif 360 < minute < 1080:
+        background_R[idx] = 255 * 0.75
+        background_G[idx] = 255 * 0.85
+        background_B[idx] = 255 * 1.5
+
+# Create DataFrame
+df = pd.DataFrame({
+    'Time_In_24_Hour': times,
+    'Minute_Count': minute_count,
+    'Light_source_intensity_R': intensity_R.astype(int),
+    'Light_source_intensity_G': intensity_G.astype(int),
+    'Light_intensity_color_B': intensity_B.astype(int),
+    'light_source_angle': light_source_angle.astype(int),
+    'background_color_R': background_R.astype(int),
+    'background_color_G': background_G.astype(int),
+    'background_color_B': background_B.astype(int)
+})
+
+# Save to CSV
+file_path = 'Simulated_Sky_Light_Intensity_and_Color.csv'
+df.to_csv(file_path, index=False)
