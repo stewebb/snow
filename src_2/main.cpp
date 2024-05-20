@@ -122,14 +122,28 @@ int main(int argc, const char **argv) {
 
         // calculate occlusion map
         r.set_occlusion_view(get_view_matrix({0, 0, 100}));
+
+
         r.draw_occlusion_map(TriangleList, false);
+        //std::cout << r.occlusion_buffer() << std::endl;
 
         r.set_view(get_view_matrix(eye_pos));
         r.set_projection(get_projection_matrix(45.0, 1, 0.1, 50));
         r.set_lights(lights);
 
         r.draw(TriangleList, true, false, true);
+
+
+        //auto of = r.occlusion_buffer();
+        //for(float o : of){
+        //    //if(o != 0){
+        //        std::cout << o << " ";
+        //    //}
+        //}
+        //std::cout << std::endl;
+
         cv::Mat image(WINDOW_HEIGHT, WINDOW_WIDTH, CV_32FC3, r.frame_buffer().data());
+        //cv::Mat image(WINDOW_HEIGHT, WINDOW_WIDTH, CV_32FC3, r.depth_buffer().data());
         image.convertTo(image, CV_8UC3, 1.0f);
         cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
 
@@ -147,7 +161,7 @@ int main(int argc, const char **argv) {
 
         cv::putText(image, fpsText, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
         cv::putText(image, eyePosText, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
-        cv::putText(image, timeText, cv::Point(10, 60), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+        //cv::putText(image, timeText, cv::Point(10, 60), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
 
         cv::imshow("Snow", image);
         key = cv::waitKey(16);

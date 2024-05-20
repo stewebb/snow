@@ -90,6 +90,10 @@ namespace rst {
             return depth_buf;
         }
 
+        std::vector<float>&occlusion_buffer(){
+            return occlusion_map;
+        }
+
     private:
         void draw_line(Eigen::Vector3f begin, Eigen::Vector3f end);
 
@@ -130,8 +134,11 @@ namespace rst {
 
         std::vector<Eigen::Vector3f> frame_buf;
         std::vector<float> depth_buf;
+        std::vector<float> occlusion_buf;
         std::vector<Eigen::Vector3f> ssaa_frame_buf;
         std::vector<float> ssaa_depth_buf;
+
+
         std::vector<float> occlusion_map;
         int get_index(int x, int y);
 

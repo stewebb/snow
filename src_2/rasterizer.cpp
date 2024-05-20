@@ -246,6 +246,7 @@ void rst::rasterizer::draw_occlusion_map(std::vector<Triangle *> &TriangleList, 
         std::transform(mm.begin(), mm.end(), occlusionspace_pos.begin(),
                        [](auto &v) { return v.template head<3>(); });
 
+        /**/
         if (culling) {
 
             Eigen::Vector3f A = occlusionspace_pos[0];
@@ -392,6 +393,8 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t, const std::array<Eig
                 int index = get_index(x, y);
                 if(z_interpolated < depth_buf[index]){
                     depth_buf[index] = z_interpolated;
+
+                    //std::cout << depth_buf[index] << std::endl;
                         
                     // pass them to the fragment_shader_payload
                     fragment_shader_payload payload(cur_px.interpolated_color,
