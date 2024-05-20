@@ -10,6 +10,7 @@
 #include "Triangle.hpp"
 #include "global.hpp"
 #include "rasterizer.hpp"
+#include "CSV_Reader.hpp"
 
 #include "MVP.hpp"
 
@@ -54,6 +55,26 @@ void loadModel(int objectId, const std::string& filePath, Eigen::Vector3f offset
 
 int main(int argc, const char **argv) {
 
+    CSV_Reader reader("../../daylight_simulate.csv");
+    reader.readCSV();
+    auto data = reader.getData();
+    /*
+    if (reader.readCSV()) {
+        for (const auto& entry : reader.getData()) {
+            std::cout << "Time: " << entry.time
+                      << ", Minute: " << entry.minute
+                      << ", Light Intensity R: " << entry.lightIntensityR
+                      << ", Light Intensity G: " << entry.lightIntensityG
+                      << ", Light Intensity B: " << entry.lightIntensityB
+                      << ", Light Angle: " << entry.lightAngle
+                      << ", Background Color R: " << entry.backgroundColorR
+                      << ", Background Color G: " << entry.backgroundColorG
+                      << ", Background Color B: " << entry.backgroundColorB
+                      << std::endl;
+        }
+    }
+    */
+
     // Load OBJ models and set textures
     std::vector<Triangle *> TriangleList;
     std::vector<Texture *> TextureList;
@@ -91,6 +112,10 @@ int main(int argc, const char **argv) {
     r.set_occlusion_view(get_view_matrix(Eigen::Vector3f(0, 0, 1)));
 
     while (key != 27) {
+
+        int minute_count = frame_count % 1440;
+        auto current_minute = data[minute_count];
+
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
 
         r.set_model(get_model_matrix(angle, {0, 1, 0}, {0, 0, 0}));
@@ -116,10 +141,13 @@ int main(int argc, const char **argv) {
         start = end;
 
         // Display statistical information.
-        std::string eyePosText = "Eye Position: (" + std::to_string(int(eye_pos.x())) + ", " + std::to_string(int(eye_pos.y())) + ", " + std::to_string(int(eye_pos.z())) + ")";
         std::string fpsText = "FPS: " + std::to_string(int(fps));
-        cv::putText(image, eyePosText, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+        std::string eyePosText = "Eye Position: (" + std::to_string(int(eye_pos.x())) + ", " + std::to_string(int(eye_pos.y())) + ", " + std::to_string(int(eye_pos.z())) + ")";
+        std::string timeText = "Clock: " + current_minute.time;
+
         cv::putText(image, fpsText, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+        cv::putText(image, eyePosText, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+        cv::putText(image, timeText, cv::Point(10, 60), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
 
         cv::imshow("Snow", image);
         key = cv::waitKey(16);

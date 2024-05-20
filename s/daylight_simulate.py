@@ -1,14 +1,17 @@
 import pandas as pd
 import numpy as np
 
-# Set up the time range
-times = pd.date_range("00:00", "23:59", freq='T').strftime('%H:%M')
+# Set up the time range (in 24 hour format)
+# There are 1440 minutes in a day, minute_count=0 <--> 00:00, minute_count=1439 <--> 23:59
+times = pd.date_range("00:00", "23:59", freq='T').strftime('%I:%M %p')
 minute_count = np.arange(1440)
 
 # Sunlight intensity and color calculations
-intensity_R = np.where(((minute_count >= 360) & (minute_count <= 420)) | ((minute_count >= 1020) & (minute_count <= 1080)),
-                       255 * (np.sin(np.pi * (minute_count % 60) / 60)),  # Sunrise/Sunset transition
-                       np.where(((minute_count > 420) & (minute_count < 1020)), 255, 0))  # Daytime peak
+intensity_R = np.zeros(1440)
+
+#intensity_R = np.where(((minute_count >= 360) & (minute_count <= 420)) | ((minute_count >= 1020) & (minute_count <= 1080)),
+#                       255 * (np.sin(np.pi * (minute_count % 60) / 60)),  # Sunrise/Sunset transition
+#                       np.where(((minute_count > 420) & (minute_count < 1020)), 255, 0))  # Daytime peak
 #print(intensity_R)
 for m in minute_count:
     #print(m)
@@ -85,5 +88,5 @@ df = pd.DataFrame({
 })
 
 # Save to CSV
-file_path = 'Simulated_Sky_Light_Intensity_and_Color.csv'
+file_path = 'daylight_simulate.csv'
 df.to_csv(file_path, index=False)
