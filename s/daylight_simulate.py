@@ -2,13 +2,30 @@ import pandas as pd
 import numpy as np
 
 # Set up the time range
-times = pd.date_range("00:00", "23:59", freq='T').time
+times = pd.date_range("00:00", "23:59", freq='T').strftime('%H:%M')
 minute_count = np.arange(1440)
 
 # Sunlight intensity and color calculations
 intensity_R = np.where(((minute_count >= 360) & (minute_count <= 420)) | ((minute_count >= 1020) & (minute_count <= 1080)),
                        255 * (np.sin(np.pi * (minute_count % 60) / 60)),  # Sunrise/Sunset transition
                        np.where(((minute_count > 420) & (minute_count < 1020)), 255, 0))  # Daytime peak
+#print(intensity_R)
+for m in minute_count:
+    #print(m)
+
+    
+    if ((m >= 360) & (m <= 420)) or ((m >= 1020) & (m <= 1080)):
+        # Sunrise/Sunset transition
+        intensity_R[m] = 255 * np.sin(np.pi * (m % 60) / 60)
+    elif (m > 420) & (m < 1020):
+        # Daytime peak
+        intensity_R[m] = 255
+    else:
+        # Nighttime
+        intensity_R[m] = 0
+    
+
+
 intensity_G = intensity_R
 intensity_B = np.where(intensity_R == 255, 255, intensity_R * 0.5)
 
@@ -56,15 +73,15 @@ for idx, minute in enumerate(minute_count):
 
 # Create DataFrame
 df = pd.DataFrame({
-    'Time_In_24_Hour': times,
-    'Minute_Count': minute_count,
-    'Light_source_intensity_R': intensity_R.astype(int),
-    'Light_source_intensity_G': intensity_G.astype(int),
-    'Light_intensity_color_B': intensity_B.astype(int),
-    'light_source_angle': light_source_angle.astype(int),
-    'background_color_R': background_R.astype(int),
-    'background_color_G': background_G.astype(int),
-    'background_color_B': background_B.astype(int)
+    'Time': times,
+    'Minute': minute_count,
+    'LightIntensityR': intensity_R.astype(int),
+    'LightIntensityG': intensity_G.astype(int),
+    'LightIntensityB': intensity_B.astype(int),
+    'lightAngle': light_source_angle.astype(int),
+    'BackgroundColorR': background_R.astype(int),
+    'BackgroundColorG': background_G.astype(int),
+    'BackgroundColorB': background_B.astype(int)
 })
 
 # Save to CSV
