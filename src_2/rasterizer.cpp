@@ -490,6 +490,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t,
                         //float finc = inclination(snow_normal);
                         //float fp = fe;
 
+                        // We need to get the normal from the original triangle
                         float finc = inclination(real_normal);
                         float fp = finc;
 
@@ -513,24 +514,23 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t,
                     }
                     */
 
-            //Eigen::Vector3f N = real_normal.normalized();
+                    // DO NOT REMOVE ME - start
+                    // It can verify if the implementation of inclination part is correct
+                    // If it's correct, you will see different colors based on the pitch angle, regardless of the eye position.
 
-            //Eigen::Vector3f U = Eigen::Vector3f(0, 1, 0);
+                    //Eigen::Vector3f N = real_normal.normalized();
+                    //Eigen::Vector3f U = Eigen::Vector3f(0, 1, 0);
+                    //float nu = N.dot(U);
+                    //if(nu <= 0.0000) set_pixel(Vector2i(x, y), Eigen::Vector3f(255, 0, 0));             // [90, 180] -> Red
+                    //else if(nu <= 0.2588)   set_pixel(Vector2i(x, y), Eigen::Vector3f(255, 128, 0));    // [75, 90)  -> Orange 
+                    //else if(nu <= 0.5000)   set_pixel(Vector2i(x, y), Eigen::Vector3f(255, 255, 0));    // [60, 75)  -> Yellow 
+                    //else if(nu <= 0.7071)   set_pixel(Vector2i(x, y), Eigen::Vector3f(0, 255, 0));      // [45, 60)  -> Green
+                    //else if(nu <= 0.8660)   set_pixel(Vector2i(x, y), Eigen::Vector3f(0, 255, 255));    // [30, 45)  -> Cyan
+                    //else if(nu <= 0.9659)   set_pixel(Vector2i(x, y), Eigen::Vector3f(0, 0, 255));      // [15, 30)  -> Blue
+                    //else    set_pixel(Vector2i(x, y), Eigen::Vector3f(128, 0, 255));                    // [0, 15)  -> Purple  
+                    // DO NOT REMOVE ME - end
 
-                    //if(N.dot(U) <= 0.0){
-                    //    set_pixel(Vector2i(x, y), Eigen::Vector3f(255, 0, 0));
-                    //} else if(N.dot(U) <= 0.2588){  // 75 deg
-                    //    set_pixel(Vector2i(x, y), Eigen::Vector3f(0, 255, 0));
-                    //}
-
-                    //else if(N.dot(U) <= 0.5){  // 60 deg
-                    //    set_pixel(Vector2i(x, y), Eigen::Vector3f(0, 0, 255));
-                    //}
-
-
-                    //else{
                     set_pixel(Vector2i(x, y), pixel_color);
-                    //}
                 }
             }
             // update interpolated values for next pixel

@@ -18,6 +18,7 @@ float inclination(Eigen::Vector3f N){
     float mag = N.norm();
     if (mag < 0.001) return 0.0f;
 
+    // IT SEEMS THAT THE COORDINATION SYSTEM IS X-Z-Y (i.e., Left-handed system)
     Eigen::Vector3f U = Eigen::Vector3f(0, 1, 0);
     //Eigen::Vector3f U = Eigen::Vector3f(0, 0, 1);
 
