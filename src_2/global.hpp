@@ -59,7 +59,7 @@ typedef unsigned char u08;
 
 #define MODEL_OBJECT_ID 1
 #define MODEL_OBJ_LOCATION "../../models/football.obj"
-#define MODEL_OBJ_OFFSET {0, 5, 0}
+#define MODEL_OBJ_OFFSET {0, 3, 0}
 //#define MODEL_OBJ_OFFSET {0, 1.5, 0}
 #define MODEL_HAS_TEXTURE false
 #define MODEL_TEXTURE_MAP ""

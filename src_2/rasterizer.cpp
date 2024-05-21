@@ -440,13 +440,15 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t,
                         Eigen::Vector4f P_view {
                             cur_px.interpolated_shadingcoords[0], 
                             cur_px.interpolated_shadingcoords[1], 
-                            cur_px.interpolated_shadingcoords[2], 1.0f
+                            cur_px.interpolated_shadingcoords[2], 
+                            1.0f
                         };
+
                         Eigen::Vector4f P_world = view.inverse() * P_view;
 
                         // World space to shadow view space
                         // P_shadow_view ​= Shadow_Proj * Shadow_view * P_world​
-                        Eigen::Vector4f P_shadow_view = shadow_projection *occlusion_view * P_world;
+                        Eigen::Vector4f P_shadow_view = projection * occlusion_view * P_world;
 
                         // Shadow view space to shadow image space
                         P_shadow_view /= P_shadow_view[3];
@@ -459,7 +461,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t,
                         float z_A = occlusion_buf[index];
 
                         // Draw shadow
-                        // if(z_B > z_A)   
+                         if(z_B > z_A)   pixel_color *= 0.5;
                         //float fe = z_B > z_A;
                         //auto snow_color = snow_phong_fragment_shader(payload);
                         //float fp = 1 - fe;
