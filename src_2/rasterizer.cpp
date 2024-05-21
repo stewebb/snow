@@ -224,8 +224,10 @@ void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, 
             // view space normal
             newtri.setNormal(i, n[i].head<3>());
         }
+
         
-        rasterize_triangle(newtri, t->a(), viewspace_pos, viewspace_lights, shadow, snow);
+        auto nnn = t->normal[0];
+        rasterize_triangle(newtri, nnn, viewspace_pos, viewspace_lights, shadow, snow);
     }
 }
 
@@ -352,7 +354,7 @@ struct rast_px_info_all {
 };
 
 void rst::rasterizer::rasterize_triangle(const Triangle &t, 
-                                            Eigen::Vector4f real_3d_pos,
+                                            Eigen::Vector3f real_normal,
                                             const std::array<Eigen::Vector3f, 3> &view_pos, 
                                             const std::vector<light> &view_lights, 
                                             bool shadow, bool snow) {
@@ -485,8 +487,11 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t,
 
                         // calculate exposure fc
                         float fe = is_snow ? 1.0f : 0.0f;
-                        float finc = inclination(snow_normal);
-                        float fp = fe;
+                        //float finc = inclination(snow_normal);
+                        //float fp = fe;
+
+                        float finc = inclination(real_normal);
+                        float fp = finc;
 
                         if (iters % 1000000 == 1) {
                             /* std::cout << "fe: " << fe << ", finc: " << finc << ", fp: " << fp << std::endl; */
@@ -508,24 +513,24 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t,
                     }
                     */
 
-            Eigen::Vector3f A = view_pos[0];
-            Eigen::Vector3f B = view_pos[1];
-            Eigen::Vector3f C = view_pos[2];
+            //Eigen::Vector3f N = real_normal.normalized();
 
-            Eigen::Vector3f AB = B - A;
-            Eigen::Vector3f AC = C - A;
-            Eigen::Vector3f N = AB.cross(AC);
+            //Eigen::Vector3f U = Eigen::Vector3f(0, 1, 0);
 
-            Eigen::Vector3f U = Eigen::Vector3f(0, 1, 0);
+                    //if(N.dot(U) <= 0.0){
+                    //    set_pixel(Vector2i(x, y), Eigen::Vector3f(255, 0, 0));
+                    //} else if(N.dot(U) <= 0.2588){  // 75 deg
+                    //    set_pixel(Vector2i(x, y), Eigen::Vector3f(0, 255, 0));
+                    //}
 
-                    if(N.dot(U) <= 0){
-                        set_pixel(Vector2i(x, y), Eigen::Vector3f(255, 0, 0));
-                    }
+                    //else if(N.dot(U) <= 0.5){  // 60 deg
+                    //    set_pixel(Vector2i(x, y), Eigen::Vector3f(0, 0, 255));
+                    //}
 
 
-                    else{
+                    //else{
                     set_pixel(Vector2i(x, y), pixel_color);
-                    }
+                    //}
                 }
             }
             // update interpolated values for next pixel

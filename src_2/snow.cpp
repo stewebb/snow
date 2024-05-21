@@ -17,7 +17,10 @@ std::mt19937 inclination_random_gen(rd());
 float inclination(Eigen::Vector3f N){
     float mag = N.norm();
     if (mag < 0.001) return 0.0f;
-    Eigen::Vector3f U = Eigen::Vector3f(0, 0, 1);
+
+    Eigen::Vector3f U = Eigen::Vector3f(0, 1, 0);
+    //Eigen::Vector3f U = Eigen::Vector3f(0, 0, 1);
+
     float cosTheta = U.dot(N) / N.norm();
     if (cosTheta < 0) return 0.0f;
 

@@ -102,7 +102,7 @@ namespace rst {
 
         //void rasterize_triangle(const Triangle& t, bool anti_aliasing = false);
         void rasterize_triangle(const Triangle& t,
-                                Eigen::Vector4f real_3d_pos,
+                                Eigen::Vector3f real_normal,
                                 const std::array<Eigen::Vector3f, 3>& world_pos,
                                 const std::vector<light>& viewspace_lights,
                                 bool shadow=false,
