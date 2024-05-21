@@ -508,8 +508,24 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t,
                     }
                     */
 
-                    //else{
+            Eigen::Vector3f A = view_pos[0];
+            Eigen::Vector3f B = view_pos[1];
+            Eigen::Vector3f C = view_pos[2];
+
+            Eigen::Vector3f AB = B - A;
+            Eigen::Vector3f AC = C - A;
+            Eigen::Vector3f N = AB.cross(AC);
+
+            Eigen::Vector3f U = Eigen::Vector3f(0, 1, 0);
+
+                    if(N.dot(U) <= 0){
+                        set_pixel(Vector2i(x, y), Eigen::Vector3f(255, 0, 0));
+                    }
+
+
+                    else{
                     set_pixel(Vector2i(x, y), pixel_color);
+                    }
                 }
             }
             // update interpolated values for next pixel
