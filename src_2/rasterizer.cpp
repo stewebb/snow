@@ -435,23 +435,43 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t,
                     
                     if (shadow) {
 
-                        // Find the relative position to the light source (by given shadow_projection and shadow_view)
-                        Eigen::Vector4f view_pos {cur_px.interpolated_shadingcoords[0], cur_px.interpolated_shadingcoords[1], cur_px.interpolated_shadingcoords[2], 1.0f};
+                        // View space -> World space
+                        // P_world = view.inverse() * P_view
+                        Eigen::Vector4f P_view {cur_px.interpolated_shadingcoords[0], cur_px.interpolated_shadingcoords[1], cur_px.interpolated_shadingcoords[2], 1.0f};
+                        Eigen::Vector4f P_world = view.inverse() * P_view;
+
+                        // P_light_view​ = M_shadow * P_world​
+                        //Eigen::Vector4f P_light_view = shadow_view * P_world;
+
+                        // P_shadow_view ​= Shadow_Proj * Shadow_view * P_world​
+                        Eigen::Vector4f P_shadow_view = shadow_projection * occlusion_view * P_world;
+
+                        P_shadow_view /= P_shadow_view[3];
+
+                        //std::cout << P_shadow_view.transpose() << std::endl;
+
+                        float f1 = (50 - 0.1) / 2.0;
+                        float f2 = (50 + 0.1) / 2.0;
+                        float z_B = P_shadow_view.z() * f1 + f2;
                         
-                        view_pos = real_coord;
-                        Eigen::Matrix4f mvp = shadow_projection * occlusion_view * model.inverse();
-                        Eigen::Vector4f v = mvp * view_pos;
+
+                        // Find the relative position to the light source (by given shadow_projection and shadow_view)
+                        //Eigen::Vector4f view_pos {cur_px.interpolated_shadingcoords[0], cur_px.interpolated_shadingcoords[1], cur_px.interpolated_shadingcoords[2], 1.0f};
+                        
+                        //view_pos = real_coord;
+                        //Eigen::Matrix4f mvp = shadow_projection * occlusion_view * model.inverse();
+                        //Eigen::Vector4f v = mvp * view_pos;
 
                         // To homogeneous form!
-                        v = v / v[3];   
+                        //v = v / v[3];   
 
                         // Depth value of shadow depth map
                         float z_A = occlusion_buf[index];
 
                         // Depth value of the relative position 
-                        float f1 = (50 - 0.1) / 2.0;
-                        float f2 = (50 + 0.1) / 2.0;
-                        float z_B = v.z() * f1 + f2;
+                        //float f1 = (50 - 0.1) / 2.0;
+                        //float f2 = (50 + 0.1) / 2.0;
+                        //float z_B = v.z() * f1 + f2;
 
                         //;std::cout << z_A << " " << z_B << std::endl;
 
