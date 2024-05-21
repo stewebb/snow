@@ -227,7 +227,7 @@ void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList, bool culling, 
 
         
         auto nnn = t->normal[0];
-        rasterize_triangle(newtri, nnn, viewspace_pos, viewspace_lights, shadow, snow);
+        rasterize_triangle(newtri, nnn, t->a(), viewspace_pos, viewspace_lights, shadow, snow);
     }
 }
 
@@ -355,6 +355,7 @@ struct rast_px_info_all {
 
 void rst::rasterizer::rasterize_triangle(const Triangle &t, 
                                             Eigen::Vector3f real_normal,
+                                            Eigen::Vector4f real_coord,
                                             const std::array<Eigen::Vector3f, 3> &view_pos, 
                                             const std::vector<light> &view_lights, 
                                             bool shadow, bool snow) {
@@ -431,29 +432,33 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t,
                     // Call the fragment shader to get the pixel color
                     auto pixel_color = fragment_shader(payload);
                         
-                    /*
+                    
                     if (shadow) {
 
                         // Find the relative position to the light source (by given shadow_projection and shadow_view)
                         Eigen::Vector4f view_pos {cur_px.interpolated_shadingcoords[0], cur_px.interpolated_shadingcoords[1], cur_px.interpolated_shadingcoords[2], 1.0f};
-                        Eigen::Matrix4f mvp = shadow_projection * shadow_view * model.inverse();
+                        
+                        view_pos = real_coord;
+                        Eigen::Matrix4f mvp = shadow_projection * occlusion_view * model.inverse();
                         Eigen::Vector4f v = mvp * view_pos;
 
                         // To homogeneous form!
                         v = v / v[3];   
 
                         // Depth value of shadow depth map
-                        float z_A = shadow_buf[index];
+                        float z_A = occlusion_buf[index];
 
                         // Depth value of the relative position 
                         float f1 = (50 - 0.1) / 2.0;
                         float f2 = (50 + 0.1) / 2.0;
                         float z_B = v.z() * f1 + f2;
 
+                        //;std::cout << z_A << " " << z_B << std::endl;
+
                         // Draw shadow
                         if(z_B > z_A)   pixel_color *= 0.3;
                     }
-                    */
+                    
                     
 
                     if (snow) {
@@ -651,7 +656,7 @@ void rst::rasterizer::set_shadow_buffer(const std::vector<float> &shadow_buffer)
 }
 
 void rst::rasterizer::set_occlusion_buffer(const std::vector<float> &occlusion_buffer) {
-    std::fill(occlusion_buf.begin(), occlusion_buf.end(), std::numeric_limits<float>::infinity() * -1);
+    std::fill(occlusion_buf.begin(), occlusion_buf.end(), std::numeric_limits<float>::infinity());
     std::copy(occlusion_buffer.begin(), occlusion_buffer.end(), this->occlusion_buf.begin());
     //occlusion_buf.resize(w * h);
 

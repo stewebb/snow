@@ -114,10 +114,10 @@ int main(int argc, const char **argv) {
     while (key != 27) {
 
 
-        bool snow = true;
+        bool snow = false;
         bool shadow = true;
 
-        /*
+        // TODO: Fix bug {0, x, 0} all black
         
         if(shadow){
 
@@ -125,7 +125,8 @@ int main(int argc, const char **argv) {
             r.set_model(get_model_matrix(angle, {0, 1, 0}, {0, 0, 0}));
 
             // Eye position is the light source
-            Eigen::Vector3f shadow_eye_pos = eye_pos;
+            
+            Eigen::Vector3f shadow_eye_pos = {0, CENTER_VERTICAL_DIST, 1};
             Eigen::Matrix4f shadow_view = get_view_matrix(shadow_eye_pos);
             Eigen::Matrix4f shadow_proj = get_projection_matrix(45.0, 1, 0.1, 50);
 
@@ -134,13 +135,12 @@ int main(int argc, const char **argv) {
             r.set_lights(lights);
             r.draw(TriangleList, true, false, false);
 
-            // Set and store shadow depth buffer, shadow view and shadow projection.
-            r.set_shadow_buffer(r.depth_buffer());
-            r.set_shadow_view(shadow_view);
+            r.set_occlusion_buffer(r.depth_buffer());
+            r.set_occlusion_view(shadow_view);
             r.shadow_projection = shadow_proj;
         }
 
-        */
+        
 
 
 
