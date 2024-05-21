@@ -55,9 +55,9 @@ void loadModel(int objectId, const std::string& filePath, Eigen::Vector3f offset
 
 int main(int argc, const char **argv) {
 
-    CSV_Reader reader("../../daylight_simulate.csv");
-    reader.readCSV();
-    auto data = reader.getData();
+    //CSV_Reader reader("../../daylight_simulate.csv");
+    //reader.readCSV();
+    //auto data = reader.getData();
     /*
     if (reader.readCSV()) {
         for (const auto& entry : reader.getData()) {
@@ -124,14 +124,17 @@ int main(int argc, const char **argv) {
             r.clear(rst::Buffers::Color | rst::Buffers::Depth);
             r.set_model(get_model_matrix(angle, {0, 1, 0}, {0, 0, 0}));
 
+            auto shadow_light = light{{0, 15, 0.1}, {10, 10, 10}};
+
             // Eye position is the light source
-            Eigen::Vector3f shadow_eye_pos = {1, 10, 0};
+            Eigen::Vector3f shadow_eye_pos = {0, 15, 0.1};
+
             Eigen::Matrix4f shadow_view = get_view_matrix(shadow_eye_pos);
             Eigen::Matrix4f shadow_proj = get_projection_matrix(45.0, 1, 0.1, 50);
 
             r.set_view(shadow_view);
             r.set_projection(shadow_proj);
-            r.set_lights(lights);
+            r.set_lights({shadow_light});
             r.draw(TriangleList, true, false, false);
 
             // Save the depth buffer
@@ -139,14 +142,9 @@ int main(int argc, const char **argv) {
             r.set_occlusion_view(shadow_view);
             r.shadow_projection = shadow_proj;
         }
-
         
-
-
-
-        
-        int minute_count = frame_count % 1440;
-        auto current_minute = data[minute_count];
+        //int minute_count = frame_count % 1440;
+        //auto current_minute = data[minute_count];
 
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
 

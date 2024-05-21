@@ -437,23 +437,33 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t,
 
                         // View space -> World space
                         // P_world = view.inverse() * P_view
-                        Eigen::Vector4f P_view {cur_px.interpolated_shadingcoords[0], cur_px.interpolated_shadingcoords[1], cur_px.interpolated_shadingcoords[2], 1.0f};
+                        Eigen::Vector4f P_view {
+                            cur_px.interpolated_shadingcoords[0], 
+                            cur_px.interpolated_shadingcoords[1], 
+                            cur_px.interpolated_shadingcoords[2], 1.0f
+                        };
                         Eigen::Vector4f P_world = view.inverse() * P_view;
 
-                        // P_light_view​ = M_shadow * P_world​
-                        //Eigen::Vector4f P_light_view = shadow_view * P_world;
-
+                        // World space to shadow view space
                         // P_shadow_view ​= Shadow_Proj * Shadow_view * P_world​
-                        Eigen::Vector4f P_shadow_view = shadow_projection * occlusion_view * P_world;
+                        Eigen::Vector4f P_shadow_view = shadow_projection *occlusion_view * P_world;
 
+                        // Shadow view space to shadow image space
                         P_shadow_view /= P_shadow_view[3];
-
-                        //std::cout << P_shadow_view.transpose() << std::endl;
 
                         float f1 = (50 - 0.1) / 2.0;
                         float f2 = (50 + 0.1) / 2.0;
                         float z_B = P_shadow_view.z() * f1 + f2;
                         
+                        // Depth value of shadow depth map
+                        float z_A = occlusion_buf[index];
+
+                        // Draw shadow
+                        // if(z_B > z_A)   
+                        //float fe = z_B > z_A;
+                        //auto snow_color = snow_phong_fragment_shader(payload);
+                        //float fp = 1 - fe;
+                        //pixel_color = fp * snow_color + (1 - fp) * pixel_color;
 
                         // Find the relative position to the light source (by given shadow_projection and shadow_view)
                         //Eigen::Vector4f view_pos {cur_px.interpolated_shadingcoords[0], cur_px.interpolated_shadingcoords[1], cur_px.interpolated_shadingcoords[2], 1.0f};
@@ -465,8 +475,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t,
                         // To homogeneous form!
                         //v = v / v[3];   
 
-                        // Depth value of shadow depth map
-                        float z_A = occlusion_buf[index];
+
 
                         // Depth value of the relative position 
                         //float f1 = (50 - 0.1) / 2.0;
@@ -474,9 +483,6 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t,
                         //float z_B = v.z() * f1 + f2;
 
                         //;std::cout << z_A << " " << z_B << std::endl;
-
-                        // Draw shadow
-                        if(z_B > z_A)   pixel_color *= 0.3;
                     }
                     
                     
