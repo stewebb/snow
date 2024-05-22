@@ -52,7 +52,8 @@ add_definitions(
 
 # The project code
 add_executable(SnowGL
-	src/tutorial16.cpp
+
+	src/main.cpp
 	common/shader.cpp
 	common/shader.hpp
 	common/controls.cpp
@@ -74,21 +75,19 @@ add_executable(SnowGL
 target_link_libraries(SnowGL
 	${ALL_LIBS}
 )
+
 # Xcode and Visual working directories
 set_target_properties(SnowGL PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 create_target_launcher(SnowGL WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
-
-
 SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
 SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
-
 
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
 
 add_custom_command(
    TARGET SnowGL POST_BUILD
-   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/src${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/src/"
+   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/SnowGL${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/src/"
 )
 
 elseif (${CMAKE_GENERATOR} MATCHES "Xcode" )
