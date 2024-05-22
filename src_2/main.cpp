@@ -124,10 +124,10 @@ int main(int argc, const char **argv) {
             r.clear(rst::Buffers::Color | rst::Buffers::Depth);
             r.set_model(get_model_matrix(angle, {0, 1, 0}, {0, 0, 0}));
 
-            auto shadow_light = light{{0, 20, 10}, {10, 10, 10}};
+            auto shadow_light = light{{0, 20, 0}, {10, 10, 10}};
 
             // Eye position is the light source
-            Eigen::Vector3f shadow_eye_pos = {0, 20, 10};
+            Eigen::Vector3f shadow_eye_pos = {0, 20, 0.1};
 
             Eigen::Matrix4f shadow_view = get_view_matrix(shadow_eye_pos);
             Eigen::Matrix4f shadow_proj = get_projection_matrix(45.0, 1, 0.1, 50);
