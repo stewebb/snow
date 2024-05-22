@@ -70,12 +70,12 @@ add_executable(tutorial16_shadowmaps
 	common/vboindexer.cpp
 	common/vboindexer.hpp
 
-	tutorial16_shadowmaps/ShadowMapping.vertexshader
+	tutorial16_shadowmaps/ShadowMapping.vert
 	tutorial16_shadowmaps/ShadowMapping.frag
-	tutorial16_shadowmaps/DepthRTT.vertexshader
-	tutorial16_shadowmaps/DepthRTT.fragmentshader
-	tutorial16_shadowmaps/Passthrough.vertexshader
-	tutorial16_shadowmaps/SimpleTexture.fragmentshader
+	tutorial16_shadowmaps/DepthRTT.vert
+	tutorial16_shadowmaps/DepthRTT.frag
+	tutorial16_shadowmaps/Passthrough.vert
+	tutorial16_shadowmaps/SimpleTexture.frag
 )
 target_link_libraries(tutorial16_shadowmaps
 	${ALL_LIBS}
