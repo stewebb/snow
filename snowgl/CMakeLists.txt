@@ -1,21 +1,17 @@
-# CMake entry point
 cmake_minimum_required (VERSION 3.0)
-project (Tutorials)
+project (SnowGL)
 
 find_package(OpenGL REQUIRED)
 
-
-if( CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR )
-    message( FATAL_ERROR "Please select another Build Directory ! (and give it a clever name, like bin_Visual2012_64bits/)" )
-endif()
-if( CMAKE_SOURCE_DIR MATCHES " " )
-	message( "Your Source Directory contains spaces. If you experience problems when compiling, this can be the cause." )
-endif()
-if( CMAKE_BINARY_DIR MATCHES " " )
-	message( "Your Build Directory contains spaces. If you experience problems when compiling, this can be the cause." )
-endif()
-
-
+#if( CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR )
+#    message( FATAL_ERROR "Please select another Build Directory ! (and give it a clever name, like bin_Visual2012_64bits/)" )
+#endif()
+#if( CMAKE_SOURCE_DIR MATCHES " " )
+#	message( "Your Source Directory contains spaces. If you experience problems when compiling, this can be the cause." )
+#endif()
+#if( CMAKE_BINARY_DIR MATCHES " " )
+#	message( "Your Build Directory contains spaces. If you experience problems when compiling, this can be the cause." )
+#endif()
 
 # Compile external dependencies 
 add_subdirectory (external)
@@ -29,8 +25,6 @@ include(MSVCMultipleProcessCompile) # /MP
 if(INCLUDE_DISTRIB)
 	add_subdirectory(distrib)
 endif(INCLUDE_DISTRIB)
-
-
 
 include_directories(
 	external/AntTweakBar-1.16/include/
@@ -56,9 +50,9 @@ add_definitions(
 	-D_CRT_SECURE_NO_WARNINGS
 )
 
-# Tutorial 16
-add_executable(tutorial16_shadowmaps
-	tutorial16_shadowmaps/tutorial16.cpp
+# The project code
+add_executable(SnowGL
+	src/tutorial16.cpp
 	common/shader.cpp
 	common/shader.hpp
 	common/controls.cpp
@@ -70,19 +64,19 @@ add_executable(tutorial16_shadowmaps
 	common/vboindexer.cpp
 	common/vboindexer.hpp
 
-	tutorial16_shadowmaps/ShadowMapping.vert
-	tutorial16_shadowmaps/ShadowMapping.frag
-	tutorial16_shadowmaps/DepthRTT.vert
-	tutorial16_shadowmaps/DepthRTT.frag
-	tutorial16_shadowmaps/Passthrough.vert
-	tutorial16_shadowmaps/SimpleTexture.frag
+	src/ShadowMapping.vert
+	src/ShadowMapping.frag
+	src/DepthRTT.vert
+	src/DepthRTT.frag
+	src/Passthrough.vert
+	src/SimpleTexture.frag
 )
-target_link_libraries(tutorial16_shadowmaps
+target_link_libraries(SnowGL
 	${ALL_LIBS}
 )
 # Xcode and Visual working directories
-set_target_properties(tutorial16_shadowmaps PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/tutorial16_shadowmaps/")
-create_target_launcher(tutorial16_shadowmaps WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tutorial16_shadowmaps/")
+set_target_properties(SnowGL PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/")
+create_target_launcher(SnowGL WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
 
 
@@ -93,8 +87,8 @@ SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
 
 add_custom_command(
-   TARGET tutorial16_shadowmaps POST_BUILD
-   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/tutorial16_shadowmaps${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/tutorial16_shadowmaps/"
+   TARGET SnowGL POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/src${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/src/"
 )
 
 elseif (${CMAKE_GENERATOR} MATCHES "Xcode" )
