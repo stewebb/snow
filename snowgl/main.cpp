@@ -21,7 +21,8 @@ using namespace glm;
 #include <common/objloader.hpp>
 #include <common/vboindexer.hpp>
 
-#include "common/global.hpp"
+#include <common/global.hpp>
+#include <common/OBJ_Loader.h>
 
 int main( void )
 {
@@ -96,13 +97,13 @@ int main( void )
 	GLuint depthMatrixID = glGetUniformLocation(depthProgramID, "depthMVP");
 
 	// Load the texture
-	GLuint Texture = loadDDS("model/uvmap.DDS");
+	//GLuint Texture = loadDDS("model/uvmap.DDS");
 	
 	// Read our .obj file
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> normals;
-	bool res = loadOBJ("model/33.obj", vertices, uvs, normals);
+	bool res = loadOBJ("model/untitled.obj", vertices, uvs, normals);
 
 	std::vector<unsigned short> indices;
 	std::vector<glm::vec3> indexed_vertices;
@@ -117,10 +118,10 @@ int main( void )
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, indexed_vertices.size() * sizeof(glm::vec3), &indexed_vertices[0], GL_STATIC_DRAW);
 
-	GLuint uvbuffer;
-	glGenBuffers(1, &uvbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-	glBufferData(GL_ARRAY_BUFFER, indexed_uvs.size() * sizeof(glm::vec2), &indexed_uvs[0], GL_STATIC_DRAW);
+	//GLuint uvbuffer;
+	//glGenBuffers(1, &uvbuffer);
+	//glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+	//glBufferData(GL_ARRAY_BUFFER, indexed_uvs.size() * sizeof(glm::vec2), &indexed_uvs[0], GL_STATIC_DRAW);
 
 	GLuint normalbuffer;
 	glGenBuffers(1, &normalbuffer);
@@ -307,7 +308,7 @@ int main( void )
 
 		// Bind our texture in Texture Unit 0
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, Texture);
+		//glBindTexture(GL_TEXTURE_2D, Texture);
 		// Set our "myTextureSampler" sampler to use Texture Unit 0
 		glUniform1i(TextureID, 0);
 
@@ -328,16 +329,16 @@ int main( void )
 		);
 
 		// 2nd attribute buffer : UVs
-		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-		glVertexAttribPointer(
-			1,                                // attribute
-			2,                                // size
-			GL_FLOAT,                         // type
-			GL_FALSE,                         // normalized?
-			0,                                // stride
-			(void*)0                          // array buffer offset
-		);
+		//glEnableVertexAttribArray(1);
+		//glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+		//glVertexAttribPointer(
+		//	1,                                // attribute
+		//	2,                                // size
+		//	GL_FLOAT,                         // type
+		//	GL_FALSE,                         // normalized?
+		//	0,                                // stride
+		//	(void*)0                          // array buffer offset
+		//);
 
 		// 3rd attribute buffer : normals
 		glEnableVertexAttribArray(2);
@@ -409,13 +410,13 @@ int main( void )
 
 	// Cleanup VBO and shader
 	glDeleteBuffers(1, &vertexbuffer);
-	glDeleteBuffers(1, &uvbuffer);
+	//glDeleteBuffers(1, &uvbuffer);
 	glDeleteBuffers(1, &normalbuffer);
 	glDeleteBuffers(1, &elementbuffer);
 	glDeleteProgram(programID);
 	glDeleteProgram(depthProgramID);
 	glDeleteProgram(quad_programID);
-	glDeleteTextures(1, &Texture);
+	//glDeleteTextures(1, &Texture);
 
 	glDeleteFramebuffers(1, &FramebufferName);
 	glDeleteTextures(1, &depthTexture);
