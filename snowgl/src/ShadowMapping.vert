@@ -12,7 +12,6 @@ out vec3 Normal_cameraspace;
 out vec3 EyeDirection_cameraspace;
 out vec3 LightDirection_cameraspace;
 out vec4 ShadowCoord;
-out vec4 OcclusionCoord;
 
 // Values that stay constant for the whole mesh.
 uniform mat4 MVP;
@@ -20,7 +19,7 @@ uniform mat4 V;
 uniform mat4 M;
 uniform vec3 LightInvDirection_worldspace;
 uniform mat4 DepthBiasMVP;
-uniform mat4 OcclusionBiasMVP;
+
 
 void main(){
 
@@ -28,7 +27,6 @@ void main(){
 	gl_Position =  MVP * vec4(vertexPosition_modelspace,1);
 	
 	ShadowCoord = DepthBiasMVP * vec4(vertexPosition_modelspace,1);
-	OcclusionCoord = OcclusionBiasMVP * vec4(vertexPosition_modelspace,1);
 	
 	// Position of the vertex, in worldspace : M * position
 	Position_worldspace = (M * vec4(vertexPosition_modelspace,1)).xyz;
