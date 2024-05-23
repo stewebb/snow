@@ -23,11 +23,11 @@ glm::mat4 getProjectionMatrix(){
 
 
 // Initial position : on +Z
-glm::vec3 position = glm::vec3( 0, 0, 30 ); 
+glm::vec3 position = glm::vec3(10, 0, 20); 
 // Initial horizontal angle : toward -Z
 float horizontalAngle = 0.0f;
 // Initial vertical angle : none
-float verticalAngle = 0.0f;
+float verticalAngle = 3.14f;
 // Initial Field of View
 float initialFoV = 45.0f;
 
@@ -109,7 +109,7 @@ void computeMatricesFromInputs(){
 	// For the next frame, the "last time" will be "now"
 	lastTime = currentTime;
 
-	//std::cout << "Vector: (" << position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
-	//std::cout << "horizontalAngle: " << horizontalAngle << ", verticalAngle: " << verticalAngle << std::endl;
+	std::cout << "Vector: (" << position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
+	std::cout << "horizontalAngle: " << horizontalAngle << ", verticalAngle: " << verticalAngle << std::endl;
 
 }

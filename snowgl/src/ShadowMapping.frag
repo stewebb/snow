@@ -7,6 +7,7 @@ in vec3 Normal_cameraspace;
 in vec3 EyeDirection_cameraspace;
 in vec3 LightDirection_cameraspace;
 in vec4 ShadowCoord;
+in vec4 OcclusionCoord;
 
 // Output data
 layout(location = 0) out vec3 color;
@@ -16,6 +17,7 @@ uniform sampler2D myTextureSampler;
 uniform mat4 MV;
 uniform vec3 LightPosition_worldspace;
 uniform sampler2DShadow shadowMap;
+uniform sampler2DShadow occlusionMap;
 
 vec2 poissonDisk[16] = vec2[]( 
    vec2( -0.94201624, -0.39906216 ), 
@@ -52,7 +54,8 @@ void main(){
 	// Material properties
 	vec3 MaterialDiffuseColor = texture( myTextureSampler, UV ).rgb;
 	vec3 MaterialAmbientColor = vec3(0.1,0.1,0.1) * MaterialDiffuseColor;
-	vec3 MaterialSpecularColor = vec3(0.3,0.3,0.3);
+	vec3 MaterialSpecularColor = vec3(0.7,0.7,0.7);
+	float SpecularExponent = 150.0f;
 
 	// Distance to the light
 	//float distance = length( LightPosition_worldspace - Position_worldspace );
@@ -102,7 +105,10 @@ void main(){
 		
 		// being fully in the shadow will eat up 4*0.2 = 0.8
 		// 0.2 potentially remain, which is quite dark.
+
 		visibility -= 0.2*(1.0-texture( shadowMap, vec3(ShadowCoord.xy + poissonDisk[index]/700.0,  (ShadowCoord.z-bias)/ShadowCoord.w) ));
+		//visibility -= 0.8*(1.0-texture( occlusionMap, vec3(OcclusionCoord.xy + poissonDisk[index]/700.0,  (OcclusionCoord.z-bias)/OcclusionCoord.w) ));
+
 	}
 
 	// For spot lights, use either one of these lines instead.
@@ -115,6 +121,6 @@ void main(){
 		// Diffuse : "color" of the object
 		visibility * MaterialDiffuseColor * LightColor * LightPower * cosTheta+
 		// Specular : reflective highlight, like a mirror
-		visibility * MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha,5);
+		visibility * MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha, SpecularExponent);
 
 }

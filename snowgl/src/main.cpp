@@ -23,6 +23,17 @@ using namespace glm;
 
 #include <common/global.hpp>
 
+
+void drawLightDirection(GLfloat x, GLfloat y, GLfloat z, GLfloat dx, GLfloat dy, GLfloat dz) {
+    glPushMatrix();
+    glColor3f(1.0, 1.0, 1.0); // Set the color to white for the direction line
+    glBegin(GL_LINES);
+        glVertex3f(x, y, z); // Start point of the line at the light source
+        glVertex3f(x + dx, y + dy, z + dz); // End point showing the direction
+    glEnd();
+    glPopMatrix();
+}
+
 int main( void )
 {
 	// Initialize GLFW
@@ -94,6 +105,7 @@ int main( void )
 
 	// Get a handle for our "MVP" uniform
 	GLuint depthMatrixID = glGetUniformLocation(depthProgramID, "depthMVP");
+	GLuint occlusionMatrixID = glGetUniformLocation(depthProgramID, "depthMVP");
 
 	// Load the texture
 	//GLuint Texture = loadDDS("model/sample.dds");
@@ -197,12 +209,17 @@ int main( void )
 	GLuint ViewMatrixID = glGetUniformLocation(programID, "V");
 	GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
 	GLuint DepthBiasID = glGetUniformLocation(programID, "DepthBiasMVP");
+	GLuint OcclusionBiasID = glGetUniformLocation(programID, "OcclusionBiasMVP");
+
 	GLuint ShadowMapID = glGetUniformLocation(programID, "shadowMap");
+	GLuint OcclusionMapID = glGetUniformLocation(programID, "occlusionMap");
 	
 	// Get a handle for our "LightPosition" uniform
 	GLuint lightInvDirID = glGetUniformLocation(programID, "LightInvDirection_worldspace");
 
+	float angle = 0.0f;
 
+	// 
 	
 	do{
 
@@ -223,22 +240,34 @@ int main( void )
 		glUseProgram(depthProgramID);
 
 		// glm::vec3 lightInvDir = glm::vec3(0.5f,2,2);
-	 	glm::vec3 lightInvDir = glm::vec3(0.0f, 0.0f , 1.0f);
+	 	glm::vec3 lightInvDir = glm::vec3(0.0f, 1.0f , 0.0f);
+		glm::vec3 lightInvDir2 = glm::vec3(0.0f, 0.0f , 1.0f);
 
 		// Compute the MVP matrix from the light's point of view
 		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-30, 30, -30, 30, -30, 30);
 		glm::mat4 depthViewMatrix = glm::lookAt(lightInvDir, glm::vec3(0,0,0), glm::vec3(0,1,0));
+
+		glm::mat4 occlusionProjectionMatrix = glm::ortho<float>(-30, 30, -30, 30, -30, 30);
+		glm::mat4 occlusionViewMatrix = glm::lookAt(lightInvDir2, glm::vec3(0,0,0), glm::vec3(0,1,0));
+
+		//
 		// or, for spot light :
 		//glm::vec3 lightPos(5, 20, 20);
 		//glm::mat4 depthProjectionMatrix = glm::perspective<float>(45.0f, 1.0f, 2.0f, 50.0f);
 		//glm::mat4 depthViewMatrix = glm::lookAt(lightPos, lightPos-lightInvDir, glm::vec3(0,1,0));
 
 		glm::mat4 depthModelMatrix = glm::mat4(1.0);
+		//glm::mat4 depthModelMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(-angle), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		glm::mat4 occlusionModelMatrix = glm::mat4(1.0);
+
 		glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
+		glm::mat4 occlusionMVP = occlusionProjectionMatrix * occlusionViewMatrix * occlusionModelMatrix;
 
 		// Send our transformation to the currently bound shader, 
 		// in the "MVP" uniform
 		glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);
+		glUniformMatrix4fv(occlusionMatrixID, 1, GL_FALSE, &occlusionMVP[0][0]);
 
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
@@ -277,6 +306,8 @@ int main( void )
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		//drawLightSource
+
 		// Use our shader
 		glUseProgram(programID);
 
@@ -285,7 +316,10 @@ int main( void )
 		glm::mat4 ProjectionMatrix = getProjectionMatrix();
 		glm::mat4 ViewMatrix = getViewMatrix();
 		//ViewMatrix = glm::lookAt(glm::vec3(14,6,4), glm::vec3(0,1,0), glm::vec3(0,1,0));
-		glm::mat4 ModelMatrix = glm::mat4(1.0);
+
+		glm::mat4 ModelMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		//glm::mat4 ModelMatrix = glm::mat4(1.0);
 		glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 		
 		glm::mat4 biasMatrix(
@@ -296,13 +330,16 @@ int main( void )
 		);
 
 		glm::mat4 depthBiasMVP = biasMatrix*depthMVP;
+		glm::mat4 occlusionBiasMVP = biasMatrix*occlusionMVP;
 
 		// Send our transformation to the currently bound shader, 
 		// in the "MVP" uniform
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
 		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
+
 		glUniformMatrix4fv(DepthBiasID, 1, GL_FALSE, &depthBiasMVP[0][0]);
+		glUniformMatrix4fv(OcclusionBiasID, 1, GL_FALSE, &occlusionBiasMVP[0][0]);
 
 		glUniform3f(lightInvDirID, lightInvDir.x, lightInvDir.y, lightInvDir.z);
 
@@ -315,6 +352,11 @@ int main( void )
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, depthTexture);
 		glUniform1i(ShadowMapID, 1);
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, depthTexture);
+		glUniform1i(OcclusionMapID, 2);
+
 
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
@@ -399,10 +441,15 @@ int main( void )
 		//glDrawArrays(GL_TRIANGLES, 0, 6); // 2*3 indices starting at 0 -> 2 triangles
 		glDisableVertexAttribArray(0);
 
+		// drawLightDirection(0.0, 0.0, 30.0, -10.0, -10.0, -10.0);
 
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+
+		angle += 0.5f;
+    	if (angle > 360.0f)
+       		angle -= 360.0f;
 
 	} // Check if the ESC key was pressed or the window was closed
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
