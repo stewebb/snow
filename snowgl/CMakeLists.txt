@@ -43,9 +43,8 @@ add_definitions(
 # The project code
 add_executable(SnowGL
 
-	src/main.cpp
-	src/global.hpp
-
+	main.cpp
+	common/global.hpp
 	common/shader.cpp
 	common/shader.hpp
 	common/controls.cpp

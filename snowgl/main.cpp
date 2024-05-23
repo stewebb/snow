@@ -21,7 +21,7 @@ using namespace glm;
 #include <common/objloader.hpp>
 #include <common/vboindexer.hpp>
 
-#include "global.hpp"
+#include "common/global.hpp"
 
 int main( void )
 {
@@ -96,7 +96,7 @@ int main( void )
 	GLuint depthMatrixID = glGetUniformLocation(depthProgramID, "depthMVP");
 
 	// Load the texture
-	GLuint Texture = loadDDS("uvmap.DDS");
+	GLuint Texture = loadDDS("model/uvmap.DDS");
 	
 	// Read our .obj file
 	std::vector<glm::vec3> vertices;
