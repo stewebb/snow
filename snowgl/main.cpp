@@ -40,7 +40,7 @@ int main( void )
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow( WINDOW_WIDTH, WINDOW_HEIGHT, "Tutorial 16 - Shadows", NULL, NULL);
+	window = glfwCreateWindow( WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, NULL, NULL);
 	if( window == NULL ){
 		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
 		getchar();
@@ -96,7 +96,8 @@ int main( void )
 	GLuint depthMatrixID = glGetUniformLocation(depthProgramID, "depthMVP");
 
 	// Load the texture
-	GLuint Texture = loadDDS("model/dds.dds");
+	//GLuint Texture = loadDDS("model/sample.dds");
+	GLuint Texture = loadBMP_custom("model/t.bmp");
 	
 	// Read our .obj file
 	std::vector<glm::vec3> vertices;
