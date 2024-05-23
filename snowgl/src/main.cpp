@@ -222,11 +222,12 @@ int main( void )
 		// Use our shader
 		glUseProgram(depthProgramID);
 
-		glm::vec3 lightInvDir = glm::vec3(1.0f,0,0);
+		glm::vec3 lightInvDir1 = glm::vec3(0.0f, 0.0, 1.0);
+		glm::vec3 lightInvDir = glm::vec3(0.0f, 0.0, 1.0);
 
 		// Compute the MVP matrix from the light's point of view
 		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-30,30,-30,30,-30,30);
-		glm::mat4 depthViewMatrix = glm::lookAt(lightInvDir, glm::vec3(0,0,0), glm::vec3(0,1,0));
+		glm::mat4 depthViewMatrix = glm::lookAt(lightInvDir1, glm::vec3(0,0,0), glm::vec3(0,1,0));
 		// or, for spot light :
 		//glm::vec3 lightPos(5, 20, 20);
 		//glm::mat4 depthProjectionMatrix = glm::perspective<float>(45.0f, 1.0f, 2.0f, 50.0f);
