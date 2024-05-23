@@ -44,6 +44,8 @@ add_definitions(
 add_executable(SnowGL
 
 	src/main.cpp
+	src/global.hpp
+
 	common/shader.cpp
 	common/shader.hpp
 	common/controls.cpp

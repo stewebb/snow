@@ -1,5 +1,9 @@
+# Building-related files
 **/build
-**/output
+**/output/*
+!**/output/.gitkeep
+
+# IDE-related files
 **/.vscode
 **/.vs
 **/.idea

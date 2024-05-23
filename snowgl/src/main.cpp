@@ -21,8 +21,7 @@ using namespace glm;
 #include <common/objloader.hpp>
 #include <common/vboindexer.hpp>
 
-#define WINDOW_WIDTH 1024
-#define WINDOW_HEIGHT 1024
+#include "global.hpp"
 
 int main( void )
 {
@@ -91,7 +90,7 @@ int main( void )
 	glBindVertexArray(VertexArrayID);
 
 	// Create and compile our GLSL program from the shaders
-	GLuint depthProgramID = LoadShaders( "DepthRTT.vert", "DepthRTT.frag" );
+	GLuint depthProgramID = LoadShaders("shader/DepthRTT.vert", "shader/DepthRTT.frag" );
 
 	// Get a handle for our "MVP" uniform
 	GLuint depthMatrixID = glGetUniformLocation(depthProgramID, "depthMVP");
@@ -103,7 +102,7 @@ int main( void )
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> normals;
-	bool res = loadOBJ("untitled.obj", vertices, uvs, normals);
+	bool res = loadOBJ("model/untitled.obj", vertices, uvs, normals);
 
 	std::vector<unsigned short> indices;
 	std::vector<glm::vec3> indexed_vertices;
@@ -182,12 +181,12 @@ int main( void )
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
 
 	// Create and compile our GLSL program from the shaders
-	GLuint quad_programID = LoadShaders( "Passthrough.vert", "SimpleTexture.frag" );
+	GLuint quad_programID = LoadShaders( "shader/Passthrough.vert", "shader/SimpleTexture.frag" );
 	GLuint texID = glGetUniformLocation(quad_programID, "texture");
 
 
 	// Create and compile our GLSL program from the shaders
-	GLuint programID = LoadShaders( "ShadowMapping.vert", "ShadowMapping.frag" );
+	GLuint programID = LoadShaders( "shader/ShadowMapping.vert", "shader/ShadowMapping.frag" );
 
 	// Get a handle for our "myTextureSampler" uniform
 	GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
