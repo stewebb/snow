@@ -11,6 +11,7 @@
  * Window width and height. They should equal.
 */
 
+#define WINDOW_NAME "SnowGL"
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 
@@ -77,6 +78,8 @@
 // Snow color, in RGB format (white with a higher blue part)
 #define SNOW_COLOR {240, 240, 255}
 #define BACKGROUND_COLOR {0, 0, 0}
+
+// #define BACKGROUND_R 255
 
 #define DISTORTION_SCALAR 0.1
 

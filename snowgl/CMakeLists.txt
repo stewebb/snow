@@ -56,6 +56,8 @@ add_executable(SnowGL
 	common/vboindexer.cpp
 	common/vboindexer.hpp
 
+	common/OBJ_Loader.h
+
 	shader/ShadowMapping.vert
 	shader/ShadowMapping.frag
 	shader/DepthRTT.vert
