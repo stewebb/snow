@@ -21,6 +21,8 @@ using namespace glm;
 #include <common/objloader.hpp>
 #include <common/vboindexer.hpp>
 
+#include <common/global.hpp>
+
 int main( void )
 {
 	// Initialize GLFW
@@ -38,7 +40,7 @@ int main( void )
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow( 1024, 768, "Tutorial 16 - Shadows", NULL, NULL);
+	window = glfwCreateWindow( WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, NULL, NULL);
 	if( window == NULL ){
 		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
 		getchar();
@@ -47,10 +49,10 @@ int main( void )
 	}
 	glfwMakeContextCurrent(window);
     
-    // We would expect width and height to be 1024 and 768
-    int windowWidth = 1024;
-    int windowHeight = 768;
-    // But on MacOS X with a retina screen it'll be 1024*2 and 768*2, so we get the actual framebuffer size:
+    // We would expect width and height to be WINDOW_WIDTH and WINDOW_HEIGHT
+    int windowWidth = WINDOW_WIDTH;
+    int windowHeight = WINDOW_HEIGHT;
+    // But on MacOS X with a retina screen it'll be WINDOW_WIDTH*2 and WINDOW_HEIGHT*2, so we get the actual framebuffer size:
     glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
 
 	// Initialize GLEW
@@ -69,7 +71,7 @@ int main( void )
     
     // Set the mouse at the center of the screen
     glfwPollEvents();
-    glfwSetCursorPos(window, 1024/2, 768/2);
+    glfwSetCursorPos(window, WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
 
 	// Dark blue background
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
@@ -88,20 +90,20 @@ int main( void )
 	glBindVertexArray(VertexArrayID);
 
 	// Create and compile our GLSL program from the shaders
-	GLuint depthProgramID = LoadShaders( "DepthRTT.vert", "DepthRTT.frag" );
+	GLuint depthProgramID = LoadShaders("DepthRTT.vert", "DepthRTT.frag" );
 
 	// Get a handle for our "MVP" uniform
 	GLuint depthMatrixID = glGetUniformLocation(depthProgramID, "depthMVP");
 
 	// Load the texture
-	//GLuint Texture = loadDDS("uvmap.DDS");
-	GLuint Texture = loadBMP_custom("t.bmp");
+	//GLuint Texture = loadDDS("model/sample.dds");
+	GLuint Texture = loadBMP_custom("StatueOfLiberty.bmp");
 	
 	// Read our .obj file
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> normals;
-	bool res = loadOBJ("t.obj", vertices, uvs, normals);
+	bool res = loadOBJ("StatueOfLiberty.obj", vertices, uvs, normals);
 
 	std::vector<unsigned short> indices;
 	std::vector<glm::vec3> indexed_vertices;
@@ -132,7 +134,7 @@ int main( void )
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned short), &indices[0], GL_STATIC_DRAW);
 
-
+	;
 	// ---------------------------------------------
 	// Render to Texture - specific code begins here
 	// ---------------------------------------------
@@ -146,7 +148,7 @@ int main( void )
 	GLuint depthTexture;
 	glGenTextures(1, &depthTexture);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0,GL_DEPTH_COMPONENT16, 1024, 1024, 0,GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0,GL_DEPTH_COMPONENT16, WINDOW_WIDTH, WINDOW_WIDTH, 0,GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -206,7 +208,7 @@ int main( void )
 
 		// Render to our framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
-		glViewport(0,0,1024,1024); // Render on the whole framebuffer, complete from the lower left corner to the upper right
+		glViewport(0,0,WINDOW_WIDTH,WINDOW_WIDTH); // Render on the whole framebuffer, complete from the lower left corner to the upper right
 
 		// We don't use bias in the shader, but instead we draw back faces, 
 		// which are already separated from the front faces by a small distance 
@@ -220,10 +222,11 @@ int main( void )
 		// Use our shader
 		glUseProgram(depthProgramID);
 
-		glm::vec3 lightInvDir = glm::vec3(0.5f,2,2);
+		// glm::vec3 lightInvDir = glm::vec3(0.5f,2,2);
+	 	glm::vec3 lightInvDir = glm::vec3(0.0f, 0.0f , 1.0f);
 
 		// Compute the MVP matrix from the light's point of view
-		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10,10,-10,10,-10,20);
+		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-30, 30, -30, 30, -30, 30);
 		glm::mat4 depthViewMatrix = glm::lookAt(lightInvDir, glm::vec3(0,0,0), glm::vec3(0,1,0));
 		// or, for spot light :
 		//glm::vec3 lightPos(5, 20, 20);
@@ -407,7 +410,7 @@ int main( void )
 
 	// Cleanup VBO and shader
 	glDeleteBuffers(1, &vertexbuffer);
-	glDeleteBuffers(1, &uvbuffer);
+	//glDeleteBuffers(1, &uvbuffer);
 	glDeleteBuffers(1, &normalbuffer);
 	glDeleteBuffers(1, &elementbuffer);
 	glDeleteProgram(programID);
