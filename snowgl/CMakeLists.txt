@@ -43,7 +43,10 @@ add_definitions(
 # The project code
 add_executable(SnowGL
 
-	main.cpp
+	#main.cpp
+
+	src/main.cpp
+
 	common/global.hpp
 	common/shader.cpp
 	common/shader.hpp
@@ -56,14 +59,20 @@ add_executable(SnowGL
 	common/vboindexer.cpp
 	common/vboindexer.hpp
 
-	common/OBJ_Loader.h
+	#shader/ShadowMapping.vert
+	#shader/ShadowMapping.frag
+	#shader/DepthRTT.vert
+	#shader/DepthRTT.frag
+	#shader/Passthrough.vert
+	#shader/SimpleTexture.frag
 
-	shader/ShadowMapping.vert
-	shader/ShadowMapping.frag
-	shader/DepthRTT.vert
-	shader/DepthRTT.frag
-	shader/Passthrough.vert
-	shader/SimpleTexture.frag
+	src/ShadowMapping.vertexshader
+	src/ShadowMapping.fragmentshader
+	src/DepthRTT.vertexshader
+	src/DepthRTT.fragmentshader
+	src/Passthrough.vertexshader
+	src/SimpleTexture.fragmentshader
+	
 )
 
 target_link_libraries(SnowGL
@@ -71,8 +80,8 @@ target_link_libraries(SnowGL
 )
 
 # Xcode and Visual working directories
-set_target_properties(SnowGL PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/")
-create_target_launcher(SnowGL WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src/")
+set_target_properties(SnowGL PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/")
+create_target_launcher(SnowGL WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/")
 
 SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
 SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
@@ -93,11 +102,11 @@ add_custom_command(
     # Command to copy all files in the /model directory
     COMMAND ${CMAKE_COMMAND} -E copy_directory 
             "${CMAKE_CURRENT_SOURCE_DIR}/model"
-            "${CMAKE_CURRENT_SOURCE_DIR}/output/model"
+            "${CMAKE_CURRENT_SOURCE_DIR}/output"
     # Command to copy all files in the /shader directory
     COMMAND ${CMAKE_COMMAND} -E copy_directory 
             "${CMAKE_CURRENT_SOURCE_DIR}/shader"
-            "${CMAKE_CURRENT_SOURCE_DIR}/output/shader"
+            "${CMAKE_CURRENT_SOURCE_DIR}/output"
 )
 
 elseif (${CMAKE_GENERATOR} MATCHES "Xcode" )
