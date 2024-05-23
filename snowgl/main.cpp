@@ -22,7 +22,6 @@ using namespace glm;
 #include <common/vboindexer.hpp>
 
 #include <common/global.hpp>
-#include <common/OBJ_Loader.h>
 
 int main( void )
 {
@@ -103,7 +102,7 @@ int main( void )
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> normals;
-	bool res = loadOBJ("model/untitled.obj", vertices, uvs, normals);
+	bool res = loadOBJ("model/s.obj", vertices, uvs, normals);
 
 	std::vector<unsigned short> indices;
 	std::vector<glm::vec3> indexed_vertices;
@@ -223,7 +222,7 @@ int main( void )
 		glUseProgram(depthProgramID);
 
 		// glm::vec3 lightInvDir = glm::vec3(0.5f,2,2);
-	 	glm::vec3 lightInvDir = glm::vec3(0.0f, 0.0f , -1.0f);
+	 	glm::vec3 lightInvDir = glm::vec3(0.0f, 0.0f , 1.0f);
 
 		// Compute the MVP matrix from the light's point of view
 		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10,10,-10,10,-10,20);
