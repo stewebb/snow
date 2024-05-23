@@ -3,16 +3,6 @@ project (SnowGL)
 
 find_package(OpenGL REQUIRED)
 
-#if( CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR )
-#    message( FATAL_ERROR "Please select another Build Directory ! (and give it a clever name, like bin_Visual2012_64bits/)" )
-#endif()
-#if( CMAKE_SOURCE_DIR MATCHES " " )
-#	message( "Your Source Directory contains spaces. If you experience problems when compiling, this can be the cause." )
-#endif()
-#if( CMAKE_BINARY_DIR MATCHES " " )
-#	message( "Your Build Directory contains spaces. If you experience problems when compiling, this can be the cause." )
-#endif()
-
 # Compile external dependencies 
 add_subdirectory (external)
 
@@ -65,13 +55,14 @@ add_executable(SnowGL
 	common/vboindexer.cpp
 	common/vboindexer.hpp
 
-	src/ShadowMapping.vert
-	src/ShadowMapping.frag
-	src/DepthRTT.vert
-	src/DepthRTT.frag
-	src/Passthrough.vert
-	src/SimpleTexture.frag
+	shader/ShadowMapping.vert
+	shader/ShadowMapping.frag
+	shader/DepthRTT.vert
+	shader/DepthRTT.frag
+	shader/Passthrough.vert
+	shader/SimpleTexture.frag
 )
+
 target_link_libraries(SnowGL
 	${ALL_LIBS}
 )
@@ -85,9 +76,25 @@ SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
 
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
 
+#add_custom_command(
+#   TARGET SnowGL POST_BUILD
+#   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/SnowGL${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/src/"
+#)
+
 add_custom_command(
-   TARGET SnowGL POST_BUILD
-   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/SnowGL${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/src/"
+    TARGET SnowGL POST_BUILD
+    # Command to copy the executable
+    COMMAND ${CMAKE_COMMAND} -E copy 
+            "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/SnowGL${CMAKE_EXECUTABLE_SUFFIX}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/output/"
+    # Command to copy all files in the /model directory
+    COMMAND ${CMAKE_COMMAND} -E copy_directory 
+            "${CMAKE_CURRENT_SOURCE_DIR}/model"
+            "${CMAKE_CURRENT_SOURCE_DIR}/output/model"
+    # Command to copy all files in the /shader directory
+    COMMAND ${CMAKE_COMMAND} -E copy_directory 
+            "${CMAKE_CURRENT_SOURCE_DIR}/shader"
+            "${CMAKE_CURRENT_SOURCE_DIR}/output/shader"
 )
 
 elseif (${CMAKE_GENERATOR} MATCHES "Xcode" )

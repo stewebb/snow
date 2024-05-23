@@ -22,7 +22,7 @@ using namespace glm;
 #include <common/vboindexer.hpp>
 
 #define WINDOW_WIDTH 1024
-#define WINDOW_HEIGHT 768
+#define WINDOW_HEIGHT 1024
 
 int main( void )
 {
