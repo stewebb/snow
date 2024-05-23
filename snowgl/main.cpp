@@ -96,13 +96,13 @@ int main( void )
 	GLuint depthMatrixID = glGetUniformLocation(depthProgramID, "depthMVP");
 
 	// Load the texture
-	//GLuint Texture = loadDDS("model/uvmap.DDS");
+	GLuint Texture = loadDDS("model/dd1s.dds");
 	
 	// Read our .obj file
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> normals;
-	bool res = loadOBJ("model/s.obj", vertices, uvs, normals);
+	bool res = loadOBJ("model/t.obj", vertices, uvs, normals);
 
 	std::vector<unsigned short> indices;
 	std::vector<glm::vec3> indexed_vertices;
@@ -225,7 +225,7 @@ int main( void )
 	 	glm::vec3 lightInvDir = glm::vec3(0.0f, 0.0f , 1.0f);
 
 		// Compute the MVP matrix from the light's point of view
-		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10,10,-10,10,-10,20);
+		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-30, 30, -30, 30, -30, 30);
 		glm::mat4 depthViewMatrix = glm::lookAt(lightInvDir, glm::vec3(0,0,0), glm::vec3(0,1,0));
 		// or, for spot light :
 		//glm::vec3 lightPos(5, 20, 20);
@@ -307,7 +307,7 @@ int main( void )
 
 		// Bind our texture in Texture Unit 0
 		glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, Texture);
+		glBindTexture(GL_TEXTURE_2D, Texture);
 		// Set our "myTextureSampler" sampler to use Texture Unit 0
 		glUniform1i(TextureID, 0);
 
@@ -415,7 +415,7 @@ int main( void )
 	glDeleteProgram(programID);
 	glDeleteProgram(depthProgramID);
 	glDeleteProgram(quad_programID);
-	//glDeleteTextures(1, &Texture);
+	glDeleteTextures(1, &Texture);
 
 	glDeleteFramebuffers(1, &FramebufferName);
 	glDeleteTextures(1, &depthTexture);
