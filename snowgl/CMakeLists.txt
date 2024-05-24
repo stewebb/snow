@@ -78,13 +78,23 @@ create_target_launcher(SnowGL WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/")
 SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
 SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
 
+set(output_folder build)
+
+if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/build/models/)
+    file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/models/)
+endif()
+
+if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/build/textures/)
+    file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/textures/)
+endif()
+
 add_custom_command(
     TARGET SnowGL POST_BUILD
     #COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/SnowGL${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/output/"
-    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/*.frag" "${CMAKE_CURRENT_SOURCE_DIR}/build/"#
-	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/*.vert" "${CMAKE_CURRENT_SOURCE_DIR}/build/"
-	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/*.obj" "${CMAKE_CURRENT_SOURCE_DIR}/build/"
-	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/*.bmp" "${CMAKE_CURRENT_SOURCE_DIR}/build/"
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/*.frag" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/"
+	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/*.vert" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/"
+	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/models/*.obj" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/models/"
+	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/textures/*.bmp" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/textures/"
 )
 
 #if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )

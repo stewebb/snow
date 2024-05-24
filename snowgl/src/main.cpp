@@ -112,7 +112,7 @@ int main(void){
 
 	// Load the texture
 	//GLuint Texture = loadDDS("uvmap.DDS");
-	GLuint Texture = loadBMP_custom("StatueOfLiberty.bmp");
+	GLuint Texture = loadBMP_custom("textures/StatueOfLiberty.bmp");
 	
 	// Read our .obj file
 	std::vector<glm::vec3> vertices;
@@ -121,7 +121,7 @@ int main(void){
 	//bool res = loadOBJ("icosphere6.obj", vertices, uvs, normals);
 
 
-	bool res = loadOBJ("StatueOfLiberty.obj", vertices, uvs, normals);
+	bool res = loadOBJ("models/StatueOfLiberty.obj", vertices, uvs, normals);
 
 	std::vector<unsigned short> indices;
 	std::vector<glm::vec3> indexed_vertices;
