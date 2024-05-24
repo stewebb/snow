@@ -322,4 +322,6 @@ void main(){
 	float f_p = f_e * f_inc;
 	color = snowColor() * f_p + objectColor() * (1-f_p);
 
+	color = objectColor();
+
 }
