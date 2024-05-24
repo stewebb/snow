@@ -23,11 +23,10 @@ using namespace glm;
 
 #include <common/global.hpp>
 
-int main( void )
-{
+int main(void){
 	// Initialize GLFW
-	if( !glfwInit() )
-	{
+	if(!glfwInit()){
+
 		fprintf( stderr, "Failed to initialize GLFW\n" );
 		getchar();
 		return -1;
@@ -103,7 +102,12 @@ int main( void )
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> normals;
+	//bool res = loadOBJ("sphere.obj", vertices, uvs, normals);
+
 	bool res = loadOBJ("StatueOfLiberty.obj", vertices, uvs, normals);
+
+
+
 
 	std::vector<unsigned short> indices;
 	std::vector<glm::vec3> indexed_vertices;
@@ -223,7 +227,7 @@ int main( void )
 		glUseProgram(depthProgramID);
 
 		glm::vec3 lightInvDir1 = glm::vec3(0.0f, 0.0, 1.0);
-		glm::vec3 lightInvDir = glm::vec3(0.0f, 0.0, 1.0);
+		glm::vec3 lightInvDir = glm::vec3(1.0f, 1.0, 1.0);
 
 		// Compute the MVP matrix from the light's point of view
 		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-30,30,-30,30,-30,30);

@@ -4,6 +4,9 @@
 in vec2 UV;
 in vec3 Position_worldspace;
 in vec3 Normal_cameraspace;
+in vec3 Normal_modelspace;
+
+
 in vec3 EyeDirection_cameraspace;
 in vec3 LightDirection_cameraspace;
 in vec4 ShadowCoord;
@@ -103,12 +106,19 @@ void main(){
 		
 		// being fully in the shadow will eat up 4*0.2 = 0.8
 		// 0.2 potentially remain, which is quite dark.
-		float in_shadow = texture(shadowMap, vec3(ShadowCoord.xy + poissonDisk[index]/700.0,  (ShadowCoord.z-bias)/ShadowCoord.w));
 		
-		if(in_shadow == 1.0){
-			MaterialDiffuseColor = vec3(0.96,0.96,1);
-		}
+		//float in_shadow = texture(shadowMap, vec3(ShadowCoord.xy + poissonDisk[index]/700.0,  (ShadowCoord.z-bias)/ShadowCoord.w));
+		
+		//if(in_shadow == 1.0){
+		//	MaterialDiffuseColor = vec3(0.96,0.96,1);
+		//}
 		//visibility -= 0.2*(1.0-in_shadow);
+
+	}
+	vec3 nn = normalize(Normal_modelspace);
+	vec3 uu = vec3(0, 0, 1);
+	if(dot(nn, uu) <= 0.0){
+		MaterialDiffuseColor = vec3(1, 0, 0);
 	}
 
 	// For spot lights, use either one of these lines instead.
