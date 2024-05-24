@@ -138,7 +138,7 @@ vec3 objectColor(){
 
 	// Light emission properties
 	vec3 LightColor = vec3(1.0, 1.0, 1.0);
-	float LightPower = 1.0f;
+	float LightPower = 0.167f;
 
 	// Material properties
 	vec3 MaterialDiffuseColor = texture(myTextureSampler, UV).rgb;
@@ -181,10 +181,11 @@ vec3 objectColor(){
 
 }
 
-/*
+
 // Calculate the snow color.
 vec3 snowColor(){
 
+	/*
 	vec3 LightColor = vec3(1.0, 1.0, 1.0);
 	float LightPower = 1.0f;
 
@@ -210,9 +211,57 @@ vec3 snowColor(){
 	vec3 Specular = SnowSpecularColor * LightColor * LightPower * pow(cosAlpha, SnowSpecularExponent);
 
 	return Ambient + Diffuse + Specular;
+	*/
+
+	// Light emission properties
+	vec3 LightColor = vec3(1.0, 1.0, 1.0);
+	float LightPower = 0.167f;
+
+	// Fixed snow color (white), RGB: (240, 250, 255)
+	vec3 SnowDiffuseColor = vec3(0.9375, 0.9375, 1.0000);
+	vec3 SnowAmbientColor = vec3(0.1, 0.1, 0.1) * SnowDiffuseColor;
+	vec3 SnowSpecularColor = vec3(0.2, 0.2, 0.2);
+	float SnowSpecularExponent = 25.0f;
+
+	float distortion_scalar = 0.3;
+
+	vec3 color = vec3(0.0); // Initialize final color
+
+	// Calculate color contribution from each light
+	for (int i = 0; i < numLights; i++) {
+		// Distorted normal
+		vec3 n = normalize(Normal_cameraspace + distortion_scalar * random(Normal_modelspace, 1));
+
+		// Direction of the light (from the fragment to the light)
+		vec3 l = normalize(LightDirection_cameraspace[i]);
+
+		// Cosine of the angle between the normal and the light direction
+		float cosTheta = clamp(dot(n, l), 0.0, 1.0);
+
+		// Eye vector (towards the camera)
+		vec3 E = normalize(EyeDirection_cameraspace);
+
+		// Direction in which the triangle reflects the light
+		vec3 R = reflect(-l, n);
+
+		// Cosine of the angle between the Eye vector and the Reflect vector
+		float cosAlpha = clamp(dot(E, R), 0.0, 1.0);
+
+		// Calculate Ambient, Diffuse, and Specular components
+		vec3 Ambient = SnowAmbientColor;
+		vec3 Diffuse = SnowDiffuseColor * LightColor * LightPower * cosTheta;
+		vec3 Specular = SnowSpecularColor * LightColor * LightPower * pow(cosAlpha, SnowSpecularExponent);
+
+		// Accumulate contributions from each light
+		color += Ambient + Diffuse + Specular;
+	}
+
+	return color;
+
+
 }
 
-*/
+
 
 float inclication(vec3 n){
 	float noise = 0.2f;
@@ -362,8 +411,8 @@ void main(){
 	float f_inc = inclication(Normal_modelspace);
 
 	float f_p = f_e * f_inc;
-	//color = snowColor() * f_p + objectColor() * (1-f_p);
+	color = snowColor() * f_p + objectColor() * (1-f_p);
 
-	color = objectColor();
+	//color = objectColor();
 
 }

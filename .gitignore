@@ -10,3 +10,6 @@
 **/.DS_Store
 **/.cache
 **/compile_commands.json
+
+# Materials are defined in textures only, no mtl files required.
+*.mtl

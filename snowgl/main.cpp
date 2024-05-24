@@ -119,8 +119,11 @@ int main(void){
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> normals;
 	
+	bool res = loadOBJ("models/grass.obj", vertices, uvs, normals);
+
 	//bool res = loadOBJ("models/icosphere6.obj", vertices, uvs, normals);
-	bool res = loadOBJ("models/StatueOfLiberty.obj", vertices, uvs, normals);
+	//bool res = loadOBJ("models/StatueOfLiberty.obj", vertices, uvs, normals);
+
 
 	std::vector<unsigned short> indices;
 	std::vector<glm::vec3> indexed_vertices;
@@ -284,6 +287,8 @@ int main(void){
 
 
 
+
+
 		// Render to the screen
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0,0,windowWidth,windowHeight); // Render on the whole framebuffer, complete from the lower left corner to the upper right
@@ -329,6 +334,7 @@ int main(void){
 		lightInvDirs[1] = glm::vec3(-1.0f,  0.0f,  0.0f);  // -x
 		lightInvDirs[2] = glm::vec3( 0.0f,  1.0f,  0.0f);  // +y
 		lightInvDirs[3] = glm::vec3( 0.0f, -1.0f,  0.0f);  // -y
+		
 		lightInvDirs[4] = glm::vec3( 0.0f,  0.0f,  1.0f);  // +z
 		lightInvDirs[5] = glm::vec3( 0.0f,  0.0f, -1.0f);  // -z
 
@@ -411,6 +417,9 @@ int main(void){
 
 		// Optionally render the shadowmap (for debug only)
 
+	
+
+
 		// Render only on a corner of the window (or we we won't see the real rendering...)
 		glViewport(0,0,512,512);
 
@@ -449,7 +458,9 @@ int main(void){
     	if (angle > 360.0f)
        		angle -= 360.0f;
 
-	} // Check if the ESC key was pressed or the window was closed
+	} 
+	
+	// Check if the ESC key was pressed or the window was closed
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
 		   glfwWindowShouldClose(window) == 0 );
 
