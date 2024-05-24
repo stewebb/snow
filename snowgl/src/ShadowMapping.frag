@@ -46,7 +46,7 @@ float random(vec3 seed, int i){
 	return fract(sin(dot_product) * 43758.5453);
 }
 
-// Maps angle (in degrees )with color to demonstrate inclination.
+// Maps angle (in degrees) with color to demonstrate inclination.
 vec3 getColorFromDotProduct(float dotn) {
 
 	// [90, 180] -> Red
