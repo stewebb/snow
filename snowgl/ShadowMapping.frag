@@ -8,7 +8,9 @@ in vec3 Normal_modelspace;
 
 
 in vec3 EyeDirection_cameraspace;
-in vec3 LightDirection_cameraspace;
+//in vec3 LightDirection_cameraspace;
+in vec3 LightDirection_cameraspace[6];
+
 in vec4 ShadowCoord;
 
 // Output data
@@ -19,6 +21,7 @@ uniform sampler2D myTextureSampler;
 uniform mat4 MV;
 uniform vec3 LightPosition_worldspace;
 uniform sampler2DShadow shadowMap;
+uniform int numLights;
 
 vec2 poissonDisk[16] = vec2[]( 
    vec2( -0.94201624, -0.39906216 ), 
@@ -89,6 +92,7 @@ vec3 angleColorMapping(float dotn) {
 
 // Calculate the object color without snow effect.
 vec3 objectColor(){
+	/*
 
 	// Light emission properties
 	vec3 LightColor = vec3(1.0, 1.0, 1.0);
@@ -130,8 +134,54 @@ vec3 objectColor(){
 	vec3 Specular = MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha, MaterialSpecularExponent);
 
 	return Ambient + Diffuse + Specular;
+	*/
+
+	// Light emission properties
+	vec3 LightColor = vec3(1.0, 1.0, 1.0);
+	float LightPower = 1.0f;
+
+	// Material properties
+	vec3 MaterialDiffuseColor = texture(myTextureSampler, UV).rgb;
+	vec3 MaterialAmbientColor = vec3(0.1, 0.1, 0.1) * MaterialDiffuseColor;
+	vec3 MaterialSpecularColor = vec3(0.5, 0.5, 0.5);
+	float MaterialSpecularExponent = 150.0f;
+
+	// Normal of the computed fragment, in camera space
+	vec3 n = normalize(Normal_cameraspace);
+
+	// Eye vector (towards the camera)
+	vec3 E = normalize(EyeDirection_cameraspace);
+
+	vec3 color = vec3(0.0); // Initialize final color
+
+	// Calculate color contribution from each light
+	for (int i = 0; i < numLights; i++) {
+		// Direction of the light (from the fragment to the light)
+		vec3 l = normalize(LightDirection_cameraspace[i]);
+
+		// Cosine of the angle between the normal and the light direction
+		float cosTheta = clamp(dot(n, l), 0.0, 1.0);
+
+		// Direction in which the triangle reflects the light
+		vec3 R = reflect(-l, n);
+
+		// Cosine of the angle between the Eye vector and the Reflect vector
+		float cosAlpha = clamp(dot(E, R), 0.0, 1.0);
+
+		// Calculate Ambient, Diffuse, and Specular components
+		vec3 Ambient = MaterialAmbientColor;
+		vec3 Diffuse = MaterialDiffuseColor * LightColor * LightPower * cosTheta;
+		vec3 Specular = MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha, MaterialSpecularExponent);
+
+		// Accumulate contributions from each light
+		color += Ambient + Diffuse + Specular;
+	}
+
+	return color;
+
 }
 
+/*
 // Calculate the snow color.
 vec3 snowColor(){
 
@@ -160,17 +210,9 @@ vec3 snowColor(){
 	vec3 Specular = SnowSpecularColor * LightColor * LightPower * pow(cosAlpha, SnowSpecularExponent);
 
 	return Ambient + Diffuse + Specular;
-
-	/*
-	color = 
-		// Ambient : simulates indirect lighting
-		MaterialAmbientColor +
-		// Diffuse : "color" of the object
-		visibility * MaterialDiffuseColor * LightColor * LightPower * cosTheta+
-		// Specular : reflective highlight, like a mirror
-		visibility * MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha, SpecularExponent);
-	*/
 }
+
+*/
 
 float inclication(vec3 n){
 	float noise = 0.2f;
@@ -320,7 +362,7 @@ void main(){
 	float f_inc = inclication(Normal_modelspace);
 
 	float f_p = f_e * f_inc;
-	color = snowColor() * f_p + objectColor() * (1-f_p);
+	//color = snowColor() * f_p + objectColor() * (1-f_p);
 
 	color = objectColor();
 

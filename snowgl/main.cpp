@@ -203,6 +203,7 @@ int main(void){
 	GLuint texID = glGetUniformLocation(quad_programID, "texture");
 
 
+
 	// Create and compile our GLSL program from the shaders
 	GLuint programID = LoadShaders( "ShadowMapping.vert", "ShadowMapping.frag" );
 
@@ -215,10 +216,6 @@ int main(void){
 	GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
 	GLuint DepthBiasID = glGetUniformLocation(programID, "DepthBiasMVP");
 	GLuint ShadowMapID = glGetUniformLocation(programID, "shadowMap");
-	
-	// Get a handle for our "LightPosition" uniform
-	GLuint lightInvDirID = glGetUniformLocation(programID, "LightInvDirection_worldspace");
-
 
 	float angle = 0.0f;
 	do{
@@ -285,6 +282,8 @@ int main(void){
 
 
 
+
+
 		// Render to the screen
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0,0,windowWidth,windowHeight); // Render on the whole framebuffer, complete from the lower left corner to the upper right
@@ -323,6 +322,29 @@ int main(void){
 		glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
 		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
 		glUniformMatrix4fv(DepthBiasID, 1, GL_FALSE, &depthBiasMVP[0][0]);
+
+		// Put 6 lights, on +x/-x/+y/-y/+z/-z direction respectively.
+		glm::vec3 lightInvDirs[6];
+		lightInvDirs[0] = glm::vec3( 1.0f,  0.0f,  0.0f);  // +x
+		lightInvDirs[1] = glm::vec3(-1.0f,  0.0f,  0.0f);  // -x
+		lightInvDirs[2] = glm::vec3( 0.0f,  1.0f,  0.0f);  // +y
+		lightInvDirs[3] = glm::vec3( 0.0f, -1.0f,  0.0f);  // -y
+		lightInvDirs[4] = glm::vec3( 0.0f,  0.0f,  1.0f);  // +z
+		lightInvDirs[5] = glm::vec3( 0.0f,  0.0f, -1.0f);  // -z
+
+			
+		// Get a handle for our "LightPosition" uniform
+		GLuint lightInvDirID = glGetUniformLocation(programID, "LightInvDirection_worldspace");
+
+		// Pass the array of light directions to the shader
+		glUniform3fv(lightInvDirID, 6, &lightInvDirs[0][0]);
+
+		// Pass the number of lights
+		GLuint numLightsID = glGetUniformLocation(programID, "numLights");
+		glUniform1i(numLightsID, 6);
+
+
+
 
 		glUniform3f(lightInvDirID, lightInvDir.x, lightInvDir.y, lightInvDir.z);
 

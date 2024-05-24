@@ -13,14 +13,23 @@ out vec3 Normal_modelspace;
 
 
 out vec3 EyeDirection_cameraspace;
-out vec3 LightDirection_cameraspace;
+
+//out vec3 LightDirection_cameraspace;
+out vec3 LightDirection_cameraspace[6];
+
+
 out vec4 ShadowCoord;
 
 // Values that stay constant for the whole mesh.
 uniform mat4 MVP;
 uniform mat4 V;
 uniform mat4 M;
-uniform vec3 LightInvDirection_worldspace;
+
+//uniform vec3 LightInvDirection_worldspace;
+
+uniform int numLights;
+uniform vec3 LightInvDirection_worldspace[6];
+
 uniform mat4 DepthBiasMVP;
 
 
@@ -39,7 +48,12 @@ void main(){
 	EyeDirection_cameraspace = vec3(0,0,0) - ( V * M * vec4(vertexPosition_modelspace,1)).xyz;
 
 	// Vector that goes from the vertex to the light, in camera space
-	LightDirection_cameraspace = (V*vec4(LightInvDirection_worldspace,0)).xyz;
+	// LightDirection_cameraspace = (V*vec4(LightInvDirection_worldspace,0)).xyz;
+
+	for(int i = 0; i < numLights; i++) {
+    // Transform the light direction into camera space
+    LightDirection_cameraspace[i] = (V * vec4(LightInvDirection_worldspace[i], 0.0)).xyz;
+    }
 	
 	// Normal of the the vertex, in camera space
 	Normal_cameraspace = ( V * M * vec4(vertexNormal_modelspace,0)).xyz; // Only correct if ModelMatrix does not scale the model ! Use its inverse transpose if not.
