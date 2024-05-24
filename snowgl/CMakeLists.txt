@@ -58,12 +58,12 @@ add_executable(SnowGL
 	common/vboindexer.cpp
 	common/vboindexer.hpp
 
-	ShadowMapping.vert
-	ShadowMapping.frag
-	DepthRTT.vert
-	DepthRTT.frag
-	Passthrough.vert
-	SimpleTexture.frag
+	shaders/ShadowMapping.vert
+	shaders/ShadowMapping.frag
+	shaders/DepthRTT.vert
+	shaders/DepthRTT.frag
+	shaders/Passthrough.vert
+	shaders/SimpleTexture.frag
 	
 )
 
@@ -80,19 +80,23 @@ SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
 
 set(output_folder build)
 
-if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/build/models/)
+if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${output_folder}/models/)
     file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/models/)
 endif()
 
-if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/build/textures/)
+if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${output_folder}/textures/)
     file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/textures/)
+endif()
+
+if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${output_folder}/shaders/)
+    file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/shaders/)
 endif()
 
 add_custom_command(
     TARGET SnowGL POST_BUILD
     #COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/SnowGL${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/output/"
-    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/*.frag" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/"
-	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/*.vert" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/"
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/shaders/*.frag" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/shaders"
+	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/shaders/*.vert" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/shaders"
 	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/models/*.obj" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/models/"
 	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/textures/*.bmp" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/textures/"
 )

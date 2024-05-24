@@ -26,10 +26,16 @@
 */
 
 #define MODEL_LOCATION "models/StatueOfLiberty.obj"
-#define TEXTURE_LOCATION "textures/rainbow.bmp"
+
+//#define TEXTURE_LOCATION "textures/rainbow.bmp"
+#define TEXTURE_LOCATION "textures/checkerboard.bmp"
+
 
 // Snow color, in RGB format (white with a higher blue part)
-#define SNOW_COLOR {240, 240, 255}
+//#define SNOW_COLOR_R    240
+//#define SNOW_COLOR_G    240
+//#define SNOW_COLOR_B    255
+
 #define BACKGROUND_COLOR {0, 0, 0}
 
 // #define BACKGROUND_R 255
