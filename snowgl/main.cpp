@@ -10,8 +10,6 @@
 // 5. I have modified the normal distortion function, so there is no dE anymore.
 // -----------------------------------------------------------------------
 
-
-
 // Include standard headers
 #include <stdio.h>
 #include <stdlib.h>
