@@ -43,8 +43,8 @@ add_definitions(
 # The project code
 add_executable(SnowGL
 
-	#main.cpp
-	src/main.cpp
+	main.cpp
+	#src/main.cpp
 
 	common/global.hpp
 	common/shader.cpp
@@ -58,12 +58,12 @@ add_executable(SnowGL
 	common/vboindexer.cpp
 	common/vboindexer.hpp
 
-	src/ShadowMapping.vert
-	src/ShadowMapping.frag
-	src/DepthRTT.vert
-	src/DepthRTT.frag
-	src/Passthrough.vert
-	src/SimpleTexture.frag
+	ShadowMapping.vert
+	ShadowMapping.frag
+	DepthRTT.vert
+	DepthRTT.frag
+	Passthrough.vert
+	SimpleTexture.frag
 	
 )
 
@@ -91,23 +91,8 @@ endif()
 add_custom_command(
     TARGET SnowGL POST_BUILD
     #COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/SnowGL${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/output/"
-    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/*.frag" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/"
-	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/*.vert" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/"
-	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/models/*.obj" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/models/"
-	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/textures/*.bmp" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/textures/"
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/*.frag" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/"
+	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/*.vert" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/"
+	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/models/*.obj" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/models/"
+	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/textures/*.bmp" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/textures/"
 )
-
-#if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
-
-#add_custom_command(
-#    TARGET SnowGL POST_BUILD
-#    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/SnowGL${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/output/"
-#    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/*.frag" "${CMAKE_CURRENT_SOURCE_DIR}/output/"#
-#	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/*.vert" "${CMAKE_CURRENT_SOURCE_DIR}/output/"
-#	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/*.obj" "${CMAKE_CURRENT_SOURCE_DIR}/output/"
-#	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/*.bmp" "${CMAKE_CURRENT_SOURCE_DIR}/output/"
-#)
-
-##elseif (${CMAKE_GENERATOR} MATCHES "Xcode" )
-
-#endif (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
