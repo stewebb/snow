@@ -46,8 +46,6 @@ int main(void){
 		return -1;
 	}
 
-
-
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -78,6 +76,7 @@ int main(void){
 		glfwTerminate();
 		return -1;
 	}
+
 
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
@@ -111,19 +110,14 @@ int main(void){
 	GLuint depthMatrixID = glGetUniformLocation(depthProgramID, "depthMVP");
 
 	// Load the texture
-	//GLuint Texture = loadDDS("uvmap.DDS");
-	//GLuint Texture = loadBMP_custom("textures/rainbow.bmp");
-	GLuint Texture = loadBMP_custom("textures/checkerboard_01.bmp");
+	GLuint Texture = loadBMP_custom(TEXTURE_LOCATION);
 	
 	// Read our .obj file
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> normals;
-	
-	//bool res = loadOBJ("models/football.obj", vertices, uvs, normals);
-	//bool res = loadOBJ("models/grass.obj", vertices, uvs, normals);
-	//bool res = loadOBJ("models/icosphere6.obj", vertices, uvs, normals);
-	bool res = loadOBJ("models/StatueOfLiberty.obj", vertices, uvs, normals);
+
+	bool res = loadOBJ(MODEL_LOCATION, vertices, uvs, normals);
 
 	std::vector<unsigned short> indices;
 	std::vector<glm::vec3> indexed_vertices;
@@ -204,8 +198,6 @@ int main(void){
 	// Create and compile our GLSL program from the shaders
 	GLuint quad_programID = LoadShaders( "Passthrough.vert", "SimpleTexture.frag" );
 	GLuint texID = glGetUniformLocation(quad_programID, "texture");
-
-
 
 	// Create and compile our GLSL program from the shaders
 	GLuint programID = LoadShaders( "ShadowMapping.vert", "ShadowMapping.frag" );

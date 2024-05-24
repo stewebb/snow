@@ -89,52 +89,8 @@ vec3 angleColorMapping(float dotn) {
     }
 }
 
-
 // Calculate the object color without snow effect.
 vec3 objectColor(){
-	/*
-
-	// Light emission properties
-	vec3 LightColor = vec3(1.0, 1.0, 1.0);
-	float LightPower = 1.0f;
-
-	// Material properties
-	vec3 MaterialDiffuseColor = texture(myTextureSampler, UV).rgb;
-	vec3 MaterialAmbientColor = vec3(0.1, 0.1, 0.1) * MaterialDiffuseColor;
-	vec3 MaterialSpecularColor = vec3(0.5, 0.5, 0.5);
-	float MaterialSpecularExponent = 150.0f;
-
-	// Normal of the computed fragment, in camera space
-	vec3 n = normalize( Normal_cameraspace );
-
-	// Direction of the light (from the fragment to the light)
-	vec3 l = normalize( LightDirection_cameraspace );
-
-	// Cosine of the angle between the normal and the light direction, 
-	// clamped above 0
-	//  - light is at the vertical of the triangle -> 1
-	//  - light is perpendicular to the triangle -> 0
-	//  - light is behind the triangle -> 0
-	float cosTheta = clamp(dot(n, l), 0, 1);
-
-	// Eye vector (towards the camera)
-	vec3 E = normalize(EyeDirection_cameraspace);
-	
-	// Direction in which the triangle reflects the light
-	vec3 R = reflect(-l, n);
-
-	// Cosine of the angle between the Eye vector and the Reflect vector,
-	// clamped to 0
-	//  - Looking into the reflection -> 1
-	//  - Looking elsewhere -> < 1
-	float cosAlpha = clamp(dot(E, R), 0, 1);
-
-	vec3 Ambient = MaterialAmbientColor;
-	vec3 Diffuse = MaterialDiffuseColor * LightColor * LightPower * cosTheta;
-	vec3 Specular = MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha, MaterialSpecularExponent);
-
-	return Ambient + Diffuse + Specular;
-	*/
 
 	// Light emission properties
 	vec3 LightColor = vec3(1.0, 1.0, 1.0);
@@ -156,6 +112,7 @@ vec3 objectColor(){
 
 	// Calculate color contribution from each light
 	for (int i = 0; i < numLights; i++) {
+
 		// Direction of the light (from the fragment to the light)
 		vec3 l = normalize(LightDirection_cameraspace[i]);
 
@@ -185,35 +142,6 @@ vec3 objectColor(){
 // Calculate the snow color.
 vec3 snowColor(){
 
-	/*
-	vec3 LightColor = vec3(1.0, 1.0, 1.0);
-	float LightPower = 1.0f;
-
-	// Fixed snow color (white), RGB: (240, 250, 255)
-	vec3 SnowDiffuseColor = vec3(0.9375, 0.9375, 1.0000);
-	vec3 SnowAmbientColor = vec3(0.1, 0.1, 0.1) * SnowDiffuseColor;
-	vec3 SnowSpecularColor = vec3(0.2, 0.2, 0.2);
-	float SnowSpecularExponent = 25.0f;
-
-	float distortion_scalar = 0.1;
-	
-	// Distorted normal
-	vec3 n = normalize(Normal_cameraspace + distortion_scalar * random(Normal_modelspace, 1));
-	vec3 l = normalize(LightDirection_cameraspace);
-	float cosTheta = clamp(dot(n, l), 0, 1);
-	
-	vec3 E = normalize(EyeDirection_cameraspace);
-	vec3 R = reflect(-l, n);
-	float cosAlpha = clamp(dot(E, R),0, 1);
-
-	vec3 Ambient = SnowAmbientColor;
-	vec3 Diffuse = SnowDiffuseColor * LightColor * LightPower * cosTheta;
-	vec3 Specular = SnowSpecularColor * LightColor * LightPower * pow(cosAlpha, SnowSpecularExponent);
-
-	return Ambient + Diffuse + Specular;
-	*/
-
-	// Light emission properties
 	vec3 LightColor = vec3(1.0, 1.0, 1.0);
 	float LightPower = 0.167f;
 
@@ -223,146 +151,51 @@ vec3 snowColor(){
 	vec3 SnowSpecularColor = vec3(0.2, 0.2, 0.2);
 	float SnowSpecularExponent = 25.0f;
 
-	float distortion_scalar = 0.3;
-
-	vec3 color = vec3(0.0); // Initialize final color
+	float distortion_scalar = 0.1;
+	vec3 color = vec3(0.0);
 
 	// Calculate color contribution from each light
 	for (int i = 0; i < numLights; i++) {
+
 		// Distorted normal
 		vec3 n = normalize(Normal_cameraspace + distortion_scalar * random(Normal_modelspace, 1));
-
-		// Direction of the light (from the fragment to the light)
 		vec3 l = normalize(LightDirection_cameraspace[i]);
-
-		// Cosine of the angle between the normal and the light direction
 		float cosTheta = clamp(dot(n, l), 0.0, 1.0);
 
-		// Eye vector (towards the camera)
 		vec3 E = normalize(EyeDirection_cameraspace);
-
-		// Direction in which the triangle reflects the light
 		vec3 R = reflect(-l, n);
-
-		// Cosine of the angle between the Eye vector and the Reflect vector
 		float cosAlpha = clamp(dot(E, R), 0.0, 1.0);
 
 		// Calculate Ambient, Diffuse, and Specular components
 		vec3 Ambient = SnowAmbientColor;
 		vec3 Diffuse = SnowDiffuseColor * LightColor * LightPower * cosTheta;
 		vec3 Specular = SnowSpecularColor * LightColor * LightPower * pow(cosAlpha, SnowSpecularExponent);
-
-		// Accumulate contributions from each light
 		color += Ambient + Diffuse + Specular;
 	}
 
 	return color;
-
-
 }
 
 
-
+// Calculate the inclication value of a snow surface.
 float inclication(vec3 n){
-	float noise = 0.2f;
 
+	// The inclication noise, between 0 and 0.4
+	float noise = random(Normal_modelspace, 1) * 0.4;
+
+	// Normalize vectors to simplify the angle calculation.
 	n = normalize(n);
 	vec3 u = vec3(0, 0, 1);
 
+	// cos(theta) = dot(n, u) / (norm(n) * norm(u))
 	float dotn = dot(n, u);
 
-	return (dotn > 0) ? (dotn + noise) : 0.0f;
+	// If 0 < angle < 90, f_inc = cos(theta) + n, otherwise f_inc = 0
+	// Make sure f_inc betweens 0 and 1
+	return (dotn > 0) ? min(dotn + noise, 1.0f) : 0.0f;
 }
 
 void main(){
-
-	/*
-	// Light emission properties
-	vec3 LightColor = vec3(1.0, 1.0, 1.0);
-	float LightPower = 1.0f;
-	
-	// Material properties
-	vec3 MaterialDiffuseColor = texture(myTextureSampler, UV).rgb;
-	vec3 MaterialAmbientColor = vec3(0.1, 0.1, 0.1) * MaterialDiffuseColor;
-	vec3 MaterialSpecularColor = vec3(0.5, 0.5, 0.5);
-	float SpecularExponent = 150.0f;
-
-	// Distance to the light
-	//float distance = length( LightPosition_worldspace - Position_worldspace );
-
-	// Normal of the computed fragment, in camera space
-	vec3 n = normalize( Normal_cameraspace );
-	// Direction of the light (from the fragment to the light)
-	vec3 l = normalize( LightDirection_cameraspace );
-	// Cosine of the angle between the normal and the light direction, 
-	// clamped above 0
-	//  - light is at the vertical of the triangle -> 1
-	//  - light is perpendicular to the triangle -> 0
-	//  - light is behind the triangle -> 0
-	float cosTheta = clamp( dot( n,l ), 0,1 );
-	
-	// Eye vector (towards the camera)
-	vec3 E = normalize(EyeDirection_cameraspace);
-	// Direction in which the triangle reflects the light
-	vec3 R = reflect(-l,n);
-	// Cosine of the angle between the Eye vector and the Reflect vector,
-	// clamped to 0
-	//  - Looking into the reflection -> 1
-	//  - Looking elsewhere -> < 1
-	float cosAlpha = clamp( dot( E,R ), 0,1 );
-	
-	float visibility=1.0;
-
-	// Fixed bias, or...
-	float bias = 0.005;
-
-	// ...variable bias
-	// float bias = 0.005*tan(acos(cosTheta));
-	// bias = clamp(bias, 0,0.01);
-
-	// Sample the shadow map 4 times
-	for (int i=0;i<4;i++){
-		// use either :
-		//  - Always the same samples.
-		//    Gives a fixed pattern in the shadow, but no noise
-		int index = i;
-		//  - A random sample, based on the pixel's screen location. 
-		//    No banding, but the shadow moves with the camera, which looks weird.
-		// int index = int(16.0*random(gl_FragCoord.xyy, i))%16;
-		//  - A random sample, based on the pixel's position in world space.
-		//    The position is rounded to the millimeter to avoid too much aliasing
-		// int index = int(16.0*random(floor(Position_worldspace.xyz*1000.0), i))%16;
-		
-		// being fully in the shadow will eat up 4*0.2 = 0.8
-		// 0.2 potentially remain, which is quite dark.
-		
-		//float in_shadow = texture(shadowMap, vec3(ShadowCoord.xy + poissonDisk[index]/700.0,  (ShadowCoord.z-bias)/ShadowCoord.w));
-		
-		//if(in_shadow == 1.0){
-		//	MaterialDiffuseColor = vec3(0.96,0.96,1);
-		//}
-		//visibility -= 0.2*(1.0-in_shadow);
-
-	}
-	vec3 nn = normalize(Normal_modelspace);
-	vec3 uu = vec3(0, 0, 1);
-	float dotn = dot(nn, uu);
-	MaterialDiffuseColor = angleColorMapping(dotn);
-	
-	// For spot lights, use either one of these lines instead.
-	// if ( texture( shadowMap, (ShadowCoord.xy/ShadowCoord.w) ).z  <  (ShadowCoord.z-bias)/ShadowCoord.w )
-	// if ( textureProj( shadowMap, ShadowCoord.xyw ).z  <  (ShadowCoord.z-bias)/ShadowCoord.w )
-	
-	color = 
-		// Ambient : simulates indirect lighting
-		MaterialAmbientColor +
-		// Diffuse : "color" of the object
-		visibility * MaterialDiffuseColor * LightColor * LightPower * cosTheta+
-		// Specular : reflective highlight, like a mirror
-		visibility * MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha, SpecularExponent);
-	*/
-
-	//color = snowColor();
 
 	// Fixed bias, or...
 	float bias = 0.005;
@@ -397,7 +230,7 @@ void main(){
 		//	MaterialDiffuseColor = vec3(0.96,0.96,1);
 		//}
 
-		visibility -= 0.2*(1.0-in_shadow);
+		visibility -= 0.25*(1.0-in_shadow);
 
 	}
 
@@ -409,9 +242,10 @@ void main(){
 
 	float f_e = visibility; // (visibility < 1.0) ? 0.0 : 1.0;
 	float f_inc = inclication(Normal_modelspace);
+	//f_inc = 1.00;
 
 	float f_p = f_e * f_inc;
-	color = snowColor() * f_p + objectColor() * (1-f_p);
+	color = snowColor() * f_p + objectColor() * (1.00-f_p);
 
 	//color = objectColor();
 
