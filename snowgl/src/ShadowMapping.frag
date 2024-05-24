@@ -46,6 +46,45 @@ float random(vec3 seed, int i){
 	return fract(sin(dot_product) * 43758.5453);
 }
 
+// Maps angle (in degrees )with color to demonstrate inclination.
+vec3 getColorFromDotProduct(float dotn) {
+
+	// [90, 180] -> Red
+    if (dotn <= 0.0000) {
+        return vec3(1.00, 0.50, 0.50);
+    } 
+	
+	// [75, 90) -> Orange
+	else if (dotn <= 0.2588) {
+        return vec3(1.00, 0.65, 0.50);
+    } 
+	
+	// [60, 75) -> Yellow
+	else if (dotn <= 0.5) {
+        return vec3(1.0, 1.0, 0.6);
+    } 
+	
+	// [45, 60) -> Green
+	else if (dotn <= 0.7071) {
+        return vec3(0.60, 1.00, 0.60);
+    } 
+	
+	// [30, 45) -> Blue
+	else if (dotn <= 0.8660) {
+        return vec3(0.50, 0.70, 1.00);
+    } 
+	
+	// [15, 30) -> Indigo
+	else if (dotn <= 0.9659) {
+        return vec3(0.40, 0.40, 0.70);
+    } 
+
+	// [0, 15) -> Violet
+	else {
+        return vec3(0.8, 0.6, 1.0);
+    }
+}
+
 void main(){
 
 	// Light emission properties
@@ -117,10 +156,9 @@ void main(){
 	}
 	vec3 nn = normalize(Normal_modelspace);
 	vec3 uu = vec3(0, 0, 1);
-	if(dot(nn, uu) <= 0.0){
-		MaterialDiffuseColor = vec3(1, 0, 0);
-	}
-
+	float dotn = dot(nn, uu);
+	MaterialDiffuseColor = getColorFromDotProduct(dotn);
+	
 	// For spot lights, use either one of these lines instead.
 	// if ( texture( shadowMap, (ShadowCoord.xy/ShadowCoord.w) ).z  <  (ShadowCoord.z-bias)/ShadowCoord.w )
 	// if ( textureProj( shadowMap, ShadowCoord.xyw ).z  <  (ShadowCoord.z-bias)/ShadowCoord.w )
