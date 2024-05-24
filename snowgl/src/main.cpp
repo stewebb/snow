@@ -32,6 +32,8 @@ int main(void){
 		return -1;
 	}
 
+
+
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -102,9 +104,9 @@ int main(void){
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> normals;
-	bool res = loadOBJ("icosphere6.obj", vertices, uvs, normals);
-
-	//bool res = loadOBJ("StatueOfLiberty.obj", vertices, uvs, normals);
+	//bool res = loadOBJ("icosphere6.obj", vertices, uvs, normals);
+	
+	bool res = loadOBJ("StatueOfLiberty.obj", vertices, uvs, normals);
 
 	std::vector<unsigned short> indices;
 	std::vector<glm::vec3> indexed_vertices;

@@ -47,7 +47,7 @@ float random(vec3 seed, int i){
 }
 
 // Maps angle (in degrees) with color to demonstrate inclination.
-vec3 getColorFromDotProduct(float dotn) {
+vec3 angleColorMapping(float dotn) {
 
 	// [90, 180] -> Red
     if (dotn <= 0.0000) {
@@ -85,16 +85,54 @@ vec3 getColorFromDotProduct(float dotn) {
     }
 }
 
+vec3 snowColor(){
+
+	vec3 LightColor = vec3(1.0, 1.0, 1.0);
+	float LightPower = 1.0f;
+
+	// Fixed snow color (white), RGB: (240, 250, 255)
+	vec3 SnowDiffuseColor = vec3(0.9375, 0.9375, 1.0000);
+	vec3 SnowAmbientColor = vec3(0.1, 0.1, 0.1) * SnowDiffuseColor;
+	vec3 SnowSpecularColor = vec3(0.2, 0.2, 0.2);
+	float SnowSpecularExponent = 25.0f;
+
+	float distortion_scalar = 0.1;
+	
+	vec3 n = normalize(Normal_cameraspace + distortion_scalar * random(Normal_modelspace, 1));
+	vec3 l = normalize(LightDirection_cameraspace);
+	float cosTheta = clamp(dot(n, l), 0, 1);
+	
+	vec3 E = normalize(EyeDirection_cameraspace);
+	vec3 R = reflect(-l, n);
+	float cosAlpha = clamp(dot(E, R),0, 1);
+
+	vec3 Ambient = SnowAmbientColor;
+	vec3 Diffuse = SnowDiffuseColor * LightColor * LightPower * cosTheta;
+	vec3 Specular = SnowSpecularColor * LightColor * LightPower * pow(cosAlpha, SnowSpecularExponent);
+
+	return Ambient + Diffuse + Specular;
+
+	/*
+	color = 
+		// Ambient : simulates indirect lighting
+		MaterialAmbientColor +
+		// Diffuse : "color" of the object
+		visibility * MaterialDiffuseColor * LightColor * LightPower * cosTheta+
+		// Specular : reflective highlight, like a mirror
+		visibility * MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha, SpecularExponent);
+	*/
+}
+
 void main(){
 
 	// Light emission properties
-	vec3 LightColor = vec3(1,1,1);
+	vec3 LightColor = vec3(1.0, 1.0, 1.0);
 	float LightPower = 1.0f;
 	
 	// Material properties
-	vec3 MaterialDiffuseColor = texture( myTextureSampler, UV ).rgb;
-	vec3 MaterialAmbientColor = vec3(0.1,0.1,0.1) * MaterialDiffuseColor;
-	vec3 MaterialSpecularColor = vec3(0.5,0.5,0.5);
+	vec3 MaterialDiffuseColor = texture(myTextureSampler, UV).rgb;
+	vec3 MaterialAmbientColor = vec3(0.1, 0.1, 0.1) * MaterialDiffuseColor;
+	vec3 MaterialSpecularColor = vec3(0.5, 0.5, 0.5);
 	float SpecularExponent = 150.0f;
 
 	// Distance to the light
@@ -157,7 +195,7 @@ void main(){
 	vec3 nn = normalize(Normal_modelspace);
 	vec3 uu = vec3(0, 0, 1);
 	float dotn = dot(nn, uu);
-	MaterialDiffuseColor = getColorFromDotProduct(dotn);
+	MaterialDiffuseColor = angleColorMapping(dotn);
 	
 	// For spot lights, use either one of these lines instead.
 	// if ( texture( shadowMap, (ShadowCoord.xy/ShadowCoord.w) ).z  <  (ShadowCoord.z-bias)/ShadowCoord.w )
@@ -171,4 +209,5 @@ void main(){
 		// Specular : reflective highlight, like a mirror
 		visibility * MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha, SpecularExponent);
 
+	color = snowColor();
 }
