@@ -1,3 +1,17 @@
+// -----------------------------------------------------------------------
+// 					  				README
+// 1. Most of this paper can be implemented in ShadowMapping.frag file
+// 2. I am using the shadow map as the occlusion map currently.
+//	  But I set the light source of the shadow map to right above the object
+// 3. I have tried to implement two separate shadow maps, one for normal shadow,
+// 	  another for snow occlusion, but it doesn't work.
+//    Two shadow maps affect each other, which shouldn't happen.
+// 4. This shadow map supports soft shadowing.
+// 5. I have modified the normal distortion function, so there is no dE anymore.
+// -----------------------------------------------------------------------
+
+
+
 // Include standard headers
 #include <stdio.h>
 #include <stdlib.h>
@@ -106,7 +120,7 @@ int main(void){
 	std::vector<glm::vec3> normals;
 	//bool res = loadOBJ("icosphere6.obj", vertices, uvs, normals);
 
-	
+
 	bool res = loadOBJ("StatueOfLiberty.obj", vertices, uvs, normals);
 
 	std::vector<unsigned short> indices;
@@ -227,6 +241,7 @@ int main(void){
 		glUseProgram(depthProgramID);
 
 		glm::vec3 lightInvDir1 = glm::vec3(0.0f, 0.0, 1.0);
+
 		glm::vec3 lightInvDir = glm::vec3(0.0f, 0.0, 1.0);
 
 		// Compute the MVP matrix from the light's point of view

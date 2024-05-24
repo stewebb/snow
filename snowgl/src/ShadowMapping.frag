@@ -123,7 +123,7 @@ vec3 objectColor(){
 	// clamped to 0
 	//  - Looking into the reflection -> 1
 	//  - Looking elsewhere -> < 1
-	float cosAlpha = clamp(dot(E, R ),0, 1);
+	float cosAlpha = clamp(dot(E, R), 0, 1);
 
 	vec3 Ambient = MaterialAmbientColor;
 	vec3 Diffuse = MaterialDiffuseColor * LightColor * LightPower * cosTheta;
@@ -170,6 +170,17 @@ vec3 snowColor(){
 		// Specular : reflective highlight, like a mirror
 		visibility * MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha, SpecularExponent);
 	*/
+}
+
+float inclication(vec3 n){
+	float noise = 0.2f;
+
+	n = normalize(n);
+	vec3 u = vec3(0, 0, 1);
+
+	float dotn = dot(n, u);
+
+	return (dotn > 0) ? (dotn + noise) : 0.0f;
 }
 
 void main(){
@@ -261,5 +272,54 @@ void main(){
 	*/
 
 	//color = snowColor();
-	color = objectColor();
+
+	// Fixed bias, or...
+	float bias = 0.005;
+
+	// ...variable bias
+	// float bias = 0.005*tan(acos(cosTheta));
+	// bias = clamp(bias, 0,0.01);
+
+
+	float visibility=1.0;
+
+	// Sample the shadow map 4 times
+	for (int i=0;i<4;i++){
+		// use either :
+		//  - Always the same samples.
+		//    Gives a fixed pattern in the shadow, but no noise
+		
+		int index = i;
+		//  - A random sample, based on the pixel's screen location. 
+		//    No banding, but the shadow moves with the camera, which looks weird.
+		// int index = int(16.0*random(gl_FragCoord.xyy, i))%16;
+		//  - A random sample, based on the pixel's position in world space.
+		//    The position is rounded to the millimeter to avoid too much aliasing
+		//int index = int(16.0*random(floor(Position_worldspace.xyz*1000.0), i))%16;
+		
+		// being fully in the shadow will eat up 4*0.2 = 0.8
+		// 0.2 potentially remain, which is quite dark.
+		
+		float in_shadow = texture(shadowMap, vec3(ShadowCoord.xy + poissonDisk[index]/700.0,  (ShadowCoord.z-bias)/ShadowCoord.w));
+		
+		//if(in_shadow == 1.0){
+		//	MaterialDiffuseColor = vec3(0.96,0.96,1);
+		//}
+
+		visibility -= 0.2*(1.0-in_shadow);
+
+	}
+
+	//color = objectColor() * visibility;
+
+	//if(visibility < 1.00){
+	//
+	//}
+
+	float f_e = visibility; // (visibility < 1.0) ? 0.0 : 1.0;
+	float f_inc = inclication(Normal_modelspace);
+
+	float f_p = f_e * f_inc;
+	color = snowColor() * f_p + objectColor() * (1-f_p);
+
 }
