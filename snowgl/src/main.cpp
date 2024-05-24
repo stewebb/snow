@@ -105,6 +105,7 @@ int main(void){
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> normals;
 	//bool res = loadOBJ("icosphere6.obj", vertices, uvs, normals);
+
 	
 	bool res = loadOBJ("StatueOfLiberty.obj", vertices, uvs, normals);
 
