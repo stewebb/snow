@@ -61,8 +61,7 @@ data['Time'] = data['Minute'].apply(minutes_to_time)
 
 # Save to CSV for OpenGL C++ renderer
 data = data[['Time', 'Minute', 'Temperature', 'SnowAmount']]
-data.to_csv('minute_data.csv', index=False)
-
+data.to_csv('data.csv', index=False)
 
 # Plotting
 if PLOTTING:
