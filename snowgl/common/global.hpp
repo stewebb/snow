@@ -27,6 +27,7 @@
 
 #define MODEL_LOCATION "models/StatueOfLiberty.obj"
 //#define MODEL_LOCATION "models/grass.obj"
+//#define MODEL_LOCATION "models/football.obj"
 
 //#define TEXTURE_LOCATION "textures/rainbow.bmp"
 #define TEXTURE_LOCATION "textures/checkerboard.bmp"

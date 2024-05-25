@@ -177,7 +177,7 @@ int main(void){
 	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		return false;
 
-	
+
 	// The quad's FBO. Used only for visualizing the shadowmap.
 	static const GLfloat g_quad_vertex_buffer_data[] = { 
 		-1.0f, -1.0f, 0.0f,

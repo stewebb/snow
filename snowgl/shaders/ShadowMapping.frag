@@ -208,43 +208,29 @@ void main(){
 	float visibility=1.0;
 
 	// Sample the shadow map 4 times
-	for (int i=0;i<4;i++){
-		// use either :
-		//  - Always the same samples.
-		//    Gives a fixed pattern in the shadow, but no noise
+	for (int i=0; i<4; i++){
+		float in_shadow = texture(
+			shadowMap, 
+			vec3(ShadowCoord.xy + poissonDisk[i] / 700.0, (ShadowCoord.z - bias) / ShadowCoord.w)
+		);
 		
-		int index = i;
-		//  - A random sample, based on the pixel's screen location. 
-		//    No banding, but the shadow moves with the camera, which looks weird.
-		// int index = int(16.0*random(gl_FragCoord.xyy, i))%16;
-		//  - A random sample, based on the pixel's position in world space.
-		//    The position is rounded to the millimeter to avoid too much aliasing
-		//int index = int(16.0*random(floor(Position_worldspace.xyz*1000.0), i))%16;
-		
-		// being fully in the shadow will eat up 4*0.2 = 0.8
-		// 0.2 potentially remain, which is quite dark.
-		
-		float in_shadow = texture(shadowMap, vec3(ShadowCoord.xy + poissonDisk[index]/700.0,  (ShadowCoord.z-bias)/ShadowCoord.w));
-		
-		//if(in_shadow == 1.0){
-		//	MaterialDiffuseColor = vec3(0.96,0.96,1);
-		//}
-
-		visibility -= 0.25*(1.0-in_shadow);
-
+		visibility -= 0.25 * (1.0 - in_shadow);
 	}
 
-	//color = objectColor() * visibility;
+	// f_e is the exposure component.
+	float f_e = visibility;
 
-	//if(visibility < 1.00){
-	//
-	//}
-
-	float f_e = visibility; // (visibility < 1.0) ? 0.0 : 1.0;
+	// f_inc is the inclication function.
 	float f_inc = inclication(Normal_modelspace);
-	//f_inc = 1.00;
 
-	float f_p = f_e * f_inc;
+	
+	// f_u is a user-defined function to customize/manipulate the snow effect.
+	// It can be any function with any domain, but the range of it must in [0, 1]
+	float f_u = 0.00;
+
+	// Snow accumulation prediction function f_p = f_e * f_inc * f_u
+	float f_p = f_e * f_inc * f_u;
+
 	color = snowColor() * f_p + objectColor() * (1.00-f_p);
 
 	//color = objectColor();
