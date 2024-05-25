@@ -1,29 +1,25 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.interpolate import CubicSpline
 
-def daily_temperature(minute_of_day, min_temp=5, max_temp=25):
-    # Normalize the time to a value between 0 and 2*pi
-    radians = (minute_of_day / 1440) * 2 * np.pi
-    
-    # Use a sinusoidal function shifted to have a minimum around 5:00 (300 minutes)
-    temperature = ((np.sin(radians + np.pi * 1) + 1) / 2) * (max_temp - min_temp) + min_temp
-    
-    return temperature
+# Convert times to minutes in a day
+times_segments = np.array([0.0, 1.0, 2.0,  3.0,  4.0,  5.0,  6.0,  7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0]) * 60
+temps_segments = np.array([1.0, 0.0, 0.0, -1.0, -3.0, -4.0, -5.0, -2.0, 1.0, 3.0,  7.0, 10.0, 12.0, 13.0, 15.0, 16.0, 14.0, 12.0,  9.0,  7.0,  5.0,  4.0,  3.0,  2.0])
 
-# Generate a list of minutes from 00:00 to 23:59
-minutes = np.arange(0, 1440)
+# Use CubicSpline for a smoother interpolation
+cs = CubicSpline(times_segments, temps_segments, bc_type='natural')
 
-# Calculate temperatures for each minute
-temperatures = [daily_temperature(minute) for minute in minutes]
+# Generate times in minutes
+minute_times = np.linspace(0, 1440, 1440)  # Time array for minutes in a day
+minute_temperatures = cs(minute_times)
 
 # Plotting
 plt.figure(figsize=(10, 5))
-plt.plot(minutes, temperatures, label='Temperature through the day', color='blue')
-plt.title('Daily Temperature Variation')
-plt.xlabel('Minute of the Day')
+plt.plot(minute_times, minute_temperatures, label='Temperature vs. Time', color='blue')
+plt.scatter(times_segments, temps_segments, color='blue')
+plt.xlabel('Time (minutes)')
 plt.ylabel('Temperature (°C)')
+plt.title('Smooth Cubic Spline Daily Temperature Variation in Canberra During Winter')
 plt.grid(True)
-plt.xticks(np.arange(0, 1500, step=60), [f"{int(x/60):02d}:00" for x in np.arange(0, 1500, step=60)], rotation=45)
-plt.tight_layout()
 plt.legend()
 plt.show()
