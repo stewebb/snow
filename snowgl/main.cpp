@@ -20,7 +20,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
-//#include <map>
+
+#include <iostream>
+#include <sstream>
+#include <iomanip>  // for setprecision
 
 // Include GLEW
 #include <GL/glew.h>
@@ -67,6 +70,11 @@ cv::Mat captureFramebufferToCVMat(const int width, const int height) {
     return resultMat;
 }
 
+std::string doubleToString(double value) {
+    std::ostringstream stream;
+    stream << std::fixed << std::setprecision(2) << value;
+    return stream.str();
+}
 int main(void){
 
 	int g_width = 800, g_height = 600;
@@ -581,7 +589,7 @@ int main(void){
         std::string eyePosText = "Eye Position: (" + std::to_string(int(eye_pos.x)) + ", " + std::to_string(int(eye_pos.y)) + ", " + std::to_string(int(eye_pos.z)) + ")";
         
 		std::string timeText = "Clock: " + current_time.time;
-		std::string temperatureText = "Temperature: " + std::to_string(current_time.temperature);
+		std::string temperatureText = "Temperature: " + doubleToString(current_time.temperature);
 
         cv::putText(capturedImage, fpsText, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
         cv::putText(capturedImage, eyePosText, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
