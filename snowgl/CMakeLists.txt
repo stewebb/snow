@@ -47,6 +47,9 @@ add_executable(SnowGL
 	#src/main.cpp
 
 	common/global.hpp
+	common/csv_reader.hpp
+	common/csv_reader.cpp
+
 	common/shader.cpp
 	common/shader.hpp
 	common/controls.cpp
@@ -91,15 +94,6 @@ endif()
 if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${output_folder}/shaders/)
     file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/shaders/)
 endif()
-
-#add_custom_command(
-#    TARGET SnowGL POST_BUILD
-#    #COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/SnowGL${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/output/"
-#    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/shaders/*.frag" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/shaders"
-#	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/shaders/*.vert" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/shaders"
-#	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/models/*.obj" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/models/"
-#	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/textures/*.bmp" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/textures/"
-#)
 
 add_custom_command(
     TARGET SnowGL POST_BUILD

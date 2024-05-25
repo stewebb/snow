@@ -170,6 +170,7 @@ int main(void){
 		 
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexture, 0);
 
+
 	// No color output in the bound framebuffer, only depth.
 	glDrawBuffer(GL_NONE);
 
