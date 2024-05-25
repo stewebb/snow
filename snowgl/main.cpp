@@ -6,8 +6,12 @@
 // 3. I have tried to implement two separate shadow maps, one for normal shadow,
 // 	  another for snow occlusion, but it doesn't work.
 //    Two shadow maps affect each other, which shouldn't happen.
+//	  Try to redo my process, but remember to backup the current code (c++ and glsl) first
+//	  copy the file and add .bak extension.
 // 4. This shadow map supports soft shadowing.
 // 5. I have modified the normal distortion function, so there is no dE anymore.
+// 6. I have modified Snow accumulation prediction function and added a new parameter
+//    to customize/manipulate the snow effect.
 // -----------------------------------------------------------------------
 
 // Include standard headers
