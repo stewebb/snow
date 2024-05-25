@@ -23,6 +23,8 @@ uniform vec3 LightPosition_worldspace;
 uniform sampler2DShadow shadowMap;
 uniform int numLights;
 
+uniform float snow_amount;
+
 vec2 poissonDisk[16] = vec2[]( 
    vec2( -0.94201624, -0.39906216 ), 
    vec2( 0.94558609, -0.76890725 ), 
@@ -226,7 +228,7 @@ void main(){
 	
 	// f_u is a user-defined function to customize/manipulate the snow effect.
 	// It can be any function with any domain, but the range of it must in [0, 1]
-	float f_u = 1.00;
+	float f_u = snow_amount;
 
 	// Snow accumulation prediction function f_p = f_e * f_inc * f_u
 	float f_p = f_e * f_inc * f_u;

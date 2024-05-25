@@ -22,13 +22,8 @@ bool csv_reader::read_csv() {
 
         getline(ss, entry.time, ',');
         getline(ss, temp, ','); entry.minute = std::stoi(temp);
-        getline(ss, temp, ','); entry.temperature = std::stoi(temp);
-        getline(ss, temp, ','); entry.snow_amount = std::stoi(temp);
-        //getline(ss, temp, ','); entry.lightIntensityB = std::stoi(temp);
-        //getline(ss, temp, ','); entry.lightAngle = std::stof(temp);
-        //getline(ss, temp, ','); entry.backgroundColorR = std::stoi(temp);
-        //getline(ss, temp, ','); entry.backgroundColorG = std::stoi(temp);
-        //getline(ss, temp, ','); entry.backgroundColorB = std::stoi(temp);
+        getline(ss, temp, ','); entry.temperature = std::stof(temp);
+        getline(ss, temp, ','); entry.snow_amount = std::stof(temp);
 
         dataEntries.push_back(entry);
     }

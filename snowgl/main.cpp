@@ -45,10 +45,33 @@ using namespace glm;
 #include <common/vboindexer.hpp>
 
 #include <common/global.hpp>
+#include <common/csv_reader.hpp>
 
 int main(void){
 
-	
+	csv_reader reader("data/data.csv");
+    reader.read_csv();
+    auto daytime_data = reader.getData();
+	auto daytime_size = daytime_data.size();
+	std::cout << daytime_size << std::endl;
+    
+	/*
+    if (reader.read_csv()) {
+        for (const auto& entry : reader.getData()) {
+            std::cout << "Time: " << entry.time
+                      << ", Minute: " << entry.minute
+                      << ", Temperature: " << entry.temperature
+                      << ", Snow Amount: " << entry.snow_amount
+                      //<< ", Light Intensity B: " << entry.lightIntensityB
+                      //<< ", Light Angle: " << entry.lightAngle
+                      //<< ", Background Color R: " << entry.backgroundColorR
+                      //<< ", Background Color G: " << entry.backgroundColorG
+                      //<< ", Background Color B: " << entry.backgroundColorB
+                      << std::endl;
+        }
+    }
+	*/
+    
 	// Initialize GLFW
 	if(!glfwInit()){
 
@@ -239,114 +262,31 @@ int main(void){
 	GLuint DepthBiasID = glGetUniformLocation(programID, "DepthBiasMVP");
 	GLuint ShadowMapID = glGetUniformLocation(programID, "shadowMap");
 
-	/*
-	GLuint fontTexture;
-	glActiveTexture(GL_TEXTURE0);
-	glGenTextures(1, &fontTexture);
-	glBindTexture(GL_TEXTURE_2D, fontTexture);
-
-	// Set texture options
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	// Load the glyph for character 'X'
-	if (FT_Load_Char(face, 'X', FT_LOAD_RENDER)) {
-		std::cerr << "Failed to load Glyph\n";
-		return -1;
-	}
-
-	// Generate texture
-	glTexImage2D(
-		GL_TEXTURE_2D,
-		0,
-		GL_RED,
-		face->glyph->bitmap.width,
-		face->glyph->bitmap.rows,
-		0,
-		GL_RED,
-		GL_UNSIGNED_BYTE,
-		face->glyph->bitmap.buffer
-	);
-
-	GLuint textVAO, textVBO;
-	glGenVertexArrays(1, &textVAO);
-	glGenBuffers(1, &textVBO);
-	glBindVertexArray(textVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, textVBO);
-
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	std::string text = "Hello World";
-	GLfloat x = 25.0f; // X position for top-left corner
-	GLfloat y = 25.0f; // Y position for top-left corner
-
-	// Assuming character information is stored in some structure `ch`
-	struct Character {
-		GLuint     TextureID;  // ID handle of the glyph texture
-		glm::ivec2 Size;       // Size of glyph
-		glm::ivec2 Bearing;    // Offset from baseline to left/top of glyph
-		GLuint     Advance;    // Offset to advance to next glyph
-	};
-
-	std::map<char, Character> Characters;  // Map of characters
-
-	// Activate the texture unit and bind the text VAO
-	glActiveTexture(GL_TEXTURE0);
-	glBindVertexArray(textVAO);
-
-	// Iterate through all characters in the string
-	for (char c : text) {
-		Character ch = Characters[c];
-
-		GLfloat xpos = x + ch.Bearing.x;
-		GLfloat ypos = y - (ch.Size.y - ch.Bearing.y);
-
-		GLfloat w = ch.Size.x;
-		GLfloat h = ch.Size.y;
-
-		// Update VBO for each character
-		GLfloat vertices[6][4] = {
-			{ xpos,     ypos + h, 0.0, 0.0 },
-			{ xpos,     ypos,     0.0, 1.0 },
-			{ xpos + w, ypos,     1.0, 1.0 },
-
-			{ xpos,     ypos + h, 0.0, 0.0 },
-			{ xpos + w, ypos,     1.0, 1.0 },
-			{ xpos + w, ypos + h, 1.0, 0.0 }
-		};
-
-		// Render glyph texture over quad
-		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-
-		// Update content of VBO memory
-		glBindBuffer(GL_ARRAY_BUFFER, textVBO);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		// Render quad
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		// Advance cursors for next glyph
-		x += (ch.Advance >> 6); // Bitshift by 6 to get value in pixels (2^6 = 64)
-	}
-
-	glBindVertexArray(0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	*/
-
-   //renderBitmapString(50, 50, GLUT_BITMAP_9_BY_15, "Hello, OpenGL!");
-
-
 
 	float angle = 0.0f;
+    int daytime_index = 0;
+
 	do{
+
+		//std::cout << "Current Time: " << daytime_data[daytime_index].time << std::endl;
+		auto current_time = daytime_data[daytime_index];
+		std::cout << "Time: " << current_time.time
+                      << ", Minute: " << current_time.minute
+                      << ", Temperature: " << current_time.temperature
+                      << ", Snow Amount: " << current_time.snow_amount
+                      //<< ", Light Intensity B: " << entry.lightIntensityB
+                      //<< ", Light Angle: " << entry.lightAngle
+                      //<< ", Background Color R: " << entry.backgroundColorR
+                      //<< ", Background Color G: " << entry.backgroundColorG
+                      //<< ", Background Color B: " << entry.backgroundColorB
+                      << std::endl;
+
+		daytime_index++;
+		if (daytime_index == daytime_size) {
+            daytime_index = 0;
+        }
+
+		glUniform1f(glGetUniformLocation(programID, "snow_amount"), current_time.snow_amount);
 
 		// Render to our framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
