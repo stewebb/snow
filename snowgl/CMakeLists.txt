@@ -25,7 +25,8 @@ include_directories(
 	external/assimp-3.0.1270/include/
 	external/bullet-2.81-rev2613/src/
 	external/bullet-2.81-rev2613/src/
-	external/freetype-2.13.2/include
+	#external/freetype-2.13.2/include
+	#external/freeglut-3.4.0/include
 	.
 )
 
