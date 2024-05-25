@@ -32,6 +32,8 @@
 //#define TEXTURE_LOCATION "textures/rainbow.bmp"
 #define TEXTURE_LOCATION "textures/checkerboard.bmp"
 
+#define FONT_LOCATION "textures/LiberationSansBold.ttf"
+
 // Snow color, in RGB format (white with a higher blue part)
 //#define SNOW_COLOR_R    240
 //#define SNOW_COLOR_G    240

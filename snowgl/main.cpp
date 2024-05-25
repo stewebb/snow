@@ -33,6 +33,9 @@ GLFWwindow* window;
 #include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 #include <common/shader.hpp>
 #include <common/texture.hpp>
 #include <common/controls.hpp>
@@ -65,6 +68,22 @@ int main(void){
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
+
+
+	FT_Library ft;
+	if (FT_Init_FreeType(&ft)) {
+    	fprintf(stderr, "Could not init freetype library\n");
+   		return 1;
+	}
+
+	FT_Face face;
+	if (FT_New_Face(ft, FONT_LOCATION, 0, &face)) {
+   		fprintf(stderr, "Could not open font\n");
+   		return 1;
+	}
+
+	FT_Set_Pixel_Sizes(face, 0, 48);
+
     
     // We would expect width and height to be WINDOW_WIDTH and WINDOW_HEIGHT
     int windowWidth = WINDOW_WIDTH;
@@ -175,7 +194,6 @@ int main(void){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
 		 
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexture, 0);
-
 
 	// No color output in the bound framebuffer, only depth.
 	glDrawBuffer(GL_NONE);
@@ -460,6 +478,9 @@ int main(void){
 	// Check if the ESC key was pressed or the window was closed
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
 		   glfwWindowShouldClose(window) == 0 );
+
+	FT_Done_Face(face);
+	FT_Done_FreeType(ft);
 
 	// Cleanup VBO and shader
 	glDeleteBuffers(1, &vertexbuffer);
