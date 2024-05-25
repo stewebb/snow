@@ -36,7 +36,7 @@ float mouseSpeed = 0.005f;
 
 
 
-void computeMatricesFromInputs(){
+glm::vec3 computeMatricesFromInputs(){
 
 	// glfwGetTime is called only once, the first time this function is called
 	static double lastTime = glfwGetTime();
@@ -112,4 +112,5 @@ void computeMatricesFromInputs(){
 	//std::cout << "Vector: (" << position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
 	//std::cout << "horizontalAngle: " << horizontalAngle << ", verticalAngle: " << verticalAngle << std::endl;
 
+	return position;
 }

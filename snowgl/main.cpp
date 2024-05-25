@@ -37,6 +37,8 @@ using namespace glm;
 //#include <ft2build.h>
 //#include FT_FREETYPE_H
 //#include <GL/freeglut.h>
+//#include "OpenGLText.h"
+#include <opencv2/opencv.hpp>
 
 #include <common/shader.hpp>
 #include <common/texture.hpp>
@@ -44,16 +46,40 @@ using namespace glm;
 #include <common/objloader.hpp>
 #include <common/vboindexer.hpp>
 
+//#define GLT_IMPLEMENTATION
+
 #include <common/global.hpp>
 #include <common/csv_reader.hpp>
+//#include <common/gltext.h>
+//#include "common/arial_10.h"
+//OpenGLText oglText;
+
+// Capture the current OpenGL framebuffer and convert it to an OpenCV Mat
+cv::Mat captureFramebufferToCVMat(const int width, const int height) {
+
+    std::vector<unsigned char> buffer(width * height * 3);
+    glReadPixels(0, 0, width, height, GL_BGR, GL_UNSIGNED_BYTE, buffer.data());
+
+    cv::Mat tempMat(height, width, CV_8UC3, buffer.data());
+    cv::Mat resultMat;
+    cv::flip(tempMat, resultMat, 0); // Flip the image along the x-axis
+
+    return resultMat;
+}
 
 int main(void){
+
+	int g_width = 800, g_height = 600;
+
+    //if(!oglText.init("arial", g_width, g_height))
+    //  //if(!oglText.init(PROJECT_SOURCE_DIR "/Candy Script_48", g_width, g_height))
+    //exit(1);
 
 	csv_reader reader("data/data.csv");
     reader.read_csv();
     auto daytime_data = reader.getData();
 	auto daytime_size = daytime_data.size();
-	std::cout << daytime_size << std::endl;
+	//std::cout << daytime_size << std::endl;
     
 	/*
     if (reader.read_csv()) {
@@ -263,13 +289,42 @@ int main(void){
 	GLuint ShadowMapID = glGetUniformLocation(programID, "shadowMap");
 
 
+	//if (!gltInit())
+	//{
+	//	fprintf(stderr, "Failed to initialize glText\n");
+	//	glfwTerminate();
+	//	return EXIT_FAILURE;
+	//}
+
+	// Creating text
+	//GLTtext *text = gltCreateText();
+	//gltSetText(text, "Hello World!");
+
+
 	float angle = 0.0f;
     int daytime_index = 0;
 
+	double lastTime = glfwGetTime();
+ 	int nbFrames = 0;
+
+	double fps = 0;
+
 	do{
+
+		double currentTime = glfwGetTime();
+     	nbFrames++;
+     	if (currentTime - lastTime >= 1.0 ){ // If last prinf() was more than 1 sec ago
+         // printf and reset timer
+         // printf("%f ms/frame\n", 1000.0/double(nbFrames));
+			fps = 1000.0/double(nbFrames);
+        	nbFrames = 0;
+        	lastTime += 1.0;
+     	}
 
 		//std::cout << "Current Time: " << daytime_data[daytime_index].time << std::endl;
 		auto current_time = daytime_data[daytime_index];
+
+		/*
 		std::cout << "Time: " << current_time.time
                       << ", Minute: " << current_time.minute
                       << ", Temperature: " << current_time.temperature
@@ -280,7 +335,7 @@ int main(void){
                       //<< ", Background Color G: " << entry.backgroundColorG
                       //<< ", Background Color B: " << entry.backgroundColorB
                       << std::endl;
-
+		*/
 		daytime_index++;
 		if (daytime_index == daytime_size) {
             daytime_index = 0;
@@ -348,12 +403,6 @@ int main(void){
 
 		glDisableVertexAttribArray(0);
 
-
-
-
-
-
-
 		// Render to the screen
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0,0,windowWidth,windowHeight); // Render on the whole framebuffer, complete from the lower left corner to the upper right
@@ -368,7 +417,7 @@ int main(void){
 		glUseProgram(programID);
 
 		// Compute the MVP matrix from keyboard and mouse input
-		computeMatricesFromInputs();
+		glm::vec3 eye_pos = computeMatricesFromInputs();
 		glm::mat4 ProjectionMatrix = getProjectionMatrix();
 		glm::mat4 ViewMatrix = getViewMatrix();
 		//ViewMatrix = glm::lookAt(glm::vec3(14,6,4), glm::vec3(0,1,0), glm::vec3(0,1,0));
@@ -515,6 +564,33 @@ int main(void){
 		glDisableVertexAttribArray(0);
 
 
+		// Begin text drawing (this for instance calls glUseProgram)
+		//gltBeginDraw();
+
+		// Draw any amount of text between begin and end
+		//gltColor(1.0f, 1.0f, 1.0f, 0.4f);
+		//gltDrawText2D(text, 0.0f, 0.0f, 1.0f); // x=0.0, y=0.0, scale=1.0
+		//gltDrawText2DAligned(text, 0.0f, (GLfloat)100, 1.0f, GLT_LEFT, GLT_BOTTOM);
+
+		//gltEndDraw();
+
+
+        cv::Mat capturedImage = captureFramebufferToCVMat(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+		std::string fpsText = "FPS: " + std::to_string(int(fps));
+        std::string eyePosText = "Eye Position: (" + std::to_string(int(eye_pos.x)) + ", " + std::to_string(int(eye_pos.y)) + ", " + std::to_string(int(eye_pos.z)) + ")";
+        
+		std::string timeText = "Clock: " + current_time.time;
+		std::string temperatureText = "Temperature: " + std::to_string(current_time.temperature);
+
+        cv::putText(capturedImage, fpsText, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+        cv::putText(capturedImage, eyePosText, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+		cv::putText(capturedImage, timeText, cv::Point(10, 60), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+		cv::putText(capturedImage, temperatureText, cv::Point(10, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+
+        cv::imshow("OpenGL Capture", capturedImage);
+		if (cv::waitKey(1) >= 0) break;
+
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -522,7 +598,6 @@ int main(void){
 		angle += 0.5f;
     	if (angle > 360.0f)
        		angle -= 360.0f;
-
 	} 
 	
 	// Check if the ESC key was pressed or the window was closed

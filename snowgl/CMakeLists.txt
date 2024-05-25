@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.0)
 project (SnowGL)
 
 find_package(OpenGL REQUIRED)
-find_package(Freetype REQUIRED)
+find_package(OpenCV REQUIRED)
 
 # Compile external dependencies 
 add_subdirectory (external)
@@ -17,6 +17,9 @@ if(INCLUDE_DISTRIB)
 	add_subdirectory(distrib)
 endif(INCLUDE_DISTRIB)
 
+include_directories(${OpenCV_INCLUDE_DIRS})
+
+
 include_directories(
 	external/AntTweakBar-1.16/include/
 	external/glfw-3.1.2/include/
@@ -25,8 +28,7 @@ include_directories(
 	external/assimp-3.0.1270/include/
 	external/bullet-2.81-rev2613/src/
 	external/bullet-2.81-rev2613/src/
-	#external/freetype-2.13.2/include
-	#external/freeglut-3.4.0/include
+	external/ogltext/
 	.
 )
 
@@ -34,7 +36,6 @@ set(ALL_LIBS
 	${OPENGL_LIBRARY}
 	glfw
 	GLEW_1130
-	freetype
 )
 
 add_definitions(
@@ -76,7 +77,7 @@ add_executable(SnowGL
 )
 
 target_link_libraries(SnowGL
-	${ALL_LIBS}
+	${ALL_LIBS} ${OpenCV_LIBRARIES}
 )
 
 # Xcode and Visual working directories

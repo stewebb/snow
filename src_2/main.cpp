@@ -55,26 +55,6 @@ void loadModel(int objectId, const std::string& filePath, Eigen::Vector3f offset
 
 int main(int argc, const char **argv) {
 
-    //CSV_Reader reader("../../daylight_simulate.csv");
-    //reader.readCSV();
-    //auto data = reader.getData();
-    /*
-    if (reader.readCSV()) {
-        for (const auto& entry : reader.getData()) {
-            std::cout << "Time: " << entry.time
-                      << ", Minute: " << entry.minute
-                      << ", Light Intensity R: " << entry.lightIntensityR
-                      << ", Light Intensity G: " << entry.lightIntensityG
-                      << ", Light Intensity B: " << entry.lightIntensityB
-                      << ", Light Angle: " << entry.lightAngle
-                      << ", Background Color R: " << entry.backgroundColorR
-                      << ", Background Color G: " << entry.backgroundColorG
-                      << ", Background Color B: " << entry.backgroundColorB
-                      << std::endl;
-        }
-    }
-    */
-
     // Load OBJ models and set textures
     std::vector<Triangle *> TriangleList;
     std::vector<Texture *> TextureList;

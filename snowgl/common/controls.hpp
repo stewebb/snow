@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-void computeMatricesFromInputs();
+glm::vec3 computeMatricesFromInputs();
 glm::mat4 getViewMatrix();
 glm::mat4 getProjectionMatrix();
 
