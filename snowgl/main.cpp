@@ -12,6 +12,8 @@
 // 5. I have modified the normal distortion function, so there is no dE anymore.
 // 6. I have modified Snow accumulation prediction function and added a new parameter
 //    to customize/manipulate the snow effect.
+// 7. The dynamic timing system can be used here, as I have found a way to control 
+//	  the snow amount based on time, see day_time_temperature.py in the s folder
 // -----------------------------------------------------------------------
 
 // Include standard headers

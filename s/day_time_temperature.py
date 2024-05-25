@@ -85,8 +85,6 @@ if PLOTTING:
     plt.legend()
     #plt.show()
 
-
-
     # Plotting the results
     plt.figure(figsize=(12, 6))
     plt.plot(minute_times, snow_amounts, label='Snow Amount vs Time', color='blue')
