@@ -19,9 +19,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
-#include <iostream>
-#include <sstream>
-#include <iomanip>
 #include <opencv2/opencv.hpp>
 
 #include <GL/glew.h>
@@ -39,70 +36,55 @@ using namespace glm;
 #include <common/vboindexer.hpp>
 #include <common/global.hpp>
 #include <common/csv_reader.hpp>
-
-/**
- * @brief Captures the current OpenGL framebuffer and converts it into an OpenCV Mat object.
- * 
- * This function reads the pixels from the current OpenGL framebuffer starting from the bottom-left corner
- * and converts these pixels into a BGR format OpenCV Mat object. It also handles flipping the image
- * vertically to align with OpenCV's top-left origin convention.
- * 
- * @param width The width of the framebuffer to capture.
- * @param height The height of the framebuffer to capture.
- * @return cv::Mat A Mat object containing the captured image in BGR format.
- */
-
-cv::Mat frameBufferToCVMat(const int width, const int height) {
-
-    std::vector<unsigned char> buffer(width * height * 3);
-    glReadPixels(0, 0, width, height, GL_BGR, GL_UNSIGNED_BYTE, buffer.data());
-
-    cv::Mat tempMat(height, width, CV_8UC3, buffer.data());
-    cv::Mat resultMat;
-    cv::flip(tempMat, resultMat, 0);
-
-    return resultMat;
-}
-
-std::string doubleToString(double value) {
-    std::ostringstream stream;
-    stream << std::fixed << std::setprecision(2) << value;
-    return stream.str();
-}
-
+#include <common/util.hpp>
 
 double f_daytime_index = 1000.0f;
 int daytime_size = 0;
 
+/**
+ * @brief Handles scroll events in a GLFW window to adjust a daytime index.
+ *
+ * This function updates a global variable `f_daytime_index` based on the vertical scroll input (`yoffset`).
+ * The function increments or decrements the `f_daytime_index` by `yoffset`, ensuring that the index
+ * wraps around if it exceeds the bounds defined by `daytime_size`. This is useful for cycling through
+ * a series of values (like time of day settings) in response to scroll input.
+ *
+ * @param window A pointer to the GLFWwindow that received the event.
+ * @param xoffset The scroll offset along the x-axis. This parameter is not used in this function.
+ * @param yoffset The scroll offset along the y-axis, used to adjust the `f_daytime_index`.
+ */
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-    // Handle scroll event
-    //printf("Scrolled: xoffset = %f, yoffset = %f\n", xoffset, yoffset);
+    f_daytime_index += yoffset;
 
-	f_daytime_index += yoffset;
-	//std::cout << daytime_index << std::endl;
-	
-	if (f_daytime_index > daytime_size - 1.0) {
+    if (f_daytime_index >= daytime_size) {
         f_daytime_index = 0.0;
+    } else if (f_daytime_index < 0.0) {
+        f_daytime_index = daytime_size - 1.0;
     }
-
-	if(f_daytime_index < 0.0){
-		f_daytime_index = daytime_size - 1;
-	}
-
-	//std::cout << daytime_index << std::endl;
 }
+
 
 int main(void){
 
+	// Read generated data file from day_time_simulator.py
 	csv_reader reader("data/data.csv");
-    reader.read_csv();
+    if(!reader.read_csv()){
+		fprintf(stderr, "Failed to read data file.\n" );
+		getchar();
+		return -1;
+	}
+
     auto daytime_data = reader.getData();
 	daytime_size = daytime_data.size();
-    
-	// Initialize GLFW
-	if(!glfwInit()){
 
-		fprintf( stderr, "Failed to initialize GLFW\n" );
+	if(daytime_size <= 0){
+		fprintf(stderr, "No valid data found.\n" );
+		getchar();
+		return -1;
+	}
+    
+	if(!glfwInit()){
+		fprintf( stderr, "Failed to initialize GLFW.\n" );
 		getchar();
 		return -1;
 	}
@@ -110,72 +92,53 @@ int main(void){
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make macOS happy; should not be needed
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Open a window and create its OpenGL context
 	window = glfwCreateWindow( WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, NULL, NULL);
-	if( window == NULL ){
-		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
+	if(window == NULL ){
+		fprintf( stderr, "Failed to open GLFW window.\n" );
 		getchar();
 		glfwTerminate();
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
     
-    // We would expect width and height to be WINDOW_WIDTH and WINDOW_HEIGHT
     int windowWidth = WINDOW_WIDTH;
     int windowHeight = WINDOW_HEIGHT;
-    // But on MacOS X with a retina screen it'll be WINDOW_WIDTH*2 and WINDOW_HEIGHT*2, so we get the actual framebuffer size:
     glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
 
-	// Initialize GLEW
-	glewExperimental = true; // Needed for core profile
+	glewExperimental = true;
 	if (glewInit() != GLEW_OK) {
-		fprintf(stderr, "Failed to initialize GLEW\n");
+		fprintf(stderr, "Failed to initialize GLEW.\n");
 		getchar();
 		glfwTerminate();
 		return -1;
 	}
 
-
-	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-    // Hide the mouse and enable unlimited movement
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    
-    // Set the mouse at the center of the screen
     glfwPollEvents();
     glfwSetCursorPos(window, WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
 
-	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
-
-	// Accept fragment if it is closer to the camera than the former one
 	glDepthFunc(GL_LESS); 
-
-	// Cull triangles which normal is not towards the camera
 	glEnable(GL_CULL_FACE);
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
 
-	// Create and compile our GLSL program from the shaders
 	GLuint depthProgramID = LoadShaders( "shaders/DepthRTT.vert", "shaders/DepthRTT.frag" );
-
-	// Get a handle for our "MVP" uniform
 	GLuint depthMatrixID = glGetUniformLocation(depthProgramID, "depthMVP");
 
-	// Load the texture
-	GLuint Texture = loadBMP_custom(TEXTURE_LOCATION);
-	
-	// Read our .obj file
+	// Load model and texture
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> normals;
 
 	bool res = loadOBJ(MODEL_LOCATION, vertices, uvs, normals);
+	GLuint Texture = loadBMP_custom(TEXTURE_LOCATION);
 
 	std::vector<unsigned short> indices;
 	std::vector<glm::vec3> indexed_vertices;
@@ -184,7 +147,6 @@ int main(void){
 	indexVBO(vertices, uvs, normals, indices, indexed_vertices, indexed_uvs, indexed_normals);
 
 	// Load it into a VBO
-
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -200,23 +162,16 @@ int main(void){
 	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
 	glBufferData(GL_ARRAY_BUFFER, indexed_normals.size() * sizeof(glm::vec3), &indexed_normals[0], GL_STATIC_DRAW);
 
-	// Generate a buffer for the indices as well
 	GLuint elementbuffer;
 	glGenBuffers(1, &elementbuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned short), &indices[0], GL_STATIC_DRAW);
 
-
-	// ---------------------------------------------
-	// Render to Texture - specific code begins here
-	// ---------------------------------------------
-
-	// The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
+	// Render to Texture
 	GLuint FramebufferName = 0;
 	glGenFramebuffers(1, &FramebufferName);
 	glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
 
-	// Depth texture. Slower than a depth buffer, but you can sample it later in your shader
 	GLuint depthTexture;
 	glGenTextures(1, &depthTexture);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
@@ -230,15 +185,10 @@ int main(void){
 		 
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexture, 0);
 
-	// No color output in the bound framebuffer, only depth.
 	glDrawBuffer(GL_NONE);
-
-	// Always check that our framebuffer is ok
 	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		return false;
 
-
-	// The quad's FBO. Used only for visualizing the shadowmap.
 	static const GLfloat g_quad_vertex_buffer_data[] = { 
 		-1.0f, -1.0f, 0.0f,
 		 1.0f, -1.0f, 0.0f,
@@ -253,17 +203,11 @@ int main(void){
 	glBindBuffer(GL_ARRAY_BUFFER, quad_vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
 
-	// Create and compile our GLSL program from the shaders
 	GLuint quad_programID = LoadShaders( "shaders/Passthrough.vert", "shaders/SimpleTexture.frag" );
 	GLuint texID = glGetUniformLocation(quad_programID, "texture");
-
-	// Create and compile our GLSL program from the shaders
 	GLuint programID = LoadShaders( "shaders/ShadowMapping.vert", "shaders/ShadowMapping.frag" );
-
-	// Get a handle for our "myTextureSampler" uniform
 	GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
 
-	// Get a handle for our "MVP" uniform
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 	GLuint ViewMatrixID = glGetUniformLocation(programID, "V");
 	GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
@@ -271,35 +215,29 @@ int main(void){
 	GLuint ShadowMapID = glGetUniformLocation(programID, "shadowMap");
 
 
- 	// Set the scroll callback
+ 	// The mouse scroll callback
     glfwSetScrollCallback(window, scroll_callback);
 
-
-	//float angle = 0.0f;
-    //int daytime_index = 0;
-	//float slow_index = 0.0;
-	double increment = 0.3;
+	double daytime_frame_increment = 0.3;
 	
+	// Data for FPS calculation
 	double lastTime = glfwGetTime();
  	int nbFrames = 0;
-
 	double fps = 0;
 
-	do{
-			// Dark blue background
+	do {
 
+		// FPS Calculation
 		double currentTime = glfwGetTime();
      	nbFrames++;
-     	if (currentTime - lastTime >= 1.0 ){ // If last prinf() was more than 1 sec ago
-         // printf and reset timer
-         // printf("%f ms/frame\n", 1000.0/double(nbFrames));
-			fps = 1000.0/double(nbFrames);
+     	if (currentTime - lastTime >= 1.0 ){
+			fps = 1000.0 / double(nbFrames);
         	nbFrames = 0;
         	lastTime += 1.0;
      	}
 
 
-		f_daytime_index += increment;
+		f_daytime_index += daytime_frame_increment;
 		if(f_daytime_index > daytime_size-1.0){
 			f_daytime_index = 0;
 		}
@@ -549,14 +487,14 @@ int main(void){
         cv::Mat capturedImage = frameBufferToCVMat(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		std::string fpsText = "FPS: " + std::to_string(int(fps));
-        std::string eyePosText = "Eye Position: (" + doubleToString(eye_pos.x) + ", " + doubleToString(eye_pos.y) + ", " + doubleToString(eye_pos.z) + ")";
+        std::string eyePosText = "Eye Position: (" + floatToString(eye_pos.x) + ", " + floatToString(eye_pos.y) + ", " + floatToString(eye_pos.z) + ")";
         
 		std::string timeText 		   = "Time: " + current_time.time;
-		std::string temperatureText    = "Temperature: " + doubleToString(current_time.temperature);
-		std::string snowAmountText 	   = "Snow Amount: " + doubleToString(current_time.snow_amount);
+		std::string temperatureText    = "Temperature: " + floatToString(current_time.temperature);
+		std::string snowAmountText 	   = "Snow Amount: " + floatToString(current_time.snow_amount);
 
-		std::string lightIntensityText = "Light Intensity: " + doubleToString(current_time.light_intensity);
-		std::string elevationAngleText = "Elevation Angle: " + doubleToString(current_time.elevation_angle);
+		std::string lightIntensityText = "Light Intensity: " + floatToString(current_time.light_intensity);
+		std::string elevationAngleText = "Elevation Angle: " + floatToString(current_time.elevation_angle);
 
         cv::putText(capturedImage, fpsText, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
         cv::putText(capturedImage, eyePosText, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);

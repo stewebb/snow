@@ -66,6 +66,8 @@ add_executable(SnowGL
 	common/objloader.hpp
 	common/vboindexer.cpp
 	common/vboindexer.hpp
+	common/util.cpp
+	common/util.hpp
 
 	shaders/ShadowMapping.vert
 	shaders/ShadowMapping.frag
