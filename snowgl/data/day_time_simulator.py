@@ -220,44 +220,48 @@ minute_temperatures = cs(minute_times)
 # Calculate snow amounts based on temperature values
 snow_amounts = np.vectorize(snow_amount)(minute_temperatures)
 
-# Calculate solar elevation angle
+# Calculate solar elevation angle and the corresponding light directions
 sun_elevations = [solar_elevation(latitude, declination, minute) for minute in minute_times]
+light_directions = [solar_to_light_direction(elevation, azimuth) for elevation in sun_elevations]
 
 # Mapping properties through interpolation
 sun_intensities = [interpolate_intensity(angle) for angle in sun_elevations]
 sun_colors      = [interpolate_sky_color(angle, sun_color_day, sun_color_twilight, sun_color_night) for angle in sun_elevations]
 sky_colors      = [interpolate_sky_color(angle, sky_color_day, sky_color_twilight, sky_color_night) for angle in sun_elevations]
 
-#print(sky_colors)
-
-#elevation = 30  # degrees above the horizon
-light_directions = [solar_to_light_direction(elevation, azimuth) for elevation in sun_elevations]
-#print(Light_directions)
-
-# Extract components of light directions
+# Extract components
 light_direction_x = [ld[0] for ld in light_directions]
 light_direction_y = [ld[1] for ld in light_directions]
 light_direction_z = [ld[2] for ld in light_directions]
-
-
-sky_color_r = [sc[0] for sc in sky_colors]
-sky_color_g = [sc[1] for sc in sky_colors]
-sky_color_b = [sc[2] for sc in sky_colors]
 
 sun_color_r = [sc[0] for sc in sun_colors]
 sun_color_g = [sc[1] for sc in sun_colors]
 sun_color_b = [sc[2] for sc in sun_colors]
 
-#print(sky_color_x)
+sky_color_r = [sc[0] for sc in sky_colors]
+sky_color_g = [sc[1] for sc in sky_colors]
+sky_color_b = [sc[2] for sc in sky_colors]
+
+# Calculate sunrise and sunset time
+sunrise_time = 0
+sunset_time  = 0
+
+for i in range(1, len(sun_elevations)):
+    if sun_elevations[i-1] < 0 <= sun_elevations[i]:
+        sunrise_time = minute_times[i]
+    elif sun_elevations[i-1] >= 0 > sun_elevations[i]:
+        sunset_time = minute_times[i]
 
 # Create DataFrame in Pandas
 data = pd.DataFrame({
     'Minute': minute_times,
     'Temperature': minute_temperatures,
     'SnowAmount': snow_amounts,
+
     'LightIntensity': sun_intensities,
     'ElevationAngle': sun_elevations,
-    'lightDirectionX': light_direction_x,
+
+    'LightDirectionX': light_direction_x,
     'lightDirectionY': light_direction_y,
     'lightDirectionZ': light_direction_z,
 
@@ -270,11 +274,15 @@ data = pd.DataFrame({
     'SunColorB': sun_color_b
 })
 
-# Round 'Minute' to integers and other columns to two decimal places
-data['Minute'] = data['Minute'].astype(int)
-data['Temperature'] = data['Temperature'].round(2)
-data['SnowAmount'] = data['SnowAmount'].round(2)
-data['lightDirectionX'] = data['lightDirectionX'].round(2)
+# Round values
+data['Minute']          = data['Minute'].astype(int)
+data['Temperature']     = data['Temperature'].round(2)
+data['SnowAmount']      = data['SnowAmount'].round(2)
+
+data['LightIntensity'] = data['LightIntensity'].round(2)
+data['ElevationAngle'] = data['ElevationAngle'].round(2)
+
+data['LightDirectionX'] = data['LightDirectionX'].round(2)
 data['lightDirectionY'] = data['lightDirectionY'].round(2)
 data['lightDirectionZ'] = data['lightDirectionZ'].round(2)
 
@@ -286,13 +294,15 @@ data['SunColorR'] = data['SunColorR'].round(2)
 data['SunColorG'] = data['SunColorG'].round(2)
 data['SunColorB'] = data['SunColorB'].round(2)
 
-data['ElevationAngle'] = data['ElevationAngle'].round(2)
+# Output format
+data['Time']            = data['Minute'].apply(minutes_to_time)
+data['Temperature']     = data['Temperature'].apply(lambda x: f"{x:.2f}")
+data['SnowAmount']      = data['SnowAmount'].apply(lambda x: f"{x:.2f}")
 
-# Convert numeric columns to string format with two decimal places
-data['Temperature'] = data['Temperature'].apply(lambda x: f"{x:.2f}")
-data['SnowAmount'] = data['SnowAmount'].apply(lambda x: f"{x:.2f}")
+data['LightIntensity']  = data['LightIntensity'].apply(lambda x: f"{x:.2f}")
+data['ElevationAngle']  = data['ElevationAngle'].apply(lambda x: f"{x:.2f}")
 
-data['lightDirectionX'] = data['lightDirectionX'].apply(lambda x: f"{x:.2f}")
+data['LightDirectionX'] = data['LightDirectionX'].apply(lambda x: f"{x:.2f}")
 data['lightDirectionY'] = data['lightDirectionY'].apply(lambda x: f"{x:.2f}")
 data['lightDirectionZ'] = data['lightDirectionZ'].apply(lambda x: f"{x:.2f}")
 
@@ -304,27 +314,24 @@ data['SunColorR'] = data['SunColorR'].apply(lambda x: f"{x:.2f}")
 data['SunColorG'] = data['SunColorG'].apply(lambda x: f"{x:.2f}")
 data['SunColorB'] = data['SunColorB'].apply(lambda x: f"{x:.2f}")
 
-# Apply the function to the 'Minute' column and create a new 'Time' column
-data['Time'] = data['Minute'].apply(minutes_to_time)
-
-data['LightIntensity'] = data['LightIntensity'].apply(lambda x: f"{x:.2f}")
-data['ElevationAngle'] = data['ElevationAngle'].apply(lambda x: f"{x:.2f}")
-
-
 # Save to CSV for OpenGL C++ renderer
 data = data[[
     'Time', 
     'Minute', 
     'Temperature', 
     'SnowAmount', 
+
     'LightIntensity',
     'ElevationAngle', 
-    'lightDirectionX',
+
+    'LightDirectionX',
     'lightDirectionY',
     'lightDirectionZ',
+
     'SkyColorR',
     'SkyColorG',
     'SkyColorB',
+
     'SunColorR',
     'SunColorG',
     'SunColorB'
@@ -339,22 +346,23 @@ if PLOTTING:
     xtick_values = np.linspace(0, 1440, 25)
     xtick_labels = [int(label) for label in np.linspace(0, 24, 25)]
 
-    fig, axs = plt.subplots(2, 2, figsize=(15, 10))  # 2x2 grid of plots
+    # Initialize sub-plots
+    fig, axs = plt.subplots(2, 3, figsize=(20, 10))
 
     # Temperature vs. Time Plot
-    axs[0, 0].plot(minute_times, minute_temperatures, label='Temperature vs. Time', color='blue')
+    axs[0, 0].plot(minute_times, minute_temperatures, color='blue')
     axs[0, 0].scatter(times_segments, temps_segments, color='blue')
     axs[0, 0].set_xlabel('Time (hours)')
     axs[0, 0].set_ylabel('Temperature (°C)')
-    axs[0, 0].set_title('Daily Temperature Variation')
+    axs[0, 0].set_title('Temperature vs. Time')
     axs[0, 0].set_xticks(xtick_values)
     axs[0, 0].set_xticklabels(xtick_labels)
     axs[0, 0].grid(True)
     axs[0, 0].legend()
 
     # Snow Amount vs Time Plot
-    axs[0, 1].plot(minute_times, snow_amounts, label='Snow Amount vs Time', color='blue')
-    axs[0, 1].set_title('Estimated Snow Amount')
+    axs[0, 1].plot(minute_times, snow_amounts, color='blue')
+    axs[0, 1].set_title('Snow Amount vs Time')
     axs[0, 1].set_xlabel('Time (hours)')
     axs[0, 1].set_ylabel('Snow Amount (0.0 - 1.0)')
     axs[0, 1].set_xticks(xtick_values)
@@ -363,25 +371,48 @@ if PLOTTING:
     axs[0, 1].legend()
 
     # Solar Elevation Angle Plot
-    axs[1, 0].plot(minute_times, sun_elevations, label='Solar Elevation Angle', color='blue')
-    axs[1, 0].set_title('Sun Elevation Angle')
+    axs[0, 2].plot(minute_times, sun_elevations, color='blue')
+    axs[0, 2].set_title('Sun Elevation Angle')
+    axs[0, 2].set_xlabel('Time (hours)')
+    axs[0, 2].set_ylabel('Solar Elevation Angle (degrees)')
+    axs[0, 2].set_xticks(xtick_values)
+    axs[0, 2].set_xticklabels(xtick_labels)
+    axs[0, 2].grid(True)
+    axs[0, 2].legend()
+
+    # Sun Intensity Plot
+    axs[1, 0].plot(minute_times, sun_intensities, color='blue')
+    axs[1, 0].set_title('Sun Intensity Throughout the Day')
     axs[1, 0].set_xlabel('Time (hours)')
-    axs[1, 0].set_ylabel('Solar Elevation Angle (degrees)')
+    axs[1, 0].set_ylabel('Intensity')
     axs[1, 0].set_xticks(xtick_values)
     axs[1, 0].set_xticklabels(xtick_labels)
-    axs[1, 0].axhline(0, color='grey', lw=0.5)  # Horizon line
     axs[1, 0].grid(True)
     axs[1, 0].legend()
 
-    # Sun Intensity Plot
-    axs[1, 1].plot(minute_times, sun_intensities, label='Sun Intensity', color='blue')
-    axs[1, 1].set_title('Sun Intensity Throughout the Day')
+    # Sun Color Plot
+    axs[1, 1].plot(minute_times, sun_color_r, color='red')
+    axs[1, 1].plot(minute_times, sun_color_g, color='green')
+    axs[1, 1].plot(minute_times, sun_color_b, color='blue')
+    axs[1, 1].set_title('Sun Color Throughout the Day')
     axs[1, 1].set_xlabel('Time (hours)')
-    axs[1, 1].set_ylabel('Intensity')
+    axs[1, 1].set_ylabel('Color')
     axs[1, 1].set_xticks(xtick_values)
     axs[1, 1].set_xticklabels(xtick_labels)
     axs[1, 1].grid(True)
     axs[1, 1].legend()
+
+    # Sky Color Plot
+    axs[1, 2].plot(minute_times, sky_color_r, color='red')
+    axs[1, 2].plot(minute_times, sky_color_g, color='green')
+    axs[1, 2].plot(minute_times, sky_color_b, color='blue')
+    axs[1, 2].set_title('Sky Color Throughout the Day')
+    axs[1, 2].set_xlabel('Time (hours)')
+    axs[1, 2].set_ylabel('Color')
+    axs[1, 2].set_xticks(xtick_values)
+    axs[1, 2].set_xticklabels(xtick_labels)
+    axs[1, 2].grid(True)
+    axs[1, 2].legend()
 
     # Adjust layout to prevent overlap
     plt.tight_layout()
