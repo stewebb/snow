@@ -77,7 +77,7 @@ std::string doubleToString(double value) {
 }
 
 
-int daytime_index = 360;
+int daytime_index = 720;
 int daytime_size = 0;
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
@@ -100,35 +100,10 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 
 int main(void){
 
-	//int g_width = 800, g_height = 600;
-
-    //if(!oglText.init("arial", g_width, g_height))
-    //  //if(!oglText.init(PROJECT_SOURCE_DIR "/Candy Script_48", g_width, g_height))
-    //exit(1);
-
 	csv_reader reader("data/data.csv");
     reader.read_csv();
     auto daytime_data = reader.getData();
 	daytime_size = daytime_data.size();
-
-	//std::cout << daytime_size << std::endl;
-    
-	/*
-    if (reader.read_csv()) {
-        for (const auto& entry : reader.getData()) {
-            std::cout << "Time: " << entry.time
-                      << ", Minute: " << entry.minute
-                      << ", Temperature: " << entry.temperature
-                      << ", Snow Amount: " << entry.snow_amount
-                      //<< ", Light Intensity B: " << entry.lightIntensityB
-                      //<< ", Light Angle: " << entry.lightAngle
-                      //<< ", Background Color R: " << entry.backgroundColorR
-                      //<< ", Background Color G: " << entry.backgroundColorG
-                      //<< ", Background Color B: " << entry.backgroundColorB
-                      << std::endl;
-        }
-    }
-	*/
     
 	// Initialize GLFW
 	if(!glfwInit()){
@@ -153,22 +128,6 @@ int main(void){
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
-
-
-	//FT_Library ft;
-	//if (FT_Init_FreeType(&ft)) {
-    //	fprintf(stderr, "Could not init freetype library\n");
-   	//	return 1;
-	//}
-
-	//FT_Face face;
-	//if (FT_New_Face(ft, FONT_LOCATION, 0, &face)) {
-   	//	fprintf(stderr, "Could not open font\n");
-   	//	return 1;
-	//}
-
-	//FT_Set_Pixel_Sizes(face, 0, 48);
-
     
     // We would expect width and height to be WINDOW_WIDTH and WINDOW_HEIGHT
     int windowWidth = WINDOW_WIDTH;
@@ -371,10 +330,11 @@ int main(void){
 
 		// Use our shader
 		glUseProgram(depthProgramID);
+		glm::vec3 light_direction = glm::vec3(current_time.light_direction_x, current_time.light_direction_y,  current_time.light_direction_z);
 
 		glm::vec3 lightInvDir1 = glm::vec3(0.0f, 0.0, 1.0);
 
-		glm::vec3 lightInvDir = glm::vec3(0.0f, 0.0, 1.0);
+		//glm::vec3 lightInvDir = glm::vec3(0.0f, 0.0, 1.0);
 
 		// Compute the MVP matrix from the light's point of view
 		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-30,30,-30,30,-30,30);
@@ -383,6 +343,7 @@ int main(void){
 		//glm::vec3 lightPos(5, 20, 20);
 		//glm::mat4 depthProjectionMatrix = glm::perspective<float>(45.0f, 1.0f, 2.0f, 50.0f);
 		//glm::mat4 depthViewMatrix = glm::lookAt(lightPos, lightPos-lightInvDir, glm::vec3(0,1,0));
+	
 
 		glm::mat4 depthModelMatrix = glm::mat4(1.0);
 		glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
@@ -455,12 +416,15 @@ int main(void){
 		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
 		glUniformMatrix4fv(DepthBiasID, 1, GL_FALSE, &depthBiasMVP[0][0]);
 
+		//light_direction
+		// TODO: Normalize it
+
 		// Put 6 lights, on +x/-x/+y/-y/+z/-z direction respectively.
 		glm::vec3 lightInvDirs[6];
 		//lightInvDirs[0] = glm::vec3( 1.0f,  0.0f,  0.0f);  // +x
 		//lightInvDirs[1] = glm::vec3(-1.0f,  0.0f,  0.0f);  // -x
 		//lightInvDirs[2] = glm::vec3( 0.0f,  1.0f,  0.0f);  // +y
-		lightInvDirs[3] = glm::vec3( 0.0f, -1.0f,  0.0f);  // -y
+		lightInvDirs[3] = light_direction;  // -y
 		
 		//lightInvDirs[4] = glm::vec3( 0.0f,  0.0f,  1.0f);  // +z
 		//lightInvDirs[5] = glm::vec3( 0.0f,  0.0f, -1.0f);  // -z
@@ -479,7 +443,7 @@ int main(void){
 
 
 
-		glUniform3f(lightInvDirID, lightInvDir.x, lightInvDir.y, lightInvDir.z);
+		//glUniform3f(lightInvDirID, lightInvDir.x, lightInvDir.y, lightInvDir.z);
 
 		// Bind our texture in Texture Unit 0
 		glActiveTexture(GL_TEXTURE0);

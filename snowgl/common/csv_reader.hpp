@@ -10,6 +10,9 @@ struct Data {
     float temperature;
     float snow_amount;
     float light_intensity;
+    float light_direction_x;
+    float light_direction_y;
+    float light_direction_z;
 };
 
 class csv_reader {
