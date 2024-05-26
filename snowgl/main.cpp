@@ -271,52 +271,29 @@ int main(void){
 		glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
 		glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);
 
-		// 1st attribute buffer : vertices
+		// 1st attribute buffer: vertices
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-		glVertexAttribPointer(
-			0,  // The attribute we want to configure
-			3,                  // size
-			GL_FLOAT,           // type
-			GL_FALSE,           // normalized?
-			0,                  // stride
-			(void*)0            // array buffer offset
-		);
-
-		// Index buffer
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
 
-		// Draw the triangles !
-		glDrawElements(
-			GL_TRIANGLES,      // mode
-			indices.size(),    // count
-			GL_UNSIGNED_SHORT, // type
-			(void*)0           // element array buffer offset
-		);
-
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_SHORT, (void*)0);
 		glDisableVertexAttribArray(0);
 
 		// Render to the screen
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0,0,windowWidth,windowHeight); // Render on the whole framebuffer, complete from the lower left corner to the upper right
-
+		glViewport(0, 0, windowWidth, windowHeight);
 		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
+		glCullFace(GL_BACK);
 
-		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		// Use our shader
 		glUseProgram(programID);
 
 		// Compute the MVP matrix from keyboard and mouse input
 		glm::vec3 eye_pos = computeMatricesFromInputs();
 		glm::mat4 ProjectionMatrix = getProjectionMatrix();
 		glm::mat4 ViewMatrix = getViewMatrix();
-		//ViewMatrix = glm::lookAt(glm::vec3(14,6,4), glm::vec3(0,1,0), glm::vec3(0,1,0));
 		glm::mat4 ModelMatrix = glm::mat4(1.0);
-		//glm::mat4 ModelMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
-
 		glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 		
 		glm::mat4 biasMatrix(
@@ -327,163 +304,88 @@ int main(void){
 		);
 
 		glm::mat4 depthBiasMVP = biasMatrix*depthMVP;
-
-		// Send our transformation to the currently bound shader, 
-		// in the "MVP" uniform
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
 		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
 		glUniformMatrix4fv(DepthBiasID, 1, GL_FALSE, &depthBiasMVP[0][0]);
 
-		//light_direction
-
-		// TODO: Normalize it
-
-		// Put 6 lights, on +x/-x/+y/-y/+z/-z direction respectively.
+		// Set up light(s)
 		glm::vec3 lightInvDirs[6];
-		//lightInvDirs[0] = glm::vec3( 1.0f,  0.0f,  0.0f);  // +x
-		//lightInvDirs[1] = glm::vec3(-1.0f,  0.0f,  0.0f);  // -x
-		//lightInvDirs[2] = glm::vec3( 0.0f,  1.0f,  0.0f);  // +y
-		glm::vec3 light_direction = glm::vec3(current_time.light_direction_x, current_time.light_direction_y,  current_time.light_direction_z);
-
-		lightInvDirs[3] = light_direction;  // -y
-		
-		//lightInvDirs[4] = glm::vec3( 0.0f,  0.0f,  1.0f);  // +z
-		//lightInvDirs[5] = glm::vec3( 0.0f,  0.0f, -1.0f);  // -z
-
+		lightInvDirs[0] = glm::vec3(current_time.light_direction_x, current_time.light_direction_y,  current_time.light_direction_z);
 			
-		// Get a handle for our "LightPosition" uniform
 		GLuint lightInvDirID = glGetUniformLocation(programID, "LightInvDirection_worldspace");
-
-		// Pass the array of light directions to the shader
 		glUniform3fv(lightInvDirID, 6, &lightInvDirs[0][0]);
-
-		// Pass the number of lights
 		GLuint numLightsID = glGetUniformLocation(programID, "numLights");
 		glUniform1i(numLightsID, 6);
 
-
-
-
-		//glUniform3f(lightInvDirID, lightInvDir.x, lightInvDir.y, lightInvDir.z);
-
-		// Bind our texture in Texture Unit 0
+		// Texture binding
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, Texture);
-		// Set our "myTextureSampler" sampler to use Texture Unit 0
 		glUniform1i(TextureID, 0);
 
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, depthTexture);
 		glUniform1i(ShadowMapID, 1);
 
-		// 1rst attribute buffer : vertices
+		// 1st attribute buffer: vertices
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-		glVertexAttribPointer(
-			0,                  // attribute
-			3,                  // size
-			GL_FLOAT,           // type
-			GL_FALSE,           // normalized?
-			0,                  // stride
-			(void*)0            // array buffer offset
-		);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,	0, (void*)0);
 
-		// 2nd attribute buffer : UVs
+		// 2nd attribute buffer: UVs
 		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-		glVertexAttribPointer(
-			1,                                // attribute
-			2,                                // size
-			GL_FLOAT,                         // type
-			GL_FALSE,                         // normalized?
-			0,                                // stride
-			(void*)0                          // array buffer offset
-		);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-		// 3rd attribute buffer : normals
+		// 3rd attribute buffer: normals
 		glEnableVertexAttribArray(2);
 		glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-		glVertexAttribPointer(
-			2,                                // attribute
-			3,                                // size
-			GL_FLOAT,                         // type
-			GL_FALSE,                         // normalized?
-			0,                                // stride
-			(void*)0                          // array buffer offset
-		);
+		glVertexAttribPointer(2, 3,	GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-		// Index buffer
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
-
-		// Draw the triangles !
-		glDrawElements(
-			GL_TRIANGLES,      // mode
-			indices.size(),    // count
-			GL_UNSIGNED_SHORT, // type
-			(void*)0           // element array buffer offset
-		);
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_SHORT, (void*)0);
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
-
-		// Optionally render the shadowmap (for debug only)
-
-	
-
-
-		// Render only on a corner of the window (or we we won't see the real rendering...)
-		glViewport(0,0,512,512);
-
-		// Use our shader
+		glViewport(0, 0, 512, 512);
 		glUseProgram(quad_programID);
 
-		// Bind our texture in Texture Unit 0
+		// Bind texture in Texture Unit 0
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, depthTexture);
-		// Set our "renderedTexture" sampler to use Texture Unit 0
 		glUniform1i(texID, 0);
 
-		// 1rst attribute buffer : vertices
+		// 1st attribute buffer: vertices
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, quad_vertexbuffer);
-		glVertexAttribPointer(
-			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-			3,                  // size
-			GL_FLOAT,           // type
-			GL_FALSE,           // normalized?
-			0,                  // stride
-			(void*)0            // array buffer offset
-		);
-
-		// Draw the triangle !
-		// You have to disable GL_COMPARE_R_TO_TEXTURE above in order to see anything !
-		//glDrawArrays(GL_TRIANGLES, 0, 6); // 2*3 indices starting at 0 -> 2 triangles
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 		glDisableVertexAttribArray(0);
 
+		// Convert the OpenGL Framebuffer to OpenCV Mat
         cv::Mat capturedImage = frameBufferToCVMat(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-		std::string fpsText = "FPS: " + std::to_string(int(fps));
-        std::string eyePosText = "Eye Position: (" + floatToString(eye_pos.x) + ", " + floatToString(eye_pos.y) + ", " + floatToString(eye_pos.z) + ")";
-        
-		std::string timeText 		   = "Time: " + current_time.time;
-		std::string temperatureText    = "Temperature: " + floatToString(current_time.temperature);
-		std::string snowAmountText 	   = "Snow Amount: " + floatToString(current_time.snow_amount);
+		// Set some statistical texts.
+		std::string fpsText 		   = "FPS: " 			 + std::to_string(int(fps));
+        std::string eyePosText 		   = "Eye Position: (" 	 + intToString(eye_pos.x) + ", " + intToString(eye_pos.y) + ", " + intToString(eye_pos.z) + ")";
 
+		std::string timeText 		   = "Time: " 			 + current_time.time;
+		std::string temperatureText    = "Temperature: " 	 + floatToString(current_time.temperature);
+		std::string snowAmountText 	   = "Snow Amount: " 	 + floatToString(current_time.snow_amount);
 		std::string lightIntensityText = "Light Intensity: " + floatToString(current_time.light_intensity);
 		std::string elevationAngleText = "Elevation Angle: " + floatToString(current_time.elevation_angle);
 
-        cv::putText(capturedImage, fpsText, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
-        cv::putText(capturedImage, eyePosText, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+		// Display those statistical texts.
+		int left_pos = 10;
+		int down_pos = 20;
+        cv::putText(capturedImage, fpsText, 			cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
+        cv::putText(capturedImage, eyePosText, 			cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 40;
 		
-		int right_pos = WINDOW_WIDTH - 200;
-		cv::putText(capturedImage, timeText, cv::Point(right_pos, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
-		cv::putText(capturedImage, snowAmountText, cv::Point(right_pos, 40), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
-
-		cv::putText(capturedImage, temperatureText, cv::Point(right_pos, 60), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
-		cv::putText(capturedImage, lightIntensityText, cv::Point(right_pos, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
-		cv::putText(capturedImage, elevationAngleText, cv::Point(right_pos, 100), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+		cv::putText(capturedImage, timeText, 			cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
+		cv::putText(capturedImage, snowAmountText,  	cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
+		cv::putText(capturedImage, temperatureText, 	cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
+		cv::putText(capturedImage, lightIntensityText,	cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
+		cv::putText(capturedImage, elevationAngleText,  cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
 
         cv::imshow("OpenGL Capture", capturedImage);
 		if (cv::waitKey(1) >= 0) break;
@@ -491,10 +393,6 @@ int main(void){
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-
-		//angle += 0.5f;
-    	//if (angle > 360.0f)
-       	//	angle -= 360.0f;
 	} 
 	
 	// Check if the ESC key was pressed or the window was closed
@@ -520,4 +418,3 @@ int main(void){
 
 	return 0;
 }
-
