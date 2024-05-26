@@ -142,7 +142,7 @@ night_color = np.array([0.0, 0.0, 0.0])
 
 day_sky = np.array([0.53, 0.81, 0.92])
 twilight_sky = np.array([0.99, 0.76, 0.52])
-night_sky = np.array([0.10, 0.10, 0.44])
+night_sky = np.array([0.05, 0.05, 0.25])
 
 # The time-temperature relationship
 times_segments = np.array([ 0,  1,  2,  3,   4,   5,   6,   7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]) * 60

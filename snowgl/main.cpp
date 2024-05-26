@@ -77,22 +77,22 @@ std::string doubleToString(double value) {
 }
 
 
-int daytime_index = 720;
+double f_daytime_index = 720.0f;
 int daytime_size = 0;
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
     // Handle scroll event
     //printf("Scrolled: xoffset = %f, yoffset = %f\n", xoffset, yoffset);
 
-	daytime_index += (int)yoffset;
+	f_daytime_index += yoffset;
 	//std::cout << daytime_index << std::endl;
 	
-	if (daytime_index > daytime_size - 1) {
-        daytime_index = 0;
+	if (f_daytime_index > daytime_size - 1.0) {
+        f_daytime_index = 0.0;
     }
 
-	if(daytime_index < 0){
-		daytime_index = daytime_size - 1;
+	if(f_daytime_index < 0.0){
+		f_daytime_index = daytime_size - 1;
 	}
 
 	//std::cout << daytime_index << std::endl;
@@ -283,7 +283,9 @@ int main(void){
 
 	//float angle = 0.0f;
     //int daytime_index = 0;
-
+	//float slow_index = 0.0;
+	double increment = 0.3;
+	
 	double lastTime = glfwGetTime();
  	int nbFrames = 0;
 
@@ -302,7 +304,12 @@ int main(void){
         	lastTime += 1.0;
      	}
 
-		//std::cout << daytime_index << std::endl;
+		f_daytime_index += increment;
+		if(f_daytime_index > daytime_size-1.0){
+			f_daytime_index = 0;
+		}
+
+		int daytime_index = (int)f_daytime_index;
 		auto current_time = daytime_data[daytime_index];
 
 		glClearColor(current_time.sky_color_r, current_time.sky_color_g, current_time.sky_color_b, 0.0f);
@@ -417,7 +424,7 @@ int main(void){
 		glUniformMatrix4fv(DepthBiasID, 1, GL_FALSE, &depthBiasMVP[0][0]);
 
 		//light_direction
-		
+
 		// TODO: Normalize it
 
 		// Put 6 lights, on +x/-x/+y/-y/+z/-z direction respectively.
