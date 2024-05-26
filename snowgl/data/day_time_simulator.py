@@ -111,14 +111,25 @@ def solar_to_light_direction(elevation_deg, azimuth_deg):
     
     return np.array([x, y, z])
 
-def interpolate_ambient_color(angle, day_sky, twilight_sky, night_sky):
+import numpy as np
+
+def interpolate_sky_color(angle, day_sky, twilight_sky, night_sky):
     # Interpolate ambient sky color similar to sun color
     if angle >= 20:
         return day_sky
-    elif 0 < angle < 20:
-        return np.interp(angle, [0, 20], [twilight_sky, day_sky], axis=0)
+    elif 5 <= angle < 20:
+        return np.array([
+            np.interp(angle, [5, 20], [twilight_sky[i], day_sky[i]])
+            for i in range(len(day_sky))
+        ])
+    elif 0 <= angle < 5:
+        return np.array([
+            np.interp(angle, [0, 5], [night_sky[i], twilight_sky[i]])
+            for i in range(len(day_sky))
+        ])
     else:
         return night_sky
+
 
 # Parameters
 day_color = np.array([1.0, 1.0, 0.9])
@@ -130,8 +141,8 @@ twilight_sky = np.array([0.3, 0.2, 0.5])
 night_sky = np.array([0.05, 0.05, 0.1])
 
 # The time-temperature relationship
-times_segments = np.array([ 0,  1,  2,  3,  4,  5,   6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]) * 60
-temps_segments = np.array([-4, -5, -5, -6, -8, -9, -10, -7, -6, -2,  2,  5,  7,  9, 12, 10,  9,  7,  4,  2,  0, -1, -2, -3])
+times_segments = np.array([ 0,  1,  2,  3,   4,   5,   6,   7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]) * 60
+temps_segments = np.array([-7, -8, -8, -9, -11, -12, -13, -10, -9, -5, -1,  2,  4,  6,  9,  7,  6,  4,  1, -1, -3, -4, -5, -6])
 
 # Time array for minutes in a day
 minute_times = np.linspace(0, 1440, 1441) 
@@ -150,8 +161,9 @@ sun_elevations = [solar_elevation(latitude, declination, minute) for minute in m
 # Mapping properties through interpolation
 #sun_colors = [interpolate_color(angle, day_color, twilight_color, night_color) for angle in sun_elevations]
 sun_intensities = [interpolate_intensity(angle) for angle in sun_elevations]
-#ambient_colors = [interpolate_ambient_color(angle, day_sky, twilight_sky, night_sky) for angle in sun_elevations]
+sky_colors = [interpolate_sky_color(angle, day_sky, twilight_sky, night_sky) for angle in sun_elevations]
 
+#print(sky_colors)
 
 #elevation = 30  # degrees above the horizon
 azimuth = 90    # degrees from North going clockwise (East)
@@ -163,15 +175,26 @@ light_direction_x = [ld[0] for ld in light_directions]
 light_direction_y = [ld[1] for ld in light_directions]
 light_direction_z = [ld[2] for ld in light_directions]
 
+
+sky_color_r = [sc[0] for sc in sky_colors]
+sky_color_g = [sc[1] for sc in sky_colors]
+sky_color_b = [sc[2] for sc in sky_colors]
+
+#print(sky_color_x)
+
 # Create DataFrame in Pandas
 data = pd.DataFrame({
     'Minute': minute_times,
     'Temperature': minute_temperatures,
     'SnowAmount': snow_amounts,
     'LightIntensity': sun_intensities,
+    'ElevationAngle': sun_elevations,
     'lightDirectionX': light_direction_x,
     'lightDirectionY': light_direction_y,
-    'lightDirectionZ': light_direction_z
+    'lightDirectionZ': light_direction_z,
+    'SkyColorR': sky_color_r,
+    'SkyColorG': sky_color_g,
+    'SkyColorB': sky_color_b
 })
 
 # Round 'Minute' to integers and other columns to two decimal places
@@ -182,17 +205,31 @@ data['lightDirectionX'] = data['lightDirectionX'].round(2)
 data['lightDirectionY'] = data['lightDirectionY'].round(2)
 data['lightDirectionZ'] = data['lightDirectionZ'].round(2)
 
+data['SkyColorR'] = data['SkyColorR'].round(2)
+data['SkyColorG'] = data['SkyColorG'].round(2)
+data['SkyColorB'] = data['SkyColorB'].round(2)
+
+data['ElevationAngle'] = data['ElevationAngle'].round(2)
+
+
 # Convert numeric columns to string format with two decimal places
 data['Temperature'] = data['Temperature'].apply(lambda x: f"{x:.2f}")
 data['SnowAmount'] = data['SnowAmount'].apply(lambda x: f"{x:.2f}")
+
 data['lightDirectionX'] = data['lightDirectionX'].apply(lambda x: f"{x:.2f}")
 data['lightDirectionY'] = data['lightDirectionY'].apply(lambda x: f"{x:.2f}")
 data['lightDirectionZ'] = data['lightDirectionZ'].apply(lambda x: f"{x:.2f}")
+
+data['SkyColorR'] = data['SkyColorR'].apply(lambda x: f"{x:.2f}")
+data['SkyColorG'] = data['SkyColorG'].apply(lambda x: f"{x:.2f}")
+data['SkyColorB'] = data['SkyColorB'].apply(lambda x: f"{x:.2f}")
 
 # Apply the function to the 'Minute' column and create a new 'Time' column
 data['Time'] = data['Minute'].apply(minutes_to_time)
 
 data['LightIntensity'] = data['LightIntensity'].apply(lambda x: f"{x:.2f}")
+data['ElevationAngle'] = data['ElevationAngle'].apply(lambda x: f"{x:.2f}")
+
 
 # Save to CSV for OpenGL C++ renderer
 data = data[[
@@ -200,10 +237,14 @@ data = data[[
     'Minute', 
     'Temperature', 
     'SnowAmount', 
-    'LightIntensity', 
+    'LightIntensity',
+    'ElevationAngle', 
     'lightDirectionX',
     'lightDirectionY',
-    'lightDirectionZ'
+    'lightDirectionZ',
+    'SkyColorR',
+    'SkyColorG',
+    'SkyColorB'
 ]]
 
 data.to_csv('data.csv', index=False)

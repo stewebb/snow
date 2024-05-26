@@ -154,9 +154,6 @@ int main(void){
     glfwPollEvents();
     glfwSetCursorPos(window, WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
 
-	// Dark blue background
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
-
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 
@@ -293,6 +290,7 @@ int main(void){
 	double fps = 0;
 
 	do{
+			// Dark blue background
 
 		double currentTime = glfwGetTime();
      	nbFrames++;
@@ -307,10 +305,7 @@ int main(void){
 		//std::cout << daytime_index << std::endl;
 		auto current_time = daytime_data[daytime_index];
 
-		//daytime_index++;
-		//if (daytime_index == daytime_size) {
-        //    daytime_index = 0;
-        //}
+		glClearColor(current_time.sky_color_r, current_time.sky_color_g, current_time.sky_color_b, 0.0f);
 
 		glUniform1f(glGetUniformLocation(programID, "snow_amount"), current_time.snow_amount);
 		glUniform1f(glGetUniformLocation(programID, "light_intensity"), current_time.light_intensity);
@@ -322,6 +317,11 @@ int main(void){
 		// We don't use bias in the shader, but instead we draw back faces, 
 		// which are already separated from the front faces by a small distance 
 		// (if your geometry is made this way)
+
+
+
+
+		
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
 
@@ -549,6 +549,7 @@ int main(void){
 		std::string timeText = "Clock: " + current_time.time;
 		std::string temperatureText = "Temperature: " + doubleToString(current_time.temperature);
 		std::string lightIntensityText = "Light Intensity: " + doubleToString(current_time.light_intensity);
+		std::string elevationAngleText = "Elevation Angle: " + doubleToString(current_time.elevation_angle);
 
         cv::putText(capturedImage, fpsText, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
         cv::putText(capturedImage, eyePosText, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
@@ -556,6 +557,7 @@ int main(void){
 		cv::putText(capturedImage, timeText, cv::Point(10, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
 		cv::putText(capturedImage, temperatureText, cv::Point(10, 100), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
 		cv::putText(capturedImage, lightIntensityText, cv::Point(10, 120), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+		cv::putText(capturedImage, elevationAngleText, cv::Point(10, 140), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
 
         cv::imshow("OpenGL Capture", capturedImage);
 		if (cv::waitKey(1) >= 0) break;

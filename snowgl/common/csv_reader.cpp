@@ -25,9 +25,13 @@ bool csv_reader::read_csv() {
         getline(ss, temp, ','); entry.temperature = std::stof(temp);
         getline(ss, temp, ','); entry.snow_amount = std::stof(temp);
         getline(ss, temp, ','); entry.light_intensity = std::stof(temp);
+        getline(ss, temp, ','); entry.elevation_angle = std::stof(temp);
         getline(ss, temp, ','); entry.light_direction_x = std::stof(temp);
         getline(ss, temp, ','); entry.light_direction_y = std::stof(temp);
         getline(ss, temp, ','); entry.light_direction_z = std::stof(temp);
+        getline(ss, temp, ','); entry.sky_color_r = std::stof(temp);
+        getline(ss, temp, ','); entry.sky_color_g = std::stof(temp);
+        getline(ss, temp, ','); entry.sky_color_b = std::stof(temp);
 
         dataEntries.push_back(entry);
     }

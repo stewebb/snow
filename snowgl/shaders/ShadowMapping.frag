@@ -101,7 +101,7 @@ vec3 objectColor(){
 
 	// Material properties
 	vec3 MaterialDiffuseColor = texture(myTextureSampler, UV).rgb;
-	vec3 MaterialAmbientColor = vec3(0.0, 0.0, 0.0) * MaterialDiffuseColor;
+	vec3 MaterialAmbientColor = vec3(0.05, 0.05, 0.05) * MaterialDiffuseColor;
 	vec3 MaterialSpecularColor = vec3(0.5, 0.5, 0.5);
 	float MaterialSpecularExponent = 150.0f;
 
@@ -150,7 +150,7 @@ vec3 snowColor(){
 
 	// Fixed snow color (white), RGB: (240, 250, 255)
 	vec3 SnowDiffuseColor = vec3(0.9375, 0.9375, 1.0000);
-	vec3 SnowAmbientColor = vec3(0.0, 0.0, 0.0) * SnowDiffuseColor;
+	vec3 SnowAmbientColor = vec3(0.05, 0.05, 0.05) * SnowDiffuseColor;
 	vec3 SnowSpecularColor = vec3(0.2, 0.2, 0.2);
 	float SnowSpecularExponent = 25.0f;
 
