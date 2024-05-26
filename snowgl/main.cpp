@@ -236,66 +236,42 @@ int main(void){
         	lastTime += 1.0;
      	}
 
-
+		// Increase time
 		f_daytime_index += daytime_frame_increment;
-		if(f_daytime_index > daytime_size-1.0){
+		if(f_daytime_index > daytime_size - 1.0){
 			f_daytime_index = 0;
 		}
 
 		int daytime_index = (int)f_daytime_index;
 		auto current_time = daytime_data[daytime_index];
 
+		// Set some parameters based on time
 		glClearColor(current_time.sky_color_r, current_time.sky_color_g, current_time.sky_color_b, 0.0f);
-
+		glUniform3f(glGetUniformLocation(programID, "sun_color"), current_time.sun_color_r, current_time.sun_color_g, current_time.sun_color_b);
 		glUniform1f(glGetUniformLocation(programID, "snow_amount"), current_time.snow_amount);
 		glUniform1f(glGetUniformLocation(programID, "light_intensity"), current_time.light_intensity);
 
-		//glm::vec3 sun_color = glm::vec3(current_time.sun_color_r, current_time.sun_color_g, current_time.sun_color_b);
-		//std::cout << current_time.sun_color_r << " " << current_time.sun_color_g << " " << current_time.sun_color_b << std::endl;
-
-		//glUniform3f(glGetUniformLocation(programID, "sun_color"), sun_color);
-		glUniform3f(glGetUniformLocation(programID, "sun_color"), current_time.sun_color_r, current_time.sun_color_g, current_time.sun_color_b);
-		//glUniform3f(glGetUniformLocation(programID, "sun_color"), 1.0f, 0.0f, 0.0f);
-
-		// Render to our framebuffer
+		// Render to framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
-		glViewport(0,0,WINDOW_WIDTH,WINDOW_WIDTH); // Render on the whole framebuffer, complete from the lower left corner to the upper right
-
-		// We don't use bias in the shader, but instead we draw back faces, 
-		// which are already separated from the front faces by a small distance 
-		// (if your geometry is made this way)
-		
+		glViewport(0,0,WINDOW_WIDTH,WINDOW_WIDTH);
+	
 		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
-
-		// Clear the screen
+		glCullFace(GL_BACK);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		// Use our shader
 		glUseProgram(depthProgramID);
-		glm::vec3 light_direction = glm::vec3(current_time.light_direction_x, current_time.light_direction_y,  current_time.light_direction_z);
 
-		glm::vec3 lightInvDir1 = glm::vec3(0.0f, 0.0, 1.0);
-
-		//glm::vec3 lightInvDir = glm::vec3(0.0f, 0.0, 1.0);
+		// A virtual "light" to get the occlusion map
+		// Typically the light source is right above the object if no wind.
+		glm::vec3 snow_occlusion_light_direction = glm::vec3(0.0f, 0.0, 1.0);
 
 		// Compute the MVP matrix from the light's point of view
-		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-30,30,-30,30,-30,30);
-		glm::mat4 depthViewMatrix = glm::lookAt(lightInvDir1, glm::vec3(0,0,0), glm::vec3(0,1,0));
-		// or, for spot light :
-		//glm::vec3 lightPos(5, 20, 20);
-		//glm::mat4 depthProjectionMatrix = glm::perspective<float>(45.0f, 1.0f, 2.0f, 50.0f);
-		//glm::mat4 depthViewMatrix = glm::lookAt(lightPos, lightPos-lightInvDir, glm::vec3(0,1,0));
-	
-
+		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-30, 30, -30, 30, -30, 30);
+		glm::mat4 depthViewMatrix = glm::lookAt(snow_occlusion_light_direction, glm::vec3(0,0,0), glm::vec3(0,1,0));
 		glm::mat4 depthModelMatrix = glm::mat4(1.0);
 		glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
-
-		// Send our transformation to the currently bound shader, 
-		// in the "MVP" uniform
 		glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);
 
-		// 1rst attribute buffer : vertices
+		// 1st attribute buffer : vertices
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 		glVertexAttribPointer(
@@ -368,6 +344,8 @@ int main(void){
 		//lightInvDirs[0] = glm::vec3( 1.0f,  0.0f,  0.0f);  // +x
 		//lightInvDirs[1] = glm::vec3(-1.0f,  0.0f,  0.0f);  // -x
 		//lightInvDirs[2] = glm::vec3( 0.0f,  1.0f,  0.0f);  // +y
+		glm::vec3 light_direction = glm::vec3(current_time.light_direction_x, current_time.light_direction_y,  current_time.light_direction_z);
+
 		lightInvDirs[3] = light_direction;  // -y
 		
 		//lightInvDirs[4] = glm::vec3( 0.0f,  0.0f,  1.0f);  // +z
