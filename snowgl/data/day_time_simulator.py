@@ -15,19 +15,25 @@ PLOTTING = True
 '''
 
 # Sun (light source) color
-day_color = np.array([1.0, 0.9, 0.5])
-twilight_color = np.array([1.0, 0.5, 0.0])
-night_color = np.array([0.0, 0.0, 0.0])
+sun_color_day      = np.array([1.00, 0.90, 0.50])
+sun_color_twilight = np.array([1.00, 0.50, 0.00])
+sun_color_night    = np.array([0.00, 0.00, 0.00])
 
-day_sky = np.array([0.53, 0.81, 0.92])
-twilight_sky = np.array([0.99, 0.76, 0.52])
-night_sky = np.array([0.10, 0.05, 0.10])
+# Sky (background) color
+sky_color_day      = np.array([0.53, 0.81, 0.92])
+sky_color_twilight = np.array([1.00, 0.76, 0.52])
+sky_color_night    = np.array([0.10, 0.05, 0.10])
 
-# The time-temperature relationship
+# Time and temperature segments in a day
 times_segments = np.array([ 0,  1,  2,  3,   4,   5,   6,   7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]) * 60
 temps_segments = np.array([-7, -8, -8, -9, -11, -12, -13, -10, -9, -5, -1,  2,  4,  6,  9,  7,  6,  4,  1, -1, -3, -4, -5, -6])
 
+# Location
+latitude = 43.5
+azimuth = 90        # degrees from North going clockwise (East)
 
+# Season
+declination = 13.0  # 23.5 -> Jun 21st, -23.5 -> Dec 22nd, 0.0 -> Mar 21st / Sep 23rd
 
 """
     Calculate the amount of snow based on the temperature.
@@ -207,26 +213,24 @@ def interpolate_sky_color(angle, day_sky, twilight_sky, night_sky):
 # Time array for minutes in a day
 minute_times = np.linspace(0, 1440, 1441) 
 
-# Perform interpolation for temperatures
+# Perform interpolation for temperature values
 cs = CubicSpline(times_segments, temps_segments, bc_type='natural')
 minute_temperatures = cs(minute_times)
 
-# Calculate snow amounts for the interpolated temperature values
+# Calculate snow amounts based on temperature values
 snow_amounts = np.vectorize(snow_amount)(minute_temperatures)
 
-latitude = 10.5  # Approximate latitude for Inverness, Scotland
-declination = 0.0  # Declination on June 21
+# Calculate solar elevation angle
 sun_elevations = [solar_elevation(latitude, declination, minute) for minute in minute_times]
 
 # Mapping properties through interpolation
-sun_colors = [interpolate_sky_color(angle, day_color, twilight_color, night_color) for angle in sun_elevations]
 sun_intensities = [interpolate_intensity(angle) for angle in sun_elevations]
-sky_colors = [interpolate_sky_color(angle, day_sky, twilight_sky, night_sky) for angle in sun_elevations]
+sun_colors      = [interpolate_sky_color(angle, sun_color_day, sun_color_twilight, sun_color_night) for angle in sun_elevations]
+sky_colors      = [interpolate_sky_color(angle, sky_color_day, sky_color_twilight, sky_color_night) for angle in sun_elevations]
 
 #print(sky_colors)
 
 #elevation = 30  # degrees above the horizon
-azimuth = 90    # degrees from North going clockwise (East)
 light_directions = [solar_to_light_direction(elevation, azimuth) for elevation in sun_elevations]
 #print(Light_directions)
 
