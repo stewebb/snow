@@ -1,4 +1,4 @@
-Time,Minute,Temperature,SnowAmount,LightIntensity,ElevationAngle,LightDirectionX,lightDirectionY,lightDirectionZ,SkyColorR,SkyColorG,SkyColorB,SunColorR,SunColorG,SunColorB
+Time,Minute,Temperature,SnowAmount,LightIntensity,ElevationAngle,LightDirectionX,LightDirectionY,LightDirectionZ,SkyColorR,SkyColorG,SkyColorB,SunColorR,SunColorG,SunColorB
 00:00,0,-7.00,1.00,0.00,-33.50,-0.83,-0.00,-0.55,0.10,0.05,0.10,0.00,0.00,0.00
 00:01,1,-7.02,1.00,0.00,-33.50,-0.83,-0.00,-0.55,0.10,0.05,0.10,0.00,0.00,0.00
 00:02,2,-7.04,1.00,0.00,-33.50,-0.83,-0.00,-0.55,0.10,0.05,0.10,0.00,0.00,0.00

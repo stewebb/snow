@@ -262,8 +262,8 @@ data = pd.DataFrame({
     'ElevationAngle': sun_elevations,
 
     'LightDirectionX': light_direction_x,
-    'lightDirectionY': light_direction_y,
-    'lightDirectionZ': light_direction_z,
+    'LightDirectionY': light_direction_y,
+    'LightDirectionZ': light_direction_z,
 
     'SkyColorR': sky_color_r,
     'SkyColorG': sky_color_g,
@@ -283,8 +283,8 @@ data['LightIntensity'] = data['LightIntensity'].round(2)
 data['ElevationAngle'] = data['ElevationAngle'].round(2)
 
 data['LightDirectionX'] = data['LightDirectionX'].round(2)
-data['lightDirectionY'] = data['lightDirectionY'].round(2)
-data['lightDirectionZ'] = data['lightDirectionZ'].round(2)
+data['LightDirectionY'] = data['LightDirectionY'].round(2)
+data['LightDirectionZ'] = data['LightDirectionZ'].round(2)
 
 data['SkyColorR'] = data['SkyColorR'].round(2)
 data['SkyColorG'] = data['SkyColorG'].round(2)
@@ -303,8 +303,8 @@ data['LightIntensity']  = data['LightIntensity'].apply(lambda x: f"{x:.2f}")
 data['ElevationAngle']  = data['ElevationAngle'].apply(lambda x: f"{x:.2f}")
 
 data['LightDirectionX'] = data['LightDirectionX'].apply(lambda x: f"{x:.2f}")
-data['lightDirectionY'] = data['lightDirectionY'].apply(lambda x: f"{x:.2f}")
-data['lightDirectionZ'] = data['lightDirectionZ'].apply(lambda x: f"{x:.2f}")
+data['LightDirectionY'] = data['LightDirectionY'].apply(lambda x: f"{x:.2f}")
+data['LightDirectionZ'] = data['LightDirectionZ'].apply(lambda x: f"{x:.2f}")
 
 data['SkyColorR'] = data['SkyColorR'].apply(lambda x: f"{x:.2f}")
 data['SkyColorG'] = data['SkyColorG'].apply(lambda x: f"{x:.2f}")
@@ -325,8 +325,8 @@ data = data[[
     'ElevationAngle', 
 
     'LightDirectionX',
-    'lightDirectionY',
-    'lightDirectionZ',
+    'LightDirectionY',
+    'LightDirectionZ',
 
     'SkyColorR',
     'SkyColorG',
@@ -377,6 +377,7 @@ if PLOTTING:
     axs[0, 2].set_ylabel('Solar Elevation Angle (degrees)')
     axs[0, 2].set_xticks(xtick_values)
     axs[0, 2].set_xticklabels(xtick_labels)
+    axs[0, 2].scatter([sunrise_time, sunset_time], [0, 0], color='red', zorder=5)
     axs[0, 2].grid(True)
     axs[0, 2].legend()
 

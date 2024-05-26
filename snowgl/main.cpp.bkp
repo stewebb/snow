@@ -16,50 +16,52 @@
 //	  the snow amount based on time, see day_time_temperature.py in the s folder
 // -----------------------------------------------------------------------
 
+// Include standard headers
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
+
 #include <iostream>
 #include <sstream>
-#include <iomanip>
-#include <opencv2/opencv.hpp>
+#include <iomanip>  // for setprecision
 
+// Include GLEW
 #include <GL/glew.h>
+
+// Include GLFW
 #include <GLFW/glfw3.h>
 GLFWwindow* window;
 
+// Include GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
+
+#include <opencv2/opencv.hpp>
 
 #include <common/shader.hpp>
 #include <common/texture.hpp>
 #include <common/controls.hpp>
 #include <common/objloader.hpp>
 #include <common/vboindexer.hpp>
+
+//#define GLT_IMPLEMENTATION
+
 #include <common/global.hpp>
 #include <common/csv_reader.hpp>
+//#include <common/gltext.h>
+//#include "common/arial_10.h"
+//OpenGLText oglText;
 
-/**
- * @brief Captures the current OpenGL framebuffer and converts it into an OpenCV Mat object.
- * 
- * This function reads the pixels from the current OpenGL framebuffer starting from the bottom-left corner
- * and converts these pixels into a BGR format OpenCV Mat object. It also handles flipping the image
- * vertically to align with OpenCV's top-left origin convention.
- * 
- * @param width The width of the framebuffer to capture.
- * @param height The height of the framebuffer to capture.
- * @return cv::Mat A Mat object containing the captured image in BGR format.
- */
-
-cv::Mat frameBufferToCVMat(const int width, const int height) {
+// Capture the current OpenGL framebuffer and convert it to an OpenCV Mat
+cv::Mat captureFramebufferToCVMat(const int width, const int height) {
 
     std::vector<unsigned char> buffer(width * height * 3);
     glReadPixels(0, 0, width, height, GL_BGR, GL_UNSIGNED_BYTE, buffer.data());
 
     cv::Mat tempMat(height, width, CV_8UC3, buffer.data());
     cv::Mat resultMat;
-    cv::flip(tempMat, resultMat, 0);
+    cv::flip(tempMat, resultMat, 0); // Flip the image along the x-axis
 
     return resultMat;
 }
@@ -546,7 +548,7 @@ int main(void){
 		//glDrawArrays(GL_TRIANGLES, 0, 6); // 2*3 indices starting at 0 -> 2 triangles
 		glDisableVertexAttribArray(0);
 
-        cv::Mat capturedImage = frameBufferToCVMat(WINDOW_WIDTH, WINDOW_HEIGHT);
+        cv::Mat capturedImage = captureFramebufferToCVMat(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		std::string fpsText = "FPS: " + std::to_string(int(fps));
         std::string eyePosText = "Eye Position: (" + doubleToString(eye_pos.x) + ", " + doubleToString(eye_pos.y) + ", " + doubleToString(eye_pos.z) + ")";
