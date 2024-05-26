@@ -24,6 +24,7 @@ bool csv_reader::read_csv() {
         getline(ss, temp, ','); entry.minute = std::stoi(temp);
         getline(ss, temp, ','); entry.temperature = std::stof(temp);
         getline(ss, temp, ','); entry.snow_amount = std::stof(temp);
+        getline(ss, temp, ','); entry.light_intensity = std::stof(temp);
 
         dataEntries.push_back(entry);
     }

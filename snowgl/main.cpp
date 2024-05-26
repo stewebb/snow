@@ -75,9 +75,32 @@ std::string doubleToString(double value) {
     stream << std::fixed << std::setprecision(2) << value;
     return stream.str();
 }
+
+
+int daytime_index = 360;
+int daytime_size = 0;
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+    // Handle scroll event
+    //printf("Scrolled: xoffset = %f, yoffset = %f\n", xoffset, yoffset);
+
+	daytime_index += (int)yoffset;
+	//std::cout << daytime_index << std::endl;
+	
+	if (daytime_index > daytime_size - 1) {
+        daytime_index = 0;
+    }
+
+	if(daytime_index < 0){
+		daytime_index = daytime_size - 1;
+	}
+
+	//std::cout << daytime_index << std::endl;
+}
+
 int main(void){
 
-	int g_width = 800, g_height = 600;
+	//int g_width = 800, g_height = 600;
 
     //if(!oglText.init("arial", g_width, g_height))
     //  //if(!oglText.init(PROJECT_SOURCE_DIR "/Candy Script_48", g_width, g_height))
@@ -86,7 +109,8 @@ int main(void){
 	csv_reader reader("data/data.csv");
     reader.read_csv();
     auto daytime_data = reader.getData();
-	auto daytime_size = daytime_data.size();
+	daytime_size = daytime_data.size();
+
 	//std::cout << daytime_size << std::endl;
     
 	/*
@@ -297,20 +321,12 @@ int main(void){
 	GLuint ShadowMapID = glGetUniformLocation(programID, "shadowMap");
 
 
-	//if (!gltInit())
-	//{
-	//	fprintf(stderr, "Failed to initialize glText\n");
-	//	glfwTerminate();
-	//	return EXIT_FAILURE;
-	//}
-
-	// Creating text
-	//GLTtext *text = gltCreateText();
-	//gltSetText(text, "Hello World!");
+ 	// Set the scroll callback
+    glfwSetScrollCallback(window, scroll_callback);
 
 
 	float angle = 0.0f;
-    int daytime_index = 0;
+    //int daytime_index = 0;
 
 	double lastTime = glfwGetTime();
  	int nbFrames = 0;
@@ -329,27 +345,16 @@ int main(void){
         	lastTime += 1.0;
      	}
 
-		//std::cout << "Current Time: " << daytime_data[daytime_index].time << std::endl;
+		//std::cout << daytime_index << std::endl;
 		auto current_time = daytime_data[daytime_index];
 
-		/*
-		std::cout << "Time: " << current_time.time
-                      << ", Minute: " << current_time.minute
-                      << ", Temperature: " << current_time.temperature
-                      << ", Snow Amount: " << current_time.snow_amount
-                      //<< ", Light Intensity B: " << entry.lightIntensityB
-                      //<< ", Light Angle: " << entry.lightAngle
-                      //<< ", Background Color R: " << entry.backgroundColorR
-                      //<< ", Background Color G: " << entry.backgroundColorG
-                      //<< ", Background Color B: " << entry.backgroundColorB
-                      << std::endl;
-		*/
-		daytime_index++;
-		if (daytime_index == daytime_size) {
-            daytime_index = 0;
-        }
+		//daytime_index++;
+		//if (daytime_index == daytime_size) {
+        //    daytime_index = 0;
+        //}
 
 		glUniform1f(glGetUniformLocation(programID, "snow_amount"), current_time.snow_amount);
+		glUniform1f(glGetUniformLocation(programID, "light_intensity"), current_time.light_intensity);
 
 		// Render to our framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
@@ -452,13 +457,13 @@ int main(void){
 
 		// Put 6 lights, on +x/-x/+y/-y/+z/-z direction respectively.
 		glm::vec3 lightInvDirs[6];
-		lightInvDirs[0] = glm::vec3( 1.0f,  0.0f,  0.0f);  // +x
-		lightInvDirs[1] = glm::vec3(-1.0f,  0.0f,  0.0f);  // -x
-		lightInvDirs[2] = glm::vec3( 0.0f,  1.0f,  0.0f);  // +y
+		//lightInvDirs[0] = glm::vec3( 1.0f,  0.0f,  0.0f);  // +x
+		//lightInvDirs[1] = glm::vec3(-1.0f,  0.0f,  0.0f);  // -x
+		//lightInvDirs[2] = glm::vec3( 0.0f,  1.0f,  0.0f);  // +y
 		lightInvDirs[3] = glm::vec3( 0.0f, -1.0f,  0.0f);  // -y
 		
-		lightInvDirs[4] = glm::vec3( 0.0f,  0.0f,  1.0f);  // +z
-		lightInvDirs[5] = glm::vec3( 0.0f,  0.0f, -1.0f);  // -z
+		//lightInvDirs[4] = glm::vec3( 0.0f,  0.0f,  1.0f);  // +z
+		//lightInvDirs[5] = glm::vec3( 0.0f,  0.0f, -1.0f);  // -z
 
 			
 		// Get a handle for our "LightPosition" uniform
@@ -571,30 +576,22 @@ int main(void){
 		//glDrawArrays(GL_TRIANGLES, 0, 6); // 2*3 indices starting at 0 -> 2 triangles
 		glDisableVertexAttribArray(0);
 
-
-		// Begin text drawing (this for instance calls glUseProgram)
-		//gltBeginDraw();
-
-		// Draw any amount of text between begin and end
-		//gltColor(1.0f, 1.0f, 1.0f, 0.4f);
-		//gltDrawText2D(text, 0.0f, 0.0f, 1.0f); // x=0.0, y=0.0, scale=1.0
-		//gltDrawText2DAligned(text, 0.0f, (GLfloat)100, 1.0f, GLT_LEFT, GLT_BOTTOM);
-
-		//gltEndDraw();
-
-
         cv::Mat capturedImage = captureFramebufferToCVMat(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		std::string fpsText = "FPS: " + std::to_string(int(fps));
         std::string eyePosText = "Eye Position: (" + std::to_string(int(eye_pos.x)) + ", " + std::to_string(int(eye_pos.y)) + ", " + std::to_string(int(eye_pos.z)) + ")";
         
+
 		std::string timeText = "Clock: " + current_time.time;
 		std::string temperatureText = "Temperature: " + doubleToString(current_time.temperature);
+		std::string lightIntensityText = "Light Intensity: " + doubleToString(current_time.light_intensity);
 
         cv::putText(capturedImage, fpsText, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
         cv::putText(capturedImage, eyePosText, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
-		cv::putText(capturedImage, timeText, cv::Point(10, 60), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
-		cv::putText(capturedImage, temperatureText, cv::Point(10, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+		
+		cv::putText(capturedImage, timeText, cv::Point(10, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+		cv::putText(capturedImage, temperatureText, cv::Point(10, 100), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+		cv::putText(capturedImage, lightIntensityText, cv::Point(10, 120), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
 
         cv::imshow("OpenGL Capture", capturedImage);
 		if (cv::waitKey(1) >= 0) break;

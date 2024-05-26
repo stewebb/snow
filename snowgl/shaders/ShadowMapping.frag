@@ -24,6 +24,7 @@ uniform sampler2DShadow shadowMap;
 uniform int numLights;
 
 uniform float snow_amount;
+uniform float light_intensity;
 
 vec2 poissonDisk[16] = vec2[]( 
    vec2( -0.94201624, -0.39906216 ), 
@@ -96,11 +97,11 @@ vec3 objectColor(){
 
 	// Light emission properties
 	vec3 LightColor = vec3(1.0, 1.0, 1.0);
-	float LightPower = 0.167f;
+	float LightPower = light_intensity;
 
 	// Material properties
 	vec3 MaterialDiffuseColor = texture(myTextureSampler, UV).rgb;
-	vec3 MaterialAmbientColor = vec3(0.1, 0.1, 0.1) * MaterialDiffuseColor;
+	vec3 MaterialAmbientColor = vec3(0.0, 0.0, 0.0) * MaterialDiffuseColor;
 	vec3 MaterialSpecularColor = vec3(0.5, 0.5, 0.5);
 	float MaterialSpecularExponent = 150.0f;
 
@@ -145,11 +146,11 @@ vec3 objectColor(){
 vec3 snowColor(){
 
 	vec3 LightColor = vec3(1.0, 1.0, 1.0);
-	float LightPower = 0.167f;
+	float LightPower = light_intensity;
 
 	// Fixed snow color (white), RGB: (240, 250, 255)
 	vec3 SnowDiffuseColor = vec3(0.9375, 0.9375, 1.0000);
-	vec3 SnowAmbientColor = vec3(0.1, 0.1, 0.1) * SnowDiffuseColor;
+	vec3 SnowAmbientColor = vec3(0.0, 0.0, 0.0) * SnowDiffuseColor;
 	vec3 SnowSpecularColor = vec3(0.2, 0.2, 0.2);
 	float SnowSpecularExponent = 25.0f;
 

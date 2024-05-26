@@ -9,6 +9,7 @@ struct Data {
     int minute;
     float temperature;
     float snow_amount;
+    float light_intensity;
 };
 
 class csv_reader {
