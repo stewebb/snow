@@ -109,8 +109,8 @@ def solar_to_light_direction(elevation_deg, azimuth_deg):
     azimuth_rad = np.radians(azimuth_deg)
     
     # Calculate the components of the direction vector
-    x = np.sin(azimuth_rad) * np.cos(elevation_rad)
-    y = np.cos(azimuth_rad) * np.cos(elevation_rad)
+    x = -np.sin(azimuth_rad) * np.cos(elevation_rad)
+    y = -np.cos(azimuth_rad) * np.cos(elevation_rad)
     z = np.sin(elevation_rad)
     
     return np.array([x, y, z])

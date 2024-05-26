@@ -555,20 +555,25 @@ int main(void){
         cv::Mat capturedImage = captureFramebufferToCVMat(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		std::string fpsText = "FPS: " + std::to_string(int(fps));
-        std::string eyePosText = "Eye Position: (" + std::to_string(int(eye_pos.x)) + ", " + std::to_string(int(eye_pos.y)) + ", " + std::to_string(int(eye_pos.z)) + ")";
+        std::string eyePosText = "Eye Position: (" + doubleToString(eye_pos.x) + ", " + doubleToString(eye_pos.y) + ", " + doubleToString(eye_pos.z) + ")";
         
-		std::string timeText = "Clock: " + current_time.time;
-		std::string temperatureText = "Temperature: " + doubleToString(current_time.temperature);
+		std::string timeText 		   = "Time: " + current_time.time;
+		std::string temperatureText    = "Temperature: " + doubleToString(current_time.temperature);
+		std::string snowAmountText 	   = "Snow Amount: " + doubleToString(current_time.snow_amount);
+
 		std::string lightIntensityText = "Light Intensity: " + doubleToString(current_time.light_intensity);
 		std::string elevationAngleText = "Elevation Angle: " + doubleToString(current_time.elevation_angle);
 
         cv::putText(capturedImage, fpsText, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
         cv::putText(capturedImage, eyePosText, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
 		
-		cv::putText(capturedImage, timeText, cv::Point(10, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
-		cv::putText(capturedImage, temperatureText, cv::Point(10, 100), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
-		cv::putText(capturedImage, lightIntensityText, cv::Point(10, 120), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
-		cv::putText(capturedImage, elevationAngleText, cv::Point(10, 140), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+		int right_pos = WINDOW_WIDTH - 200;
+		cv::putText(capturedImage, timeText, cv::Point(right_pos, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+		cv::putText(capturedImage, snowAmountText, cv::Point(right_pos, 40), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+
+		cv::putText(capturedImage, temperatureText, cv::Point(right_pos, 60), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+		cv::putText(capturedImage, lightIntensityText, cv::Point(right_pos, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+		cv::putText(capturedImage, elevationAngleText, cv::Point(right_pos, 100), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
 
         cv::imshow("OpenGL Capture", capturedImage);
 		if (cv::waitKey(1) >= 0) break;
