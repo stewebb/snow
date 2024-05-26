@@ -8,7 +8,7 @@ import pandas as pd
     The place typically is located in temperate regions in the Northern Hemisphere.
 '''
 
-PLOTTING = True
+PLOTTING = False
 
 # Calculate snow amount based on temperature
 # Output range: [0, 1]. 0 -> No snow 1 -> Full snow
@@ -86,6 +86,31 @@ def interpolate_intensity(angle):
     return np.clip(unbiased_intensity + bias, 0.0, 1.0)
 
 
+def solar_to_light_direction(elevation_deg, azimuth_deg):
+    """
+    Convert solar elevation and azimuth angles to a light direction vector suitable for use in 3D graphics.
+
+    Parameters:
+    elevation_deg (float): The solar elevation angle in degrees, measured from the horizon upwards.
+    azimuth_deg (float): The solar azimuth angle in degrees, measured from North going clockwise.
+
+    Returns:
+    numpy.ndarray: A 3D vector representing the light direction in a right-handed coordinate system where:
+        - x-axis points East
+        - y-axis points North
+        - z-axis points Up
+    """
+    # Convert degrees to radians
+    elevation_rad = np.radians(elevation_deg)
+    azimuth_rad = np.radians(azimuth_deg)
+    
+    # Calculate the components of the direction vector
+    x = -np.sin(azimuth_rad) * np.cos(elevation_rad)
+    y = -np.cos(azimuth_rad) * np.cos(elevation_rad)
+    z = np.sin(elevation_rad)
+    
+    return np.array([x, y, z])
+
 def interpolate_ambient_color(angle, day_sky, twilight_sky, night_sky):
     # Interpolate ambient sky color similar to sun color
     if angle >= 20:
@@ -128,22 +153,41 @@ sun_intensities = [interpolate_intensity(angle) for angle in sun_elevations]
 #ambient_colors = [interpolate_ambient_color(angle, day_sky, twilight_sky, night_sky) for angle in sun_elevations]
 
 
+#elevation = 30  # degrees above the horizon
+azimuth = 90    # degrees from North going clockwise (East)
+light_directions = [solar_to_light_direction(elevation, azimuth) for elevation in sun_elevations]
+#print(Light_directions)
+
+# Extract components of light directions
+light_direction_x = [ld[0] for ld in light_directions]
+light_direction_y = [ld[1] for ld in light_directions]
+light_direction_z = [ld[2] for ld in light_directions]
+
 # Create DataFrame in Pandas
 data = pd.DataFrame({
     'Minute': minute_times,
     'Temperature': minute_temperatures,
     'SnowAmount': snow_amounts,
-    'LightIntensity': sun_intensities
+    'LightIntensity': sun_intensities,
+    'lightDirectionX': light_direction_x,
+    'lightDirectionY': light_direction_y,
+    'lightDirectionZ': light_direction_z
 })
 
 # Round 'Minute' to integers and other columns to two decimal places
 data['Minute'] = data['Minute'].astype(int)
 data['Temperature'] = data['Temperature'].round(2)
 data['SnowAmount'] = data['SnowAmount'].round(2)
+data['lightDirectionX'] = data['lightDirectionX'].round(2)
+data['lightDirectionY'] = data['lightDirectionY'].round(2)
+data['lightDirectionZ'] = data['lightDirectionZ'].round(2)
 
 # Convert numeric columns to string format with two decimal places
 data['Temperature'] = data['Temperature'].apply(lambda x: f"{x:.2f}")
 data['SnowAmount'] = data['SnowAmount'].apply(lambda x: f"{x:.2f}")
+data['lightDirectionX'] = data['lightDirectionX'].apply(lambda x: f"{x:.2f}")
+data['lightDirectionY'] = data['lightDirectionY'].apply(lambda x: f"{x:.2f}")
+data['lightDirectionZ'] = data['lightDirectionZ'].apply(lambda x: f"{x:.2f}")
 
 # Apply the function to the 'Minute' column and create a new 'Time' column
 data['Time'] = data['Minute'].apply(minutes_to_time)
@@ -151,7 +195,17 @@ data['Time'] = data['Minute'].apply(minutes_to_time)
 data['LightIntensity'] = data['LightIntensity'].apply(lambda x: f"{x:.2f}")
 
 # Save to CSV for OpenGL C++ renderer
-data = data[['Time', 'Minute', 'Temperature', 'SnowAmount', 'LightIntensity']]
+data = data[[
+    'Time', 
+    'Minute', 
+    'Temperature', 
+    'SnowAmount', 
+    'LightIntensity', 
+    'lightDirectionX',
+    'lightDirectionY',
+    'lightDirectionZ'
+]]
+
 data.to_csv('data.csv', index=False)
 
 # Plotting
