@@ -77,7 +77,7 @@ std::string doubleToString(double value) {
 }
 
 
-double f_daytime_index = 720.0f;
+double f_daytime_index = 1000.0f;
 int daytime_size = 0;
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
@@ -304,7 +304,7 @@ int main(void){
         	lastTime += 1.0;
      	}
 
-		f_daytime_index += increment;
+		//f_daytime_index += increment;
 		if(f_daytime_index > daytime_size-1.0){
 			f_daytime_index = 0;
 		}
@@ -316,6 +316,12 @@ int main(void){
 
 		glUniform1f(glGetUniformLocation(programID, "snow_amount"), current_time.snow_amount);
 		glUniform1f(glGetUniformLocation(programID, "light_intensity"), current_time.light_intensity);
+
+		//glm::vec3 sun_color = glm::vec3(current_time.sun_color_r, current_time.sun_color_g, current_time.sun_color_b);
+		//std::cout << current_time.sun_color_r << " " << current_time.sun_color_g << " " << current_time.sun_color_b << std::endl;
+
+		//glUniform3f(glGetUniformLocation(programID, "sun_color"), sun_color);
+		glUniform3f(glGetUniformLocation(programID, "sun_color"), current_time.sun_color_r, current_time.sun_color_g, current_time.sun_color_b);
 
 		// Render to our framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);

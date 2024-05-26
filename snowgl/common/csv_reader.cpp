@@ -32,7 +32,9 @@ bool csv_reader::read_csv() {
         getline(ss, temp, ','); entry.sky_color_r = std::stof(temp);
         getline(ss, temp, ','); entry.sky_color_g = std::stof(temp);
         getline(ss, temp, ','); entry.sky_color_b = std::stof(temp);
-
+        getline(ss, temp, ','); entry.sun_color_r = std::stof(temp);
+        getline(ss, temp, ','); entry.sun_color_g = std::stof(temp);
+        getline(ss, temp, ','); entry.sun_color_b = std::stof(temp);
         dataEntries.push_back(entry);
     }
 

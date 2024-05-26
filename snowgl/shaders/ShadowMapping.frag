@@ -25,6 +25,7 @@ uniform int numLights;
 
 uniform float snow_amount;
 uniform float light_intensity;
+uniform vec3 sun_color;
 
 vec2 poissonDisk[16] = vec2[]( 
    vec2( -0.94201624, -0.39906216 ), 
@@ -96,7 +97,7 @@ vec3 angleColorMapping(float dotn) {
 vec3 objectColor(){
 
 	// Light emission properties
-	vec3 LightColor = vec3(1.0, 1.0, 1.0);
+	vec3 LightColor = sun_color;
 	float LightPower = light_intensity;
 
 	// Material properties
@@ -145,7 +146,7 @@ vec3 objectColor(){
 // Calculate the snow color.
 vec3 snowColor(){
 
-	vec3 LightColor = vec3(1.0, 1.0, 1.0);
+	vec3 LightColor = sun_color;
 	float LightPower = light_intensity;
 
 	// Fixed snow color (white), RGB: (240, 250, 255)

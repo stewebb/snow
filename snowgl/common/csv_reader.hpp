@@ -17,6 +17,9 @@ struct Data {
     float sky_color_r;
     float sky_color_g;
     float sky_color_b;
+    float sun_color_r;
+    float sun_color_g;
+    float sun_color_b;
 };
 
 class csv_reader {

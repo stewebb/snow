@@ -57,14 +57,14 @@ def solar_elevation(latitude, declination, minutes):
     
     return np.degrees(elevation_rad)
 
-def interpolate_color(angle, day_color, twilight_color, night_color):
-    # Interpolate based on angle thresholds
-    if angle >= 10:
-        return day_color
-    elif 0 < angle < 10:
-        return np.interp(angle, [0, 10], [twilight_color, day_color], axis=0)
-    else:
-        return night_color
+#def interpolate_color(angle, day_color, twilight_color, night_color):
+#    # Interpolate based on angle thresholds
+#    if angle >= 10:
+#        return day_color
+#    elif 0 < angle < 10:
+#        return np.interp(angle, [0, 10], [twilight_color, day_color], axis=0)
+#    else:
+#        return night_color
 
 def interpolate_intensity(angle):
     """
@@ -126,7 +126,7 @@ def interpolate_sky_color(angle, day_sky, twilight_sky, night_sky):
             np.interp(angle, [5, 20], [twilight_sky[i], day_sky[i]])
             for i in range(len(day_sky))
         ])
-    elif 0 <= angle < 5:
+    elif -5 <= angle < 5:
         return np.array([
             np.interp(angle, [0, 5], [night_sky[i], twilight_sky[i]])
             for i in range(len(day_sky))
@@ -163,7 +163,7 @@ declination = 0.0  # Declination on June 21
 sun_elevations = [solar_elevation(latitude, declination, minute) for minute in minute_times]
 
 # Mapping properties through interpolation
-#sun_colors = [interpolate_color(angle, day_color, twilight_color, night_color) for angle in sun_elevations]
+sun_colors = [interpolate_sky_color(angle, day_color, twilight_color, night_color) for angle in sun_elevations]
 sun_intensities = [interpolate_intensity(angle) for angle in sun_elevations]
 sky_colors = [interpolate_sky_color(angle, day_sky, twilight_sky, night_sky) for angle in sun_elevations]
 
@@ -184,6 +184,10 @@ sky_color_r = [sc[0] for sc in sky_colors]
 sky_color_g = [sc[1] for sc in sky_colors]
 sky_color_b = [sc[2] for sc in sky_colors]
 
+sun_color_r = [sc[0] for sc in sun_colors]
+sun_color_g = [sc[1] for sc in sun_colors]
+sun_color_b = [sc[2] for sc in sun_colors]
+
 #print(sky_color_x)
 
 # Create DataFrame in Pandas
@@ -196,9 +200,14 @@ data = pd.DataFrame({
     'lightDirectionX': light_direction_x,
     'lightDirectionY': light_direction_y,
     'lightDirectionZ': light_direction_z,
+
     'SkyColorR': sky_color_r,
     'SkyColorG': sky_color_g,
-    'SkyColorB': sky_color_b
+    'SkyColorB': sky_color_b,
+
+    'SunColorR': sun_color_r,
+    'SunColorG': sun_color_g,
+    'SunColorB': sun_color_b
 })
 
 # Round 'Minute' to integers and other columns to two decimal places
@@ -213,8 +222,11 @@ data['SkyColorR'] = data['SkyColorR'].round(2)
 data['SkyColorG'] = data['SkyColorG'].round(2)
 data['SkyColorB'] = data['SkyColorB'].round(2)
 
-data['ElevationAngle'] = data['ElevationAngle'].round(2)
+data['SunColorR'] = data['SunColorR'].round(2)
+data['SunColorG'] = data['SunColorG'].round(2)
+data['SunColorB'] = data['SunColorB'].round(2)
 
+data['ElevationAngle'] = data['ElevationAngle'].round(2)
 
 # Convert numeric columns to string format with two decimal places
 data['Temperature'] = data['Temperature'].apply(lambda x: f"{x:.2f}")
@@ -227,6 +239,10 @@ data['lightDirectionZ'] = data['lightDirectionZ'].apply(lambda x: f"{x:.2f}")
 data['SkyColorR'] = data['SkyColorR'].apply(lambda x: f"{x:.2f}")
 data['SkyColorG'] = data['SkyColorG'].apply(lambda x: f"{x:.2f}")
 data['SkyColorB'] = data['SkyColorB'].apply(lambda x: f"{x:.2f}")
+
+data['SunColorR'] = data['SunColorR'].apply(lambda x: f"{x:.2f}")
+data['SunColorG'] = data['SunColorG'].apply(lambda x: f"{x:.2f}")
+data['SunColorB'] = data['SunColorB'].apply(lambda x: f"{x:.2f}")
 
 # Apply the function to the 'Minute' column and create a new 'Time' column
 data['Time'] = data['Minute'].apply(minutes_to_time)
@@ -248,7 +264,10 @@ data = data[[
     'lightDirectionZ',
     'SkyColorR',
     'SkyColorG',
-    'SkyColorB'
+    'SkyColorB',
+    'SunColorR',
+    'SunColorG',
+    'SunColorB'
 ]]
 
 data.to_csv('data.csv', index=False)
