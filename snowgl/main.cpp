@@ -38,7 +38,7 @@ using namespace glm;
 #include <common/csv_reader.hpp>
 #include <common/util.hpp>
 
-double f_daytime_index = 1000.0f;
+double f_daytime_index = 360.0f;
 int daytime_size = 0;
 
 /**
@@ -53,6 +53,7 @@ int daytime_size = 0;
  * @param xoffset The scroll offset along the x-axis. This parameter is not used in this function.
  * @param yoffset The scroll offset along the y-axis, used to adjust the `f_daytime_index`.
  */
+
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
     f_daytime_index += yoffset;
 
@@ -370,10 +371,10 @@ int main(void){
         std::string eyePosText 		   = "Eye Position: (" 	 + intToString(eye_pos.x) + ", " + intToString(eye_pos.y) + ", " + intToString(eye_pos.z) + ")";
 
 		std::string timeText 		   = "Time: " 			 + current_time.time;
-		std::string temperatureText    = "Temperature: " 	 + floatToString(current_time.temperature);
-		std::string snowAmountText 	   = "Snow Amount: " 	 + floatToString(current_time.snow_amount);
-		std::string lightIntensityText = "Light Intensity: " + floatToString(current_time.light_intensity);
-		std::string elevationAngleText = "Elevation Angle: " + floatToString(current_time.elevation_angle);
+		std::string temperatureText    = "Temperature: " 	 + floatToString(current_time.temperature)			+ "C";
+		std::string snowAmountText 	   = "Snow Amount: " 	 + intToString(current_time.snow_amount * 100)		+ "%";
+		std::string lightIntensityText = "Light Intensity: " + intToString(current_time.light_intensity * 100)	+ "%";
+		std::string elevationAngleText = "Elevation Angle: " + floatToString(current_time.elevation_angle)		+ "deg";
 
 		// Display those statistical texts.
 		int left_pos = 10;

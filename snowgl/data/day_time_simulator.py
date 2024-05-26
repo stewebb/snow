@@ -30,7 +30,7 @@ temps_segments = np.array([-7, -8, -8, -9, -11, -12, -13, -10, -9, -5, -1,  2,  
 
 # Location
 latitude = 43.5
-azimuth = 90        # degrees from North going clockwise (East)
+azimuth = 0        # degrees from North going clockwise (East)
 
 # Season
 declination = 13.0  # 23.5 -> Jun 21st, -23.5 -> Dec 22nd, 0.0 -> Mar 21st / Sep 23rd
@@ -201,9 +201,9 @@ def interpolate_sky_color(angle, day_sky, twilight_sky, night_sky):
             np.interp(angle, [5, 20], [twilight_sky[i], day_sky[i]])
             for i in range(len(day_sky))
         ])
-    elif -10 <= angle < 10:
+    elif -10 <= angle < 5:
         return np.array([
-            np.interp(angle, [-10, 10], [night_sky[i], twilight_sky[i]])
+            np.interp(angle, [-10, 5], [night_sky[i], twilight_sky[i]])
             for i in range(len(day_sky))
         ])
     else:

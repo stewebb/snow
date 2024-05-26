@@ -22,21 +22,20 @@ glm::mat4 getProjectionMatrix(){
 }
 
 
-// Initial position : on +Z
-glm::vec3 position = glm::vec3(0, 0, 50); 
-// Initial horizontal angle : toward -Z
-float horizontalAngle = 0.0f;
-// Initial vertical angle : none
-float verticalAngle = 3.14f;
+// Initial position
+glm::vec3 position = glm::vec3(EYE_POS_X, EYE_POS_Y, EYE_POS_Z); 
+
+// Initial horizontal and vertical angle
+float horizontalAngle = HORIZONTAL_ANGLE;
+float verticalAngle = VERTICAL_ANGLE;
+
 // Initial Field of View
 float initialFoV = 45.0f;
 
 float speed = 3.0f; // 3 units / second
 float mouseSpeed = 0.005f;
 
-
-
-glm::vec3 computeMatricesFromInputs(){
+glm::vec3 computeMatricesFromInputs() {
 
 	// glfwGetTime is called only once, the first time this function is called
 	static double lastTime = glfwGetTime();
@@ -53,8 +52,13 @@ glm::vec3 computeMatricesFromInputs(){
 	glfwSetCursorPos(window, WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
 
 	// Compute new orientation
-	horizontalAngle += mouseSpeed * float(WINDOW_WIDTH/2 - xpos );
-	verticalAngle   += mouseSpeed * float(WINDOW_HEIGHT/2 - ypos );
+	if(!HORIZONTAL_FIXED){
+		horizontalAngle += mouseSpeed * float(WINDOW_WIDTH/2 - xpos );
+	}
+	
+	if(!VERTICAL_FIXED){
+		verticalAngle   += mouseSpeed * float(WINDOW_HEIGHT/2 - ypos );
+	}
 
 	// Direction : Spherical coordinates to Cartesian coordinates conversion
 	glm::vec3 direction(
@@ -109,8 +113,8 @@ glm::vec3 computeMatricesFromInputs(){
 	// For the next frame, the "last time" will be "now"
 	lastTime = currentTime;
 
-	//std::cout << "Vector: (" << position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
-	//std::cout << "horizontalAngle: " << horizontalAngle << ", verticalAngle: " << verticalAngle << std::endl;
+	std::cout << "Vector: (" << position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
+	std::cout << "horizontalAngle: " << horizontalAngle << ", verticalAngle: " << verticalAngle << std::endl;
 
 	return position;
 }
