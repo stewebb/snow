@@ -8,7 +8,7 @@ import pandas as pd
     The place typically is located in temperate regions in the Northern Hemisphere.
 '''
 
-PLOTTING = False
+PLOTTING = True
 
 # Calculate snow amount based on temperature
 # Output range: [0, 1]. 0 -> No snow 1 -> Full snow
@@ -79,11 +79,15 @@ def interpolate_intensity(angle):
         float: Normalized intensity of sunlight, between 0 and 1, where 0 is no intensity
         and 1 is the maximum intensity.
     """
-    bias = 0.05
-    zenith_angle = 90 - angle
-    unbiased_intensity = np.cos(np.radians(zenith_angle));
+    bias = 0.25
+    zenith_angle = np.radians(90 - angle) * (1.00 - bias)
+    #unbiased_intensity = np.power(np.cos(np.radians(zenith_angle)), 5)
+
+    # e^(-1 * (bx) ^ 8)
+    unbiased_intensity = np.exp(-1 * np.power(zenith_angle, 8))
+
     #return max(-bias, np.cos(np.radians(zenith_angle))) + bias
-    return np.clip(unbiased_intensity + bias, 0.0, 1.0)
+    return np.clip(unbiased_intensity, 0.0, 1.0)
 
 
 def solar_to_light_direction(elevation_deg, azimuth_deg):
@@ -136,9 +140,9 @@ day_color = np.array([1.0, 1.0, 0.9])
 twilight_color = np.array([1.0, 0.8, 0.6])
 night_color = np.array([0.0, 0.0, 0.0])
 
-day_sky = np.array([0.6, 0.7, 1.0])
-twilight_sky = np.array([0.3, 0.2, 0.5])
-night_sky = np.array([0.05, 0.05, 0.1])
+day_sky = np.array([0.53, 0.81, 0.92])
+twilight_sky = np.array([0.99, 0.76, 0.52])
+night_sky = np.array([0.10, 0.10, 0.44])
 
 # The time-temperature relationship
 times_segments = np.array([ 0,  1,  2,  3,   4,   5,   6,   7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]) * 60

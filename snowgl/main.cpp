@@ -281,7 +281,7 @@ int main(void){
     glfwSetScrollCallback(window, scroll_callback);
 
 
-	float angle = 0.0f;
+	//float angle = 0.0f;
     //int daytime_index = 0;
 
 	double lastTime = glfwGetTime();
@@ -395,8 +395,8 @@ int main(void){
 		glm::mat4 ProjectionMatrix = getProjectionMatrix();
 		glm::mat4 ViewMatrix = getViewMatrix();
 		//ViewMatrix = glm::lookAt(glm::vec3(14,6,4), glm::vec3(0,1,0), glm::vec3(0,1,0));
-		//glm::mat4 ModelMatrix = glm::mat4(1.0);
-		glm::mat4 ModelMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+		glm::mat4 ModelMatrix = glm::mat4(1.0);
+		//glm::mat4 ModelMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
 
 		glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 		
@@ -417,6 +417,7 @@ int main(void){
 		glUniformMatrix4fv(DepthBiasID, 1, GL_FALSE, &depthBiasMVP[0][0]);
 
 		//light_direction
+		
 		// TODO: Normalize it
 
 		// Put 6 lights, on +x/-x/+y/-y/+z/-z direction respectively.
@@ -545,7 +546,6 @@ int main(void){
 		std::string fpsText = "FPS: " + std::to_string(int(fps));
         std::string eyePosText = "Eye Position: (" + std::to_string(int(eye_pos.x)) + ", " + std::to_string(int(eye_pos.y)) + ", " + std::to_string(int(eye_pos.z)) + ")";
         
-
 		std::string timeText = "Clock: " + current_time.time;
 		std::string temperatureText = "Temperature: " + doubleToString(current_time.temperature);
 		std::string lightIntensityText = "Light Intensity: " + doubleToString(current_time.light_intensity);
@@ -566,17 +566,13 @@ int main(void){
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
-		angle += 0.5f;
-    	if (angle > 360.0f)
-       		angle -= 360.0f;
+		//angle += 0.5f;
+    	//if (angle > 360.0f)
+       	//	angle -= 360.0f;
 	} 
 	
 	// Check if the ESC key was pressed or the window was closed
-	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
-		   glfwWindowShouldClose(window) == 0 );
-
-	//FT_Done_Face(face);
-	//FT_Done_FreeType(ft);
+	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 
 	// Cleanup VBO and shader
 	glDeleteBuffers(1, &vertexbuffer);
