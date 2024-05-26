@@ -64,7 +64,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
     }
 }
 
-
 int main(void){
 
 	// Read generated data file from day_time_simulator.py
@@ -214,7 +213,6 @@ int main(void){
 	GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
 	GLuint DepthBiasID = glGetUniformLocation(programID, "DepthBiasMVP");
 	GLuint ShadowMapID = glGetUniformLocation(programID, "shadowMap");
-
 
  	// The mouse scroll callback
     glfwSetScrollCallback(window, scroll_callback);

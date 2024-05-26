@@ -50,8 +50,6 @@ add_definitions(
 add_executable(SnowGL
 
 	main.cpp
-	#src/main.cpp
-
 	common/global.hpp
 	common/csv_reader.hpp
 	common/csv_reader.cpp
@@ -110,4 +108,3 @@ add_custom_command(
 	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/models/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/models/"
 	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/textures/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/textures/"
 )
-

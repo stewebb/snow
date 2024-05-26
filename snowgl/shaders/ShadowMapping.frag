@@ -46,55 +46,79 @@ vec2 poissonDisk[16] = vec2[](
    vec2( 0.14383161, -0.14100790 ) 
 );
 
-// Returns a random number based on a vec3 and an int.
-float random(vec3 seed, int i){
+/**
+ * Generates a pseudo-random number based on a 3D seed vector and an integer.
+ *
+ * This function calculates a random number by first extending the 3D seed vector into a 4D vector
+ * using the provided integer as the fourth component. It then calculates a dot product of this 
+ * extended vector with a fixed vector. The sine of the dot product is taken and multiplied by a 
+ * large number to scale the result, and finally the fractional part of this result is returned 
+ * to ensure the output is between 0.0 and 1.0.
+ *
+ * @param seed A vec3 used as the base seed for the random number generation.
+ * @param i An int that modifies the seed to generate different random numbers.
+ *
+ * @return float A pseudo-random number between 0.0 and 1.0.
+ */
+ 
+ float random(vec3 seed, int i){
 	vec4 seed4 = vec4(seed,i);
 	float dot_product = dot(seed4, vec4(12.9898,78.233,45.164,94.673));
 	return fract(sin(dot_product) * 43758.5453);
 }
 
-// Maps the cosine of an angle (measured in degrees) to a specific color 
-// to visually represent the angle's inclination.
+/**
+ * Maps a dot product result to a color based on predefined angle ranges.
+ *
+ * This function uses the dot product of two normalized vectors (cosine of the angle between them) 
+ * to map to specific colors representing various ranges of angles. The mapping is as follows:
+ * - [90, 180] degrees maps to Red
+ * - [75, 90) degrees maps to Orange
+ * - [60, 75) degrees maps to Yellow
+ * - [45, 60) degrees maps to Green
+ * - [30, 45) degrees maps to Blue
+ * - [15, 30) degrees maps to Indigo
+ * - [0, 15) degrees maps to Violet
+ *
+ * Each range is associated with a specific vec3 color value. The function assumes the input `dotn` 
+ * is the cosine of the angle, with -1 corresponding to 180 degrees and 1 corresponding to 0 degrees.
+ *
+ * @param dotn The cosine of the angle between two vectors; should be in the range [-1, 1].
+ *
+ * @return vec3 The color associated with the given angle range.
+ */
+
 vec3 angleColorMapping(float dotn) {
 
-	// [90, 180] -> Red
-    if (dotn <= 0.0000) {
-        return vec3(1.00, 0.50, 0.50);
-    } 
-	
-	// [75, 90) -> Orange
-	else if (dotn <= 0.2588) {
-        return vec3(1.00, 0.65, 0.50);
-    } 
-	
-	// [60, 75) -> Yellow
-	else if (dotn <= 0.5) {
-        return vec3(1.0, 1.0, 0.6);
-    } 
-	
-	// [45, 60) -> Green
-	else if (dotn <= 0.7071) {
-        return vec3(0.60, 1.00, 0.60);
-    } 
-	
-	// [30, 45) -> Blue
-	else if (dotn <= 0.8660) {
-        return vec3(0.50, 0.70, 1.00);
-    } 
-	
-	// [15, 30) -> Indigo
-	else if (dotn <= 0.9659) {
-        return vec3(0.40, 0.40, 0.70);
-    } 
-
-	// [0, 15) -> Violet
-	else {
-        return vec3(0.8, 0.6, 1.0);
-    }
+    if (dotn <= 0.0000) {		return vec3(1.00, 0.50, 0.50);	}	// [90, 180] -> Red
+	else if (dotn <= 0.2588) {	return vec3(1.00, 0.65, 0.50);	} 	// [75, 90) -> Orange
+	else if (dotn <= 0.5000) {	return vec3(1.00, 1.00, 0.60);	} 	// [60, 75) -> Yellow
+	else if (dotn <= 0.7071) {	return vec3(0.60, 1.00, 0.60);	} 	// [45, 60) -> Green
+	else if (dotn <= 0.8660) {	return vec3(0.50, 0.70, 1.00);	} 	// [30, 45) -> Blue
+	else if (dotn <= 0.9659) {	return vec3(0.40, 0.40, 0.70);	} 	// [15, 30) -> Indigo
+	else 					 {	return vec3(0.8, 0.6, 1.0);		}	// [0, 15) -> Violet
 }
 
-// Calculate the object color without snow effect.
-vec3 objectColor(){
+/**
+ * Computes the color of an object based on its material properties and lighting, without any snow effect.
+ *
+ * This function calculates the final color of an object by considering its diffuse, ambient, and specular
+ * contributions under multiple light sources. The lighting calculation includes:
+ * - Ambient lighting, which is a small fraction of the object's diffuse color to simulate low-level 
+ *   omnidirectional light.
+ * - Diffuse lighting, which depends on the angle between the light direction and the object's normal.
+ * - Specular lighting, which depends on the view direction and the direction of perfect reflection.
+ *
+ * Each light's contribution is calculated using the Phong reflection model, and the final color is the 
+ * sum of the ambient, diffuse, and specular contributions from all lights affecting the object.
+ *
+ * Material and light properties such as color, intensity, and specular exponent are used to determine 
+ * the appearance of the object under lighting.
+ *
+ * @return vec3 The computed RGB color of the object under the given lighting conditions.
+ */
+ 
+ vec3 objectColor(){
 
 	// Light emission properties
 	vec3 LightColor = sun_color;
@@ -139,12 +163,29 @@ vec3 objectColor(){
 	}
 
 	return color;
-
 }
 
-
-// Calculate the snow color.
-vec3 snowColor(){
+/**
+ * Computes the color of snow based on its material properties and lighting conditions.
+ *
+ * This function calculates the snow color by considering its ambient, diffuse, and specular
+ * contributions under multiple light sources. The snow color is set to a near-white color, and 
+ * the lighting effects include:
+ * - Ambient lighting, which is a fraction of the snow's diffuse color to simulate low-level omnidirectional light.
+ * - Diffuse lighting, which depends on the angle between the light direction and a distorted normal of the snow surface.
+ * - Specular lighting, which is affected by the view direction and the direction of perfect reflection.
+ *
+ * The distortion in the normal is added to simulate the irregular surface of snow, and each light's
+ * contribution is calculated using the Phong reflection model. The final color is the sum of the
+ * ambient, diffuse, and specular contributions from all lights affecting the snow.
+ *
+ * Material and light properties such as color, intensity, and specular exponent are used to determine 
+ * the appearance of the snow under lighting conditions.
+ *
+ * @return vec3 The computed RGB color of the snow under the given lighting conditions.
+ */
+ 
+ vec3 snowColor(){
 
 	vec3 LightColor = sun_color;
 	float LightPower = light_intensity;
@@ -155,7 +196,7 @@ vec3 snowColor(){
 	vec3 SnowSpecularColor = vec3(0.2, 0.2, 0.2);
 	float SnowSpecularExponent = 25.0f;
 
-	float distortion_scalar = 0.1;
+	float distortion_scalar = 0.15;
 	vec3 color = vec3(0.0);
 
 	// Calculate color contribution from each light
@@ -180,9 +221,24 @@ vec3 snowColor(){
 	return color;
 }
 
-
-// Calculate the inclication value of a snow surface.
-float inclication(vec3 n){
+/**
+ * Calculates the inclination value of a snow surface based on its normal vector and random noise.
+ *
+ * This function determines the inclination (or slope) of a snow surface relative to the vertical axis. 
+ * It uses the dot product between the normalized normal vector of the surface and the up vector (0, 0, 1) 
+ * to calculate the cosine of the angle to the vertical. A random noise factor between 0 and 0.4 is added 
+ * to the cosine value to simulate natural irregularities in the snow surface.
+ *
+ * The final inclination value, adjusted by noise, is clamped between 0 and 1. If the dot product is 
+ * negative (implying the surface is facing downward or sideways relative to the up vector), the 
+ * inclination is set to zero.
+ *
+ * @param n The normal vector of the snow surface in model space.
+ *
+ * @return float The inclination value, ranging from 0 (horizontal or downward facing) to 1 (upright).
+ */
+ 
+ float inclication(vec3 n){
 
 	// The inclication noise, between 0 and 0.4
 	float noise = random(Normal_modelspace, 1) * 0.4;
@@ -199,17 +255,31 @@ float inclication(vec3 n){
 	return (dotn > 0) ? min(dotn + noise, 1.0f) : 0.0f;
 }
 
+/**
+ * Main function for fragment shader to calculate the final color of a fragment with potential snow accumulation.
+ *
+ * This function performs multiple tasks:
+ * - It samples the shadow map multiple times to determine the visibility of the fragment under
+ *   consideration, taking into account potential shadowing from multiple light sources.
+ * - It calculates the snow accumulation prediction using three factors:
+ *   - f_e: The exposure component based on visibility from shadow calculations.
+ *   - f_inc: The inclination function that estimates how much snow can accumulate based on the 
+ *     surface's orientation.
+ *   - f_u: A user-defined scalar factor representing the amount of snow, which must be within [0, 1].
+ * - It calculates the colors of the object with and without snow, and blends these colors based
+ *   on the computed snow accumulation prediction.
+ *
+ * The blending uses a linear interpolation between the object color and the snow color, weighted
+ * by the snow accumulation prediction factor, to create a realistic depiction of snow-covered surfaces.
+ *
+ * Outputs:
+ * - color: The final color of the fragment, taking into account the potential for snow coverage and shadowing.
+ */
+
 void main(){
 
-	// Fixed bias, or...
 	float bias = 0.005;
-
-	// ...variable bias
-	// float bias = 0.005*tan(acos(cosTheta));
-	// bias = clamp(bias, 0,0.01);
-
-
-	float visibility=1.0;
+	float visibility = 1.0;
 
 	// Sample the shadow map 4 times
 	for (int i=0; i<4; i++){
@@ -221,23 +291,21 @@ void main(){
 		visibility -= 0.25 * (1.0 - in_shadow);
 	}
 
-	// f_e is the exposure component.
+	// f_e: The exposure component. f_inc: The inclication function. 
+	// f_u: a user-defined function to customize/manipulate the snow effect.
+	// It can be any function, but the range of it must in [0, 1]
 	float f_e = visibility;
-
-	// f_inc is the inclication function.
 	float f_inc = inclication(Normal_modelspace);
-
-	
-	// f_u is a user-defined function to customize/manipulate the snow effect.
-	// It can be any function with any domain, but the range of it must in [0, 1]
 	float f_u = snow_amount;
-	//f_u = 1.00;
 
 	// Snow accumulation prediction function f_p = f_e * f_inc * f_u
 	float f_p = f_e * f_inc * f_u;
 
-	color = snowColor() * f_p + objectColor() * (1.00-f_p);
+	// c_s: The snow color. c_o: The object color without snow
+	vec3 c_s = snowColor();
+	vec3 c_o = objectColor();
 
-	//color = objectColor();
-
+	// The Full snow equation is the blend of those two colors. 
+	// i,e,, C = c_s * f_p + c_o * (1 - f_p)
+	color = c_s * f_p + c_o * (1.00 - f_p);
 }

@@ -1,14 +1,11 @@
-// Include GLFW
 #include <GLFW/glfw3.h>
-extern GLFWwindow* window; // The "extern" keyword here is to access the variable "window" declared in tutorialXXX.cpp. This is a hack to keep the tutorials simple. Please avoid this.
+extern GLFWwindow* window;
 
-// Include GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
 
 #include "controls.hpp"
-
 #include "global.hpp"
 
 glm::mat4 ViewMatrix;
@@ -20,7 +17,6 @@ glm::mat4 getViewMatrix(){
 glm::mat4 getProjectionMatrix(){
 	return ProjectionMatrix;
 }
-
 
 // Initial position
 glm::vec3 position = glm::vec3(EYE_POS_X, EYE_POS_Y, EYE_POS_Z); 
@@ -113,8 +109,8 @@ glm::vec3 computeMatricesFromInputs() {
 	// For the next frame, the "last time" will be "now"
 	lastTime = currentTime;
 
-	std::cout << "Vector: (" << position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
-	std::cout << "horizontalAngle: " << horizontalAngle << ", verticalAngle: " << verticalAngle << std::endl;
+	//std::cout << "Vector: (" << position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
+	//std::cout << "horizontalAngle: " << horizontalAngle << ", verticalAngle: " << verticalAngle << std::endl;
 
 	return position;
 }
