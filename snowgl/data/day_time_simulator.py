@@ -109,13 +109,13 @@ def solar_to_light_direction(elevation_deg, azimuth_deg):
     azimuth_rad = np.radians(azimuth_deg)
     
     # Calculate the components of the direction vector
-    x = -np.sin(azimuth_rad) * np.cos(elevation_rad)
-    y = -np.cos(azimuth_rad) * np.cos(elevation_rad)
+    x = np.sin(azimuth_rad) * np.cos(elevation_rad)
+    y = np.cos(azimuth_rad) * np.cos(elevation_rad)
     z = np.sin(elevation_rad)
     
     return np.array([x, y, z])
 
-import numpy as np
+#import numpy as np
 
 def interpolate_sky_color(angle, day_sky, twilight_sky, night_sky):
     # Interpolate ambient sky color similar to sun color
@@ -126,9 +126,9 @@ def interpolate_sky_color(angle, day_sky, twilight_sky, night_sky):
             np.interp(angle, [5, 20], [twilight_sky[i], day_sky[i]])
             for i in range(len(day_sky))
         ])
-    elif -5 <= angle < 5:
+    elif -10 <= angle < 10:
         return np.array([
-            np.interp(angle, [0, 5], [night_sky[i], twilight_sky[i]])
+            np.interp(angle, [-10, 10], [night_sky[i], twilight_sky[i]])
             for i in range(len(day_sky))
         ])
     else:
@@ -136,13 +136,13 @@ def interpolate_sky_color(angle, day_sky, twilight_sky, night_sky):
 
 
 # Parameters
-day_color = np.array([1.0, 1.0, 0.9])
-twilight_color = np.array([1.0, 0.8, 0.6])
+day_color = np.array([1.0, 0.9, 0.5])
+twilight_color = np.array([1.0, 0.5, 0.0])
 night_color = np.array([0.0, 0.0, 0.0])
 
 day_sky = np.array([0.53, 0.81, 0.92])
 twilight_sky = np.array([0.99, 0.76, 0.52])
-night_sky = np.array([0.05, 0.05, 0.25])
+night_sky = np.array([0.10, 0.05, 0.10])
 
 # The time-temperature relationship
 times_segments = np.array([ 0,  1,  2,  3,   4,   5,   6,   7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]) * 60

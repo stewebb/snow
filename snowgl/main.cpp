@@ -304,7 +304,8 @@ int main(void){
         	lastTime += 1.0;
      	}
 
-		//f_daytime_index += increment;
+
+		f_daytime_index += increment;
 		if(f_daytime_index > daytime_size-1.0){
 			f_daytime_index = 0;
 		}
@@ -322,6 +323,7 @@ int main(void){
 
 		//glUniform3f(glGetUniformLocation(programID, "sun_color"), sun_color);
 		glUniform3f(glGetUniformLocation(programID, "sun_color"), current_time.sun_color_r, current_time.sun_color_g, current_time.sun_color_b);
+		//glUniform3f(glGetUniformLocation(programID, "sun_color"), 1.0f, 0.0f, 0.0f);
 
 		// Render to our framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
@@ -330,10 +332,6 @@ int main(void){
 		// We don't use bias in the shader, but instead we draw back faces, 
 		// which are already separated from the front faces by a small distance 
 		// (if your geometry is made this way)
-
-
-
-
 		
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
