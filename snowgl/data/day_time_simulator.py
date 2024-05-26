@@ -80,16 +80,10 @@ def interpolate_intensity(angle):
         and 1 is the maximum intensity.
     """
     bias = 0.05
-    zenith_angle = 90 - angle  # Convert elevation angle to zenith angle
-    return max(-bias, np.cos(np.radians(zenith_angle))) + bias
-    
-    if angle > -10:
-        # Calculate intensity as the cosine of the zenith angle, which is a realistic 
-        # approximation of sunlight intensity variation.
-        return max(0, np.cos(np.radians(zenith_angle)))
-    else:
-        return 0  # No sunlight if the sun is below the horizon
-
+    zenith_angle = 90 - angle
+    unbiased_intensity = np.cos(np.radians(zenith_angle));
+    #return max(-bias, np.cos(np.radians(zenith_angle))) + bias
+    return np.clip(unbiased_intensity + bias, 0.0, 1.0)
 
 
 def interpolate_ambient_color(angle, day_sky, twilight_sky, night_sky):
@@ -124,8 +118,8 @@ minute_temperatures = cs(minute_times)
 # Calculate snow amounts for the interpolated temperature values
 snow_amounts = np.vectorize(snow_amount)(minute_temperatures)
 
-latitude = 0.0  # Approximate latitude for Inverness, Scotland
-declination = 23.5  # Declination on June 21
+latitude = 10.5  # Approximate latitude for Inverness, Scotland
+declination = 0.0  # Declination on June 21
 sun_elevations = [solar_elevation(latitude, declination, minute) for minute in minute_times]
 
 # Mapping properties through interpolation
@@ -138,7 +132,8 @@ sun_intensities = [interpolate_intensity(angle) for angle in sun_elevations]
 data = pd.DataFrame({
     'Minute': minute_times,
     'Temperature': minute_temperatures,
-    'SnowAmount': snow_amounts
+    'SnowAmount': snow_amounts,
+    'LightIntensity': sun_intensities
 })
 
 # Round 'Minute' to integers and other columns to two decimal places
@@ -153,8 +148,10 @@ data['SnowAmount'] = data['SnowAmount'].apply(lambda x: f"{x:.2f}")
 # Apply the function to the 'Minute' column and create a new 'Time' column
 data['Time'] = data['Minute'].apply(minutes_to_time)
 
+data['LightIntensity'] = data['LightIntensity'].apply(lambda x: f"{x:.2f}")
+
 # Save to CSV for OpenGL C++ renderer
-data = data[['Time', 'Minute', 'Temperature', 'SnowAmount']]
+data = data[['Time', 'Minute', 'Temperature', 'SnowAmount', 'LightIntensity']]
 data.to_csv('data.csv', index=False)
 
 # Plotting
@@ -164,52 +161,50 @@ if PLOTTING:
     xtick_values = np.linspace(0, 1440, 25)
     xtick_labels = [int(label) for label in np.linspace(0, 24, 25)]
 
-    plt.figure(figsize=(10, 5))
-    plt.plot(minute_times, minute_temperatures, label='Temperature vs. Time', color='blue')
-    #plt.gca().xaxis.set_major_formatter(FuncFormatter(time_formatter))
+    fig, axs = plt.subplots(2, 2, figsize=(15, 10))  # 2x2 grid of plots
 
-    plt.xticks(ticks=xtick_values, labels=xtick_labels)
+    # Temperature vs. Time Plot
+    axs[0, 0].plot(minute_times, minute_temperatures, label='Temperature vs. Time', color='blue')
+    axs[0, 0].scatter(times_segments, temps_segments, color='blue')
+    axs[0, 0].set_xlabel('Time (hours)')
+    axs[0, 0].set_ylabel('Temperature (°C)')
+    axs[0, 0].set_title('Daily Temperature Variation')
+    axs[0, 0].set_xticks(xtick_values)
+    axs[0, 0].set_xticklabels(xtick_labels)
+    axs[0, 0].grid(True)
+    axs[0, 0].legend()
 
-    plt.scatter(times_segments, temps_segments, color='blue')
-    plt.xlabel('Time')
-    plt.ylabel('Temperature (°C)')
-    plt.title('Smooth Cubic Spline Daily Temperature Variation in Inverness, Scotland During Winter')
-    plt.grid(True)
-    plt.legend()
-    #plt.show()
+    # Snow Amount vs Time Plot
+    axs[0, 1].plot(minute_times, snow_amounts, label='Snow Amount vs Time', color='blue')
+    axs[0, 1].set_title('Estimated Snow Amount')
+    axs[0, 1].set_xlabel('Time (hours)')
+    axs[0, 1].set_ylabel('Snow Amount (0.0 - 1.0)')
+    axs[0, 1].set_xticks(xtick_values)
+    axs[0, 1].set_xticklabels(xtick_labels)
+    axs[0, 1].grid(True)
+    axs[0, 1].legend()
 
-    # Plotting the results
-    plt.figure(figsize=(10, 5))
-    plt.plot(minute_times, snow_amounts, label='Snow Amount vs Time', color='blue')
-    plt.title('Estimated Snow Amount Throughout the Day')
-    plt.xlabel('Time')
-    plt.ylabel('Snow Amount (0.0 - 1.0)')
-    plt.xticks(ticks=xtick_values, labels=xtick_labels)
+    # Solar Elevation Angle Plot
+    axs[1, 0].plot(minute_times, sun_elevations, label='Solar Elevation Angle', color='blue')
+    axs[1, 0].set_title('Sun Elevation Angle')
+    axs[1, 0].set_xlabel('Time (hours)')
+    axs[1, 0].set_ylabel('Solar Elevation Angle (degrees)')
+    axs[1, 0].set_xticks(xtick_values)
+    axs[1, 0].set_xticklabels(xtick_labels)
+    axs[1, 0].axhline(0, color='grey', lw=0.5)  # Horizon line
+    axs[1, 0].grid(True)
+    axs[1, 0].legend()
 
-    plt.grid(True)
-    plt.legend()
+    # Sun Intensity Plot
+    axs[1, 1].plot(minute_times, sun_intensities, label='Sun Intensity', color='blue')
+    axs[1, 1].set_title('Sun Intensity Throughout the Day')
+    axs[1, 1].set_xlabel('Time (hours)')
+    axs[1, 1].set_ylabel('Intensity')
+    axs[1, 1].set_xticks(xtick_values)
+    axs[1, 1].set_xticklabels(xtick_labels)
+    axs[1, 1].grid(True)
+    axs[1, 1].legend()
 
-    plt.figure(figsize=(10, 5))
-    plt.plot(minute_times, sun_elevations, label='Solar Elevation Angle', color='blue')
-    plt.title('Sun Elevation Angle on June 21st in Inverness, Scotland')
-    plt.xlabel('Time')
-    plt.ylabel('Solar Elevation Angle (degrees)')
-    #plt.axhline(0, color='grey', lw=0.5)  # Horizon line
-
-    plt.xticks(ticks=xtick_values, labels=xtick_labels)
-    plt.grid(True)
-    plt.legend()
-
-    # Plotting example: Sun Intensity
-    plt.figure(figsize=(10, 5))
-    plt.plot(minute_times, sun_intensities, label='Sun Intensity', color='blue')
-    plt.title('Interpolated Sun Intensity Throughout the Day')
-    plt.xlabel('Time (minutes from midnight)')
-    plt.ylabel('Intensity')
-    plt.grid(True)
-    plt.xticks(ticks=xtick_values, labels=xtick_labels)
-
-    plt.legend()
-    plt.show()
-
+    # Adjust layout to prevent overlap
+    plt.tight_layout()
     plt.show()
