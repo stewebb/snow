@@ -1,17 +1,54 @@
+'''
+    Simulate snow effects based on location and temperature.
+    It generates relevant data to a CSV file, and the OpenGL C++ renderer will read the file.
+'''
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import CubicSpline
 import pandas as pd
 
-'''
-    Simulate snow effects in a place during winter.
-    The place typically is located in temperate regions in the Northern Hemisphere.
-'''
-
 PLOTTING = True
 
-# Calculate snow amount based on temperature
-# Output range: [0, 1]. 0 -> No snow 1 -> Full snow
+'''
+    Parameters
+'''
+
+# Sun (light source) color
+day_color = np.array([1.0, 0.9, 0.5])
+twilight_color = np.array([1.0, 0.5, 0.0])
+night_color = np.array([0.0, 0.0, 0.0])
+
+day_sky = np.array([0.53, 0.81, 0.92])
+twilight_sky = np.array([0.99, 0.76, 0.52])
+night_sky = np.array([0.10, 0.05, 0.10])
+
+# The time-temperature relationship
+times_segments = np.array([ 0,  1,  2,  3,   4,   5,   6,   7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]) * 60
+temps_segments = np.array([-7, -8, -8, -9, -11, -12, -13, -10, -9, -5, -1,  2,  4,  6,  9,  7,  6,  4,  1, -1, -3, -4, -5, -6])
+
+
+
+"""
+    Calculate the amount of snow based on the temperature.
+
+    This function computes the amount of snow as a normalized value between 0 and 1, where 0 indicates no snow and 1 indicates full snow coverage. The calculation is based on the temperature using the following rules:
+    - If the temperature is less than or equal to 0 degrees Celsius, full snow coverage (1.0) is returned.
+    - If the temperature is between 0 and 5 degrees Celsius, the snow amount decreases linearly from 1 to 0 as temperature increases. The formula used is: 1 - (temperature / 5).
+    - Temperatures 5 degrees Celsius or higher result in no snow (0.0).
+
+    Parameters:
+    - temperature (float): The current temperature in degrees Celsius.
+
+    Returns:
+    - float: A float between 0 and 1 representing the snow amount.
+
+    Formula:
+    - For temperature <= 0: snow_amount = 1.0
+    - For 0 < temperature < 5: snow_amount = 1 - (temperature / 5)
+    - For temperature >= 5: snow_amount = 0.0
+"""
+
 def snow_amount(temperature):
     if temperature <= 0:
         return 1.0
@@ -20,7 +57,22 @@ def snow_amount(temperature):
     else:
         return 0.0
     
-# Function to convert minutes to HH:MM format
+"""
+    Convert a number of minutes into a time string formatted as HH:MM.
+
+    This function takes an integer representing the total number of minutes and converts it into a string formatted as hours and minutes (HH:MM). The function calculates hours as the integer division of minutes by 60 and the remainder as the minutes. It ensures that single-digit hours and minutes are zero-padded to maintain a consistent two-digit format.
+
+    Parameters:
+    - mins (int): Total number of minutes to convert.
+
+    Returns:
+    - str: A string representing the time in HH:MM format.
+
+    Example:
+    - Input: 150
+    - Output: '02:30'
+"""
+
 def minutes_to_time(mins):
     hours = mins // 60
     minutes = mins % 60
@@ -40,7 +92,7 @@ def minutes_to_time(mins):
     Formula:
         Solar Elevation = arcsin(sin(latitude) * sin(declination) + cos(latitude) * cos(declination) * cos(H)),
     where H is the Hour Angle, calculated as (minutes/4 - 180) degrees, assuming 15 degrees per hour, centered at solar noon.
-    """
+"""
 
 def solar_elevation(latitude, declination, minutes):
 
@@ -57,53 +109,53 @@ def solar_elevation(latitude, declination, minutes):
     
     return np.degrees(elevation_rad)
 
-#def interpolate_color(angle, day_color, twilight_color, night_color):
-#    # Interpolate based on angle thresholds
-#    if angle >= 10:
-#        return day_color
-#    elif 0 < angle < 10:
-#        return np.interp(angle, [0, 10], [twilight_color, day_color], axis=0)
-#    else:
-#        return night_color
-
-def interpolate_intensity(angle):
-    """
+"""
     Calculate the intensity of sunlight based on the solar elevation angle.
     The intensity is maximum when the sun is at zenith (angle = 90 degrees) and decreases 
-    towards zero as the sun approaches the horizon.
+    towards zero as the sun approaches the horizon. This function uses an exponential 
+    decay function based on the transformed zenith angle, adjusted to ensure that the 
+    intensity strictly lies between 0 and 1.
 
     Parameters:
         angle (float): Solar elevation angle in degrees.
 
     Returns:
-        float: Normalized intensity of sunlight, between 0 and 1, where 0 is no intensity
-        and 1 is the maximum intensity.
-    """
+        float: Normalized intensity of sunlight, between 0 and 1, where 0 indicates no 
+        intensity and 1 indicates maximum intensity.
+
+    Formula:
+        intensity = exp(-((90 - angle) * (1 - bias))^8),
+        where bias is set to 0.25 to slightly shift the curve for practical adjustments.
+"""
+
+def interpolate_intensity(angle):
+
     bias = 0.25
     zenith_angle = np.radians(90 - angle) * (1.00 - bias)
-    #unbiased_intensity = np.power(np.cos(np.radians(zenith_angle)), 5)
-
-    # e^(-1 * (bx) ^ 8)
     unbiased_intensity = np.exp(-1 * np.power(zenith_angle, 8))
-
-    #return max(-bias, np.cos(np.radians(zenith_angle))) + bias
     return np.clip(unbiased_intensity, 0.0, 1.0)
 
-
-def solar_to_light_direction(elevation_deg, azimuth_deg):
-    """
+"""
     Convert solar elevation and azimuth angles to a light direction vector suitable for use in 3D graphics.
 
+    This function transforms the solar angles into a directional vector that indicates the direction from which light 
+    would be coming in a 3D scene. The elevation angle is measured from the horizon upwards, while the azimuth is 
+    measured from North going clockwise. The calculations return a vector for a right-handed coordinate system, 
+    where the x-axis points East, the y-axis points North, and the z-axis points Up.
+
     Parameters:
-    elevation_deg (float): The solar elevation angle in degrees, measured from the horizon upwards.
-    azimuth_deg (float): The solar azimuth angle in degrees, measured from North going clockwise.
+    elevation_deg (float): The solar elevation angle in degrees.
+    azimuth_deg (float): The solar azimuth angle in degrees, measured clockwise from North.
 
     Returns:
-    numpy.ndarray: A 3D vector representing the light direction in a right-handed coordinate system where:
-        - x-axis points East
-        - y-axis points North
-        - z-axis points Up
-    """
+    numpy.ndarray: A 3D vector representing the light direction. The components of this vector are:
+        - x: Negative sine of the azimuth times the cosine of the elevation, representing the Eastward component.
+        - y: Negative cosine of the azimuth times the cosine of the elevation, representing the Northward component.
+        - z: Sine of the elevation, representing the upward component towards the zenith.
+"""
+
+def solar_to_light_direction(elevation_deg, azimuth_deg):
+
     # Convert degrees to radians
     elevation_rad = np.radians(elevation_deg)
     azimuth_rad = np.radians(azimuth_deg)
@@ -115,10 +167,27 @@ def solar_to_light_direction(elevation_deg, azimuth_deg):
     
     return np.array([x, y, z])
 
-#import numpy as np
+"""
+    Interpolates the ambient sky color based on the solar elevation angle to simulate the changing sky colors from day to night.
+
+    This function returns a color that transitions smoothly between specified colors for daytime, twilight, and nighttime 
+    based on the solar elevation angle. The transition ranges are defined to reflect typical conditions during those times:
+    - Daytime color is used when the angle is 20 degrees or more.
+    - Twilight color gradually blends into daytime as the angle changes from 5 to 20 degrees.
+    - Nighttime color transitions to twilight color as the angle goes from -10 to 5 degrees.
+    - Strict nighttime color is used when the angle is less than -10 degrees.
+
+    Parameters:
+        angle (float): Solar elevation angle in degrees.
+        day_sky (numpy.ndarray): RGB color for the daytime sky.
+        twilight_sky (numpy.ndarray): RGB color for the twilight sky.
+        night_sky (numpy.ndarray): RGB color for the nighttime sky.
+
+    Returns:
+        numpy.ndarray: The interpolated RGB color of the sky based on the solar elevation angle.
+"""
 
 def interpolate_sky_color(angle, day_sky, twilight_sky, night_sky):
-    # Interpolate ambient sky color similar to sun color
     if angle >= 20:
         return day_sky
     elif 5 <= angle < 20:
@@ -134,19 +203,6 @@ def interpolate_sky_color(angle, day_sky, twilight_sky, night_sky):
     else:
         return night_sky
 
-
-# Parameters
-day_color = np.array([1.0, 0.9, 0.5])
-twilight_color = np.array([1.0, 0.5, 0.0])
-night_color = np.array([0.0, 0.0, 0.0])
-
-day_sky = np.array([0.53, 0.81, 0.92])
-twilight_sky = np.array([0.99, 0.76, 0.52])
-night_sky = np.array([0.10, 0.05, 0.10])
-
-# The time-temperature relationship
-times_segments = np.array([ 0,  1,  2,  3,   4,   5,   6,   7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]) * 60
-temps_segments = np.array([-7, -8, -8, -9, -11, -12, -13, -10, -9, -5, -1,  2,  4,  6,  9,  7,  6,  4,  1, -1, -3, -4, -5, -6])
 
 # Time array for minutes in a day
 minute_times = np.linspace(0, 1440, 1441) 
