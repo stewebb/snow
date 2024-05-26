@@ -16,6 +16,6 @@
 
 # Report building files
 **/report/*
-!**/report/.tex
-!**/report/.sty
-!**/report/.bak
+!**/report/*.tex
+!**/report/*.sty
+!**/report/*.bak
