@@ -9,17 +9,16 @@
 */
 
 #define WINDOW_NAME "SnowGL"
-#define WINDOW_WIDTH 900
+#define WINDOW_WIDTH 1600
 #define WINDOW_HEIGHT 900
-
 
 /**
  * Eye position
 */
 
 #define EYE_POS_X 0
-#define EYE_POS_Y -40
-#define EYE_POS_Z 15
+#define EYE_POS_Y -30
+#define EYE_POS_Z 12.5
 
 #define HORIZONTAL_FIXED true
 #define VERTICAL_FIXED true
@@ -41,22 +40,27 @@
 //#define MODEL_LOCATION "models/grass.obj"
 //#define MODEL_LOCATION "models/football.obj"
 
+#define TEXTURE_LOCATION "textures/pure_color.bmp"
 //#define TEXTURE_LOCATION "textures/rainbow.bmp"
-#define TEXTURE_LOCATION "textures/checkerboard.bmp"
-
-// Snow color, in RGB format (white with a higher blue part)
-//#define SNOW_COLOR_R    240
-//#define SNOW_COLOR_G    240
-//#define SNOW_COLOR_B    255
+//#define TEXTURE_LOCATION "textures/checkerboard.bmp"
 
 
-#define BACKGROUND_COLOR {0, 0, 0}
+/**
+ * Videos
+*/
 
-// #define BACKGROUND_R 255
+#define OUTPUT_VIDEO_FILENAME   "outputs/StatueOfLiberty.mp4"
+#define OUTPUT_VIDEO_FPS        25
+#define FRAME_MICRO_STEP        1.0
+#define AUTO_STOP_RECORDING     true
 
-#define DISTORTION_SCALAR 0.1
+/**
+ * Snow
+*/
 
-
-
+#define SNOW_COLOR_R        0.9375
+#define SNOW_COLOR_G        0.9375
+#define SNOW_COLOR_B        1.0000
+#define DISTORTION_SCALAR   0.1000
 
 #endif // GLOBAL_H

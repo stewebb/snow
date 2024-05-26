@@ -29,11 +29,11 @@ times_segments = np.array([ 0,  1,  2,  3,   4,   5,   6,   7,  8,  9, 10, 11, 1
 temps_segments = np.array([-7, -8, -8, -9, -11, -12, -13, -10, -9, -5, -1,  2,  4,  6,  9,  7,  6,  4,  1, -1, -3, -4, -5, -6])
 
 # Location
-latitude = 43.5
+latitude = 0.0
 azimuth = 0        # degrees from North going clockwise (East)
 
 # Season
-declination = 13.0  # 23.5 -> Jun 21st, -23.5 -> Dec 22nd, 0.0 -> Mar 21st / Sep 23rd
+declination = 23.5  # 23.5 -> Jun 21st, -23.5 -> Dec 22nd, 0.0 -> Mar 21st / Sep 23rd
 
 """
     Calculate the amount of snow based on the temperature.

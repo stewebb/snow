@@ -5,23 +5,20 @@ in vec2 UV;
 in vec3 Position_worldspace;
 in vec3 Normal_cameraspace;
 in vec3 Normal_modelspace;
-
-
 in vec3 EyeDirection_cameraspace;
-//in vec3 LightDirection_cameraspace;
 in vec3 LightDirection_cameraspace[6];
-
 in vec4 ShadowCoord;
 
 // Output data
 layout(location = 0) out vec3 color;
 
-// Values that stay constant for the whole mesh.
 uniform sampler2D myTextureSampler;
 uniform mat4 MV;
 uniform vec3 LightPosition_worldspace;
 uniform sampler2DShadow shadowMap;
 uniform int numLights;
+uniform vec3 snow_color;
+uniform vec3 distortion_scalar;
 
 uniform float snow_amount;
 uniform float light_intensity;
@@ -136,9 +133,8 @@ vec3 angleColorMapping(float dotn) {
 	// Eye vector (towards the camera)
 	vec3 E = normalize(EyeDirection_cameraspace);
 
-	vec3 color = vec3(0.0); // Initialize final color
-
 	// Calculate color contribution from each light
+	vec3 color = vec3(0.0);
 	for (int i = 0; i < numLights; i++) {
 
 		// Direction of the light (from the fragment to the light)
@@ -191,15 +187,13 @@ vec3 angleColorMapping(float dotn) {
 	float LightPower = light_intensity;
 
 	// Fixed snow color (white), RGB: (240, 250, 255)
-	vec3 SnowDiffuseColor = vec3(0.9375, 0.9375, 1.0000);
+	vec3 SnowDiffuseColor = snow_color;
 	vec3 SnowAmbientColor = vec3(0.10, 0.10, 0.10) * SnowDiffuseColor;
 	vec3 SnowSpecularColor = vec3(0.2, 0.2, 0.2);
 	float SnowSpecularExponent = 25.0f;
 
-	float distortion_scalar = 0.15;
-	vec3 color = vec3(0.0);
-
 	// Calculate color contribution from each light
+	vec3 color = vec3(0.0);
 	for (int i = 0; i < numLights; i++) {
 
 		// Distorted normal

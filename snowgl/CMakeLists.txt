@@ -107,4 +107,5 @@ add_custom_command(
 	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/shaders/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/shaders"
 	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/models/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/models/"
 	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/textures/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/textures/"
+	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/outputs/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/outputs/"
 )

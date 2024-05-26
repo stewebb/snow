@@ -38,7 +38,7 @@ using namespace glm;
 #include <common/csv_reader.hpp>
 #include <common/util.hpp>
 
-double f_daytime_index = 360.0f;
+double f_daytime_index = 0.0f;
 int daytime_size = 0;
 
 /**
@@ -82,6 +82,14 @@ int main(void){
 		getchar();
 		return -1;
 	}
+
+	// Setup VideoWriter
+    cv::VideoWriter video(OUTPUT_VIDEO_FILENAME, cv::VideoWriter::fourcc('X','2','6','4'), OUTPUT_VIDEO_FPS, cv::Size(WINDOW_WIDTH, WINDOW_HEIGHT));
+    if (!video.isOpened()) {
+        std::cerr << "Error: Could not open the video file for output\n";
+		getchar();
+        return -1;
+    }
     
 	if(!glfwInit()){
 		fprintf( stderr, "Failed to initialize GLFW.\n" );
@@ -216,13 +224,12 @@ int main(void){
 
  	// The mouse scroll callback
     glfwSetScrollCallback(window, scroll_callback);
-
-	double daytime_frame_increment = 0.3;
 	
 	// Data for FPS calculation
 	double lastTime = glfwGetTime();
  	int nbFrames = 0;
 	double fps = 0;
+	int frame_count = 0;
 
 	do {
 
@@ -236,7 +243,7 @@ int main(void){
      	}
 
 		// Increase time
-		f_daytime_index += daytime_frame_increment;
+		f_daytime_index += FRAME_MICRO_STEP;
 		if(f_daytime_index > daytime_size - 1.0){
 			f_daytime_index = 0;
 		}
@@ -249,6 +256,9 @@ int main(void){
 		glUniform3f(glGetUniformLocation(programID, "sun_color"), current_time.sun_color_r, current_time.sun_color_g, current_time.sun_color_b);
 		glUniform1f(glGetUniformLocation(programID, "snow_amount"), current_time.snow_amount);
 		glUniform1f(glGetUniformLocation(programID, "light_intensity"), current_time.light_intensity);
+
+		glUniform3f(glGetUniformLocation(programID, "snow_color"), SNOW_COLOR_R, SNOW_COLOR_G, SNOW_COLOR_B);
+		glUniform1f(glGetUniformLocation(programID, "distortion_scalar"), DISTORTION_SCALAR);
 
 		// Render to framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
@@ -386,16 +396,22 @@ int main(void){
 		cv::putText(capturedImage, lightIntensityText,	cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
 		cv::putText(capturedImage, elevationAngleText,  cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
 
+		video.write(capturedImage);
         cv::imshow("OpenGL Capture", capturedImage);
 		if (cv::waitKey(1) >= 0) break;
 
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+
+		frame_count++;
+		if(AUTO_STOP_RECORDING && frame_count >= daytime_size){
+			break;
+		}
 	} 
 	
 	// Check if the ESC key was pressed or the window was closed
-	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
+	while(glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 
 	// Cleanup VBO and shader
 	glDeleteBuffers(1, &vertexbuffer);
@@ -414,6 +430,9 @@ int main(void){
 
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
+
+	video.release();
+    cv::destroyAllWindows();
 
 	return 0;
 }
