@@ -5,6 +5,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
 from scipy.interpolate import CubicSpline
 import pandas as pd
 
@@ -449,6 +450,7 @@ if PLOTTING:
     axs[1, 0].legend()
 
     # Sun Color Plot
+    '''
     axs[1, 1].plot(minute_times, sun_color_r, color='red')
     axs[1, 1].plot(minute_times, sun_color_g, color='green')
     axs[1, 1].plot(minute_times, sun_color_b, color='blue')
@@ -471,6 +473,19 @@ if PLOTTING:
     axs[1, 2].set_xticklabels(xtick_labels)
     axs[1, 2].grid(True)
     axs[1, 2].legend()
+    '''
+    
+    # Sun Color Plot
+    sun_colors = np.column_stack((sun_color_r, sun_color_g, sun_color_b))
+    sm = plt.cm.ScalarMappable(cmap=ListedColormap(sun_colors), norm=plt.Normalize(0, len(minute_times) - 1))
+    sm.set_array([])
+
+    # Assuming 'fig' and 'axs' are already defined and set up for your subplot grid
+    cbar = plt.colorbar(sm, ax=axs[1, 1], orientation='horizontal', ticks=xtick_values)
+    cbar.set_label('Time of Day')
+    cbar.ax.set_xticks(xtick_values)
+    cbar.ax.set_xticklabels(xtick_labels)
+    axs[1, 1].set_title('Sun Color Throughout the Day')
 
     # Adjust layout to prevent overlap
     plt.tight_layout()
