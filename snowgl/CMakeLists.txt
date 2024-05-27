@@ -1,12 +1,9 @@
 cmake_minimum_required (VERSION 3.0)
 project (SnowGL)
 
-option(USE_OPENCV "Use OpenCV" ON)
 
 find_package(OpenGL REQUIRED)
-if(USE_OPENCV)
-	find_package(OpenCV REQUIRED)
-endif()
+#find_package(OpenCV REQUIRED)	# Comment me if not using OpenCV
 
 # Compile external dependencies 
 add_subdirectory (external)
@@ -20,10 +17,7 @@ include(MSVCMultipleProcessCompile) # /MP
 if(INCLUDE_DISTRIB)
 	add_subdirectory(distrib)
 endif(INCLUDE_DISTRIB)
-
-if(USE_OPENCV)
-	include_directories(${OpenCV_INCLUDE_DIRS})
-endif()
+#include_directories(${OpenCV_INCLUDE_DIRS})	# Comment me if not using OpenCV
 
 include_directories(
 	external/AntTweakBar-1.16/include/
@@ -76,8 +70,7 @@ add_executable(SnowGL
 	shaders/DepthRTT.vert
 	shaders/DepthRTT.frag
 	shaders/Passthrough.vert
-	shaders/SimpleTexture.frag
-	
+	shaders/SimpleTexture.frag	
 )
 
 target_link_libraries(SnowGL
@@ -91,7 +84,7 @@ create_target_launcher(SnowGL WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/")
 SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
 SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
 
-set(output_folder build)
+set(output_folder "build/Debug")
 
 if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${output_folder}/models/)
     file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/models/)
@@ -105,6 +98,7 @@ if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${output_folder}/shaders/)
     file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/shaders/)
 endif()
 
+# On Unix-based systems
 add_custom_command(
     TARGET SnowGL POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/data/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/data"
@@ -113,3 +107,13 @@ add_custom_command(
 	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/textures/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/textures/"
 	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/outputs/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/outputs/"
 )
+
+# On Windows system
+#add_custom_command(
+#    TARGET SnowGL POST_BUILD
+#    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/data/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/Debug/data"
+#	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/shaders/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/Debug/shaders
+#	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/models/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/Debug/models/"
+#	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/textures/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/Debug/textures/"
+#	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/outputs/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/Debug/outputs/"
+#)

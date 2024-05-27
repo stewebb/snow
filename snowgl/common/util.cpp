@@ -1,4 +1,11 @@
 #include "util.hpp"
+
+// On Windows OS with VC++ compiler, windows.h needs to be included before gl.h!
+// https://stackoverflow.com/q/430413
+#ifdef IS_WINDOWS_OS
+#include <windows.h>
+#endif
+
 #include <GL/gl.h>
 
 #ifdef USE_OPENCV

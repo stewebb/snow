@@ -9,8 +9,10 @@
 #define WINDOW_WIDTH            1600
 #define WINDOW_HEIGHT           900
 
+#define IS_WINDOWS_OS
+
 // Operating Mode 
-#define DAYTIME_SIMULATION      false      
+#define DAYTIME_SIMULATION      true      
 #define FRAME_MICRO_STEP        1.0 
 
 // Manual defined item (If DAYTIME_SIMULATION is set to false)
@@ -47,12 +49,11 @@
 #define TEXTURE_LOCATION "textures/rainbow.bmp"
 //#define TEXTURE_LOCATION "textures/checkerboard.bmp"
 
-
 /**
  * OpenCV Capture Window and output
 */
 
-#define USE_OPENCV              // Comment this line if OpenCV is not installed
+//#define USE_OPENCV              // Comment this line if OpenCV is not installed
 #define CV_WINDOW_NAME          "SnowGL (OpenCV Capture)"
 
 #define OUTPUT_VIDEO_FILENAME   "outputs/StatueOfLiberty.mp4"
