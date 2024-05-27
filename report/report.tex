@@ -167,6 +167,17 @@ Otherwise, the snow amount decreases linearly from 1 to 0 as temperature increas
 \]
 \text{where } t \text{ is the temperature in degrees Celsius.}
 
+\subsubsection {Light Intensity}
+In this paper, the only light source (except ambient light) is the sun light, 
+which is a directional light source, and the moon night in evenings is not considered. 
+The intensity of the sun light varies as time, ranging from 0 to 1.
+
+Assume the light intensity is 0 at night. It starts increasing before the sunrise rapidly,
+and reaches the maximum value in a short time (typically 1-3 hours, depending on the location).
+Then, it remains to a stable value until several hours before the sunset. The value decreases 
+quickly and finally return to 0.
+
+
 \section{Experiments}
 \label{headings}
 
