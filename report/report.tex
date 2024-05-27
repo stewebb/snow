@@ -144,23 +144,23 @@ TODO:
 \subsection {Environment Simulation}
 
 \subsubsection {Temperature}
-The temperature of a location depends on multiple factors, e.g., time in the day, season, altitude, 
-latitude and distance to ocean. To create a reasonable snow effect, the location used in this paper 
+The temperature of a location depends on multiple factors, e.g., time of the day, season, altitude, 
+latitude and distance to the ocean. To create a reasonable snow effect, the location used in this paper 
 is an in-land city around the latitude of 35$^{\circ}$ N or 35$^{\circ}$ S and the season is winter.
 
 This location has a large temperature difference. The highest temperature is about 
-\(10^\circ\mathrm{C}\), which can be reached on around 1-2 P.M. The lowest temperature is about 
-\(-10^\circ\mathrm{C}\), which can be reached on around 5-7 A.M. The hourly temperature data can be
+\(10^\circ\mathrm{C}\), which can be reached at around 1-2 P.M. The lowest temperature is about 
+\(-10^\circ\mathrm{C}\), which can be reached at around 5-7 A.M. The hourly temperature data can be
 obtained on weather forecast websites, and the Cubic Spline method is used to interpolate the 
 intermediate values, making the temperature-time curve smoother.
 
 \subsubsection {Snow Amount}
 The snow amount on an object is based solely on the environmental temperature. 
-The range of it betweens 0 and 1, where 0 means that no snow on the object and 1 means
+The range of it between 0 and 1, where 0 means that no snow on the object and 1 means
 that the object is fully covered by snow.
 
-If the temperature below or equal \(0^\circ\mathrm{C}\), the snow amount is always 1. 
-If the temperature above or equal \(5^\circ\mathrm{C}\), the snow amount is always 0. 
+If the temperature is below or equal to \(0^\circ\mathrm{C}\), the snow amount is always 1. 
+If the temperature is above or equal to \(5^\circ\mathrm{C}\), the snow amount is always 0. 
 Otherwise, the snow amount decreases linearly from 1 to 0 as temperature increases.
 
 \[
@@ -176,15 +176,15 @@ Otherwise, the snow amount decreases linearly from 1 to 0 as temperature increas
 \text{where } t \text{ is the temperature in degrees Celsius.}
 
 \subsubsection {Sunlight Intensity}
-In the real world, there are multiple light sources outside, including sun, sky, moon, stars, 
-and human-made lights. In this paper, only the sun light and sky (ambient) light are considered. 
-The intensity of the sky light is a small constant value while that of the sun light varies by 
+In the real world, there are multiple light sources outside, including the sun, sky, moon, stars, 
+and human-made lights. In this paper, only the sunlight and sky (ambient) light are considered. 
+The intensity of the skylight is a small constant value while that of the sunlight varies by 
 time, ranging from 0 to 1.
 
-Assume the light intensity of sun is 0 (or a very small value) at night. It starts increasing 
-rapidly (typically 30 minutes) before the sunrise and reaches the maximum value in a short time 
+Assume the light intensity of the sun is 0 (or a very small value) at night. It starts increasing 
+rapidly (typically 30 minutes) before sunrise and reaches the maximum value in a short time 
 (typically 1-3 hours). It remains stable until several hours before the sunset. The value 
-decreases quickly in the sunset period and finally return to 0 (or a very small value). Here is 
+decreases quickly in the sunset period and finally returns to 0 (or a very small value). Here is 
 the mathematical formula of the light intensity.
 
 \[
@@ -217,8 +217,8 @@ of the bias can be expressed as:
 \]
 
 \subsubsection {Sunlight and Sky Color}
-Light and sky colors depend on the current time. Typically in a sunny day, the sunlight is white
-in the most of the day and it becomes to orange during sunrise or sunset. The sky is light blue
+Light and sky colors depend on the current time. Typically on a sunny day, the sunlight is white
+for most of the day and it becomes orange during sunrise or sunset. The sky is light blue
 in the day, orange during sunrise or sunset and dark brown at night. To simulate those colors, 
 interpolation is also needed to make the transition process smoother. 
 
