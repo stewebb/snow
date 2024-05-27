@@ -175,7 +175,7 @@ Otherwise, the snow amount decreases linearly from 1 to 0 as temperature increas
 \]
 \text{where } t \text{ is the temperature in degrees Celsius.}
 
-\subsubsection {Light Intensity}
+\subsubsection {Sunlight Intensity}
 In the real world, there are multiple light sources outside, including sun, sky, moon, stars, 
 and human-made lights. In this paper, only the sun light and sky (ambient) light are considered. 
 The intensity of the sky light is a small constant value while that of the sun light varies by 
@@ -216,10 +216,11 @@ of the bias can be expressed as:
   b = \frac{\left(\frac{\pi}{2}\right)^{\frac{m}{60} + 1}}{\log(10)}
 \]
 
-\subsubsection {Light and Sky Color}
-
-
-
+\subsubsection {Sunlight and Sky Color}
+Light and sky colors depend on the current time. Typically in a sunny day, the sunlight is white
+in the most of the day and it becomes to orange during sunrise or sunset. The sky is light blue
+in the day, orange during sunrise or sunset and dark brown at night. To simulate those colors, 
+interpolation is also needed to make the transition process smoother. 
 
 \section{Experiments}
 \label{headings}
