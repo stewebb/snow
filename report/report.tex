@@ -156,7 +156,7 @@ If the temperature above or equal \(5^\circ\mathrm{C}\), the snow amount is alwa
 Otherwise, the snow amount decreases linearly from 1 to 0 as temperature increases.
 
 \[
-  S(t)=
+  S=
   \left\{
     \begin{array}{ll}
       0 & t\leq 0 \\
@@ -168,14 +168,45 @@ Otherwise, the snow amount decreases linearly from 1 to 0 as temperature increas
 \text{where } t \text{ is the temperature in degrees Celsius.}
 
 \subsubsection {Light Intensity}
-In this paper, the only light source (except ambient light) is the sun light, 
-which is a directional light source, and the moon night in evenings is not considered. 
-The intensity of the sun light varies as time, ranging from 0 to 1.
+In the real world, there are multiple light sources outside, including sun, sky, moon, stars, 
+and human-made lights. In this paper, only the sun light and sky (ambient) light are considered. 
+The intensity of the sky light is a small constant value while that of the sun light varies by 
+time, ranging from 0 to 1.
 
-Assume the light intensity is 0 at night. It starts increasing before the sunrise rapidly,
-and reaches the maximum value in a short time (typically 1-3 hours, depending on the location).
-Then, it remains to a stable value until several hours before the sunset. The value decreases 
-quickly and finally return to 0.
+Assume the light intensity of sun is 0 (or a very small value) at night. It starts increasing 
+rapidly (typically 30 minutes) before the sunrise and reaches the maximum value in a short time 
+(typically 1-3 hours). It remains stable until several hours before the sunset. The value 
+decreases quickly in the sunset period and finally return to 0 (or a very small value). Here is 
+the mathematical formula of the light intensity.
+
+\[
+  I = e^{-\frac{\left(\frac{\pi}{2} - \theta\right)^{\frac{m}{60} + 1}}{b}}
+\]
+
+where:
+\begin{itemize}
+  \item \( I \) is the light intensity of the sun, \( I \in (0, 1] \).
+  \item \( \theta \) is the solar elevation angle in radians, which is based on the current time, 
+  season (declination) and position (latitude).
+  \item \( m \) is the current minutes since midnight, \( m \in [0, 1440) \), \( m \in \mathbb{Z} \).
+  \item \( b \) is a bias factor adjusting the exponent decay rate, making the light intensity
+  transition more realistic.
+\end{itemize}
+
+The bias \( b \) depends on multiple factors, including the altitude, latitude and time zone. To
+simplify the simulation, it can be calculated by solving an equation in terms of \( m \) when 
+\( I \) and \( \theta\) is given.
+
+\[
+  b = -\frac{\left(\frac{\pi}{2} - \theta\right)^{\frac{m}{60} + 1}}{\log(I)}
+\]
+
+Assume the solar light intensity is 0.1 on sunrise or sunset (i.e., \( \theta=0\)), the formula 
+of the bias can be expressed as:
+
+\[
+  b = \frac{\left(\frac{\pi}{2}\right)^{\frac{m}{60} + 1}}{\log(10)}
+\]
 
 
 \section{Experiments}
