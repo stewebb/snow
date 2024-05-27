@@ -331,9 +331,9 @@ int main(void){
 		else{
 
 			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-			glUniform3f(glGetUniformLocation(programID, "sun_color"), 1.0f, 1.0f, 1.0f);
-			glUniform1f(glGetUniformLocation(programID, "snow_amount"), 1.0f);
-			glUniform1f(glGetUniformLocation(programID, "light_intensity"), 0.80f);
+			glUniform3f(glGetUniformLocation(programID, "sun_color"), 		1.0f, 1.0f, 1.0f);
+			glUniform1f(glGetUniformLocation(programID, "snow_amount"), 	MANUAL_SNOW_AMOUNT);
+			glUniform1f(glGetUniformLocation(programID, "light_intensity"), MANUAL_LIGHT_INTENSITY);
 
 			lightInvDirs[0] = glm::vec3(0.00f, -0.85f,  0.52f);
 			//lightInvDirs[1] = glm::vec3( 0.0f,  0.0f, -1.0f);

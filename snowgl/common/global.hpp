@@ -2,30 +2,34 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#define MY_PI       3.1415926
+#define MY_PI                   3.1415926
 
 // OpenGL Rendering Window
-#define GL_WINDOW_NAME      "SnowGL (OpenGL Rendering)"
-#define WINDOW_WIDTH        1600
-#define WINDOW_HEIGHT       900
+#define GL_WINDOW_NAME          "SnowGL (OpenGL Rendering)"
+#define WINDOW_WIDTH            1600
+#define WINDOW_HEIGHT           900
 
-// Operating Mode
-#define DAYTIME_SIMULATION  false      
-#define FRAME_MICRO_STEP    1.0 
+// Operating Mode 
+#define DAYTIME_SIMULATION      false      
+#define FRAME_MICRO_STEP        1.0 
+
+// Manual defined item (If DAYTIME_SIMULATION is set to false)
+#define MANUAL_SNOW_AMOUNT      0.0
+#define MANUAL_LIGHT_INTENSITY  1.0
 
 /**
  * Eye position
 */
 
-#define EYE_POS_X           0
-#define EYE_POS_Y           -30
-#define EYE_POS_Z           12.5
+#define EYE_POS_X               0
+#define EYE_POS_Y               -30
+#define EYE_POS_Z               12.5
 
-#define HORIZONTAL_FIXED    true
-#define VERTICAL_FIXED      true
+#define HORIZONTAL_FIXED        true
+#define VERTICAL_FIXED          true
 
-#define HORIZONTAL_ANGLE    (MY_PI * 1.00)
-#define VERTICAL_ANGLE      (-MY_PI * 1.50)
+#define HORIZONTAL_ANGLE        (MY_PI * 1.00)
+#define VERTICAL_ANGLE          (-MY_PI * 1.50)
 
 /**
  * Lighting Configuration
@@ -39,8 +43,8 @@
 //#define MODEL_LOCATION "models/grass.obj"
 //#define MODEL_LOCATION "models/football.obj"
 
-#define TEXTURE_LOCATION "textures/pure_color.bmp"
 //#define TEXTURE_LOCATION "textures/rainbow.bmp"
+#define TEXTURE_LOCATION "textures/rainbow.bmp"
 //#define TEXTURE_LOCATION "textures/checkerboard.bmp"
 
 
