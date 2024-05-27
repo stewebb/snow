@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.0)
 project (SnowGL)
 
+# option(USE_OPENCV "Enable some optional feature" ON)
+
 find_package(OpenGL REQUIRED)
 find_package(OpenCV REQUIRED)
 
@@ -28,7 +30,6 @@ include_directories(
 	external/assimp-3.0.1270/include/
 	external/bullet-2.81-rev2613/src/
 	external/bullet-2.81-rev2613/src/
-	external/ogltext/
 	.
 )
 
