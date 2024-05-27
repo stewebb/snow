@@ -29,8 +29,9 @@ times_segments = np.array([ 0,  1,  2,  3,   4,   5,   6,   7,  8,  9, 10, 11, 1
 temps_segments = np.array([-7, -8, -8, -9, -11, -12, -13, -10, -9, -5, -1,  2,  4,  6,  9,  7,  6,  4,  1, -1, -3, -4, -5, -6])
 
 # Location
-latitude = 66.6
+latitude = 40.0
 azimuth = 0        # degrees from North going clockwise (East)
+intensity_bias = 150.0
 
 # Season
 declination = 23.5  # 23.5 -> Jun 21st, -23.5 -> Dec 22nd, 0.0 -> Mar 21st / Sep 23rd
@@ -116,31 +117,38 @@ def solar_elevation(latitude, declination, minutes):
     return np.degrees(elevation_rad)
 
 """
-    Calculate the intensity of sunlight based on the solar elevation angle.
-    The intensity is maximum when the sun is at zenith (angle = 90 degrees) and decreases 
-    towards zero as the sun approaches the horizon. This function uses an exponential 
-    decay function based on the transformed zenith angle, adjusted to ensure that the 
-    intensity strictly lies between 0 and 1.
+    Calculate the intensity of sunlight based on the solar elevation angle, taking into account
+    the duration of daylight. The intensity is modeled to decrease exponentially as the angle
+    decreases from zenith towards the horizon, modified by the length of the daylight.
 
     Parameters:
         angle (float): Solar elevation angle in degrees.
+        daylight_minutes (int): Total minutes of daylight for the day.
+        bias (float): A parameter to adjust the sensitivity of the curve. A higher bias 
+                      makes the decay slower, keeping higher intensity values for lower angles.
 
     Returns:
         float: Normalized intensity of sunlight, between 0 and 1, where 0 indicates no 
-        intensity and 1 indicates maximum intensity.
+               intensity and 1 indicates maximum intensity.
 
+    Description:
+        The formula uses an exponential decay based on the transformed zenith angle. The exponent
+        in the decay function is modified by the daylight hours to adjust the curve based on 
+        how long the sun is up. This helps model seasonal changes in sun intensity.
     Formula:
-        intensity = exp(-((90 - angle) * (1 - bias))^8),
+        intensity = exp(- (90 - angle) ^ (daylight_minutes / 60 + 1) / bias),
         where bias is set to 0.25 to slightly shift the curve for practical adjustments.
 """
 
-def interpolate_intensity(angle):
+def interpolate_intensity(angle, daylight_minutes, bias):
+    
+    # If daylight hours >= 12 hours, the bias can be estimated as:
+    # bias = (daylight_minutes / 60 - 11) * 150
 
-    bias = 0.25
-    zenith_angle = np.radians(90 - angle) * (1.00 - bias)
-    #exponent = 
+    zenith_angle = np.radians(90 - angle)
+    exponent = daylight_minutes / 60 + 1
 
-    unbiased_intensity = np.exp(-1 * np.power(zenith_angle, 8))
+    unbiased_intensity = np.exp(-1 * np.power(zenith_angle, exponent) / bias)
     return np.clip(unbiased_intensity, 0.0, 1.0)
 
 """
@@ -212,33 +220,29 @@ def interpolate_sky_color(angle, day_sky, twilight_sky, night_sky):
         return night_sky
 
 """
-    Calculate sunrise and sunset times from a series of sun elevation measurements.
+    Calculate sunrise and sunset times from a series of sun elevation measurements and the duration of daylight.
 
-    This function determines the times at which the sun rises and sets based on elevation data.
-    It also identifies special conditions such as the Midnight Sun and Polar Night by checking
-    if the sun never sets or never rises, respectively, during a 24-hour period.
+    This function determines the times at which the sun rises and sets based on elevation data, along with the duration
+    of daylight. It also identifies special conditions such as the Midnight Sun and Polar Night by checking if the sun 
+    never sets or never rises, respectively, during a 24-hour period.
 
     Parameters:
-    sun_elevations (list or np.array): A sequence of sun elevation angles measured at consistent time intervals.
-    minute_times (list or np.array): The corresponding times in minutes from midnight for each sun elevation measurement.
+    - sun_elevations (list or np.array): A sequence of sun elevation angles measured at consistent time intervals.
+    - minute_times (list or np.array): The corresponding times in minutes from midnight for each sun elevation measurement.
 
     Returns:
-    tuple: 
+    - tuple: 
         - sunrise_time (float): The time in minutes from midnight when the sun rises, or np.inf if it never rises (Polar Night).
         - sunset_time (float): The time in minutes from midnight when the sun sets, or -np.inf if it never sets (Midnight Sun).
+        - daylight_time (int): The duration of daylight in minutes. For Midnight Sun, returns the total minutes in a day (1440).
+          For Polar Night, returns 0.
 
-    Returns np.inf and -np.inf to represent extreme conditions:
-        - Midnight Sun: sunrise_time = -np.inf, sunset_time = np.inf
-        - Polar Night: sunrise_time = np.inf, sunset_time = -np.inf
-
-    Examples:
-    >>> sun_elevations = [-1, -1, 2, 3, -1, -2]
-    >>> minute_times = [0, 240, 480, 720, 960, 1200]
-    >>> sunrise_sunset(sun_elevations, minute_times)
-    (480, 960)  # Sunrise at 08:00, Sunset at 16:00
+    Special cases:
+        - Midnight Sun: sunrise_time = -np.inf, sunset_time = np.inf, daylight_time is 1440
+        - Polar Night: sunrise_time = np.inf, sunset_time = -np.inf, daylight_time is 0
 
     Note: For accurate results, ensure sun_elevations and minute_times have the same length and cover a full 24-hour period.
- """
+"""
 
 def sunrise_sunset(sun_elevations, minute_times):
 
@@ -262,14 +266,17 @@ def sunrise_sunset(sun_elevations, minute_times):
         if sun_elevations[i] < 0:
             sun_never_sets = False
 
-    # Adjust output for Midnight Sun and Polar Night using -inf and inf
+    # Midnight Sun: sunrise at -inf, sunset at inf, daylight_time is 1440
     if sun_never_sets:
-        return (-np.inf, np.inf)            # Midnight Sun: sunrise at -inf, sunset at inf
-    elif sun_never_rises:
-        return (np.inf, -np.inf)            # Polar Night: sunrise at inf, sunset at -inf
-    else:
-        return (sunrise_time, sunset_time)  # Normal day sunrise and sunset times
+        return (-np.inf, np.inf, len(minute_times) - 1)      
 
+    # Polar Night: sunrise at inf, sunset at -inf, daylight_time is 0
+    elif sun_never_rises:
+        return (np.inf, -np.inf, 0)   
+
+    # Normal day sunrise and sunset times        
+    else:
+        return (sunrise_time, sunset_time, sunset_time - sunrise_time)  
 
 # Time array for minutes in a day
 minute_times = np.linspace(0, 1440, 1441) 
@@ -286,11 +293,11 @@ sun_elevations = [solar_elevation(latitude, declination, minute) for minute in m
 light_directions = [solar_to_light_direction(elevation, azimuth) for elevation in sun_elevations]
 
 # Calculate sunrise and sunset time
-(sunrise_time, sunset_time) = sunrise_sunset(sun_elevations, minute_times)
-print(sunrise_time, sunset_time)
+(sunrise_time, sunset_time, daylight_minutes) = sunrise_sunset(sun_elevations, minute_times)
+#print(sunrise_time, sunset_time, daylight_minutes)
 
 # Mapping properties through interpolation
-sun_intensities = [interpolate_intensity(angle) for angle in sun_elevations]
+sun_intensities = [interpolate_intensity(angle, daylight_minutes, intensity_bias) for angle in sun_elevations]
 sun_colors      = [interpolate_sky_color(angle, sun_color_day, sun_color_twilight, sun_color_night) for angle in sun_elevations]
 sky_colors      = [interpolate_sky_color(angle, sky_color_day, sky_color_twilight, sky_color_night) for angle in sun_elevations]
 

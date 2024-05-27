@@ -34,7 +34,7 @@
 \usepackage{xcolor}         % colors
 
 
-\title{SnowGleam: Dynamic Daylight Snow Rendering}
+\title{Dynamic Daylight Snow Rendering}
 
 
 % The \author macro works with any number of authors. There are two commands
@@ -137,18 +137,35 @@ For each tree in the forest, a quad is displayed and rotated around its center t
 
 Please pay special attention to the instructions in Section \ref{others}
 regarding figures, tables, acknowledgments, and references.
-\section{Algorithms or Design}
-In the part we analyze the texture transfer method. In fact, it is implemented on the foundation of
-texture synthesis method. The difference is that we implement the synthesis algorithm with each patch
-satisfy a desired correspondence map and satisfy the texture synthesis requirements in the meantime.
-For texture transfer, image being synthesized must comply with two independent constraints: (a)
-the output are legitimate, synthesized examples of the source texture, and (b) the resulting image
-should be similar to correspondence image. In the paper, the error term of the image quilting algorithm
-is modified to a weighted sum to meet the requirements. The parameter alpha determines the tradeoff
-between the texture synthesis and the fidelity to the target image correspondence map.
-With the added constraint, iterative method is applied over the synthesized image several times,
-and block size is reduced with each iteration. The tricky part compared with non-iteration part is that
-we should preserve the quality is excellent. 
+
+\section {Algorithms or Design}
+TODO:
+
+\subsection {Environment Simulation}
+
+\subsubsection {Temperature}
+To simulate the 
+
+\subsubsection {Snow Amount}
+The snow amount on an object is based solely on the environmental temperature. 
+The range of it betweens 0 and 1, where 0 means that no snow on the object and 1 means
+that the object is fully covered by snow.
+
+If the temperature below or equal \(0^\circ\mathrm{C}\), the snow amount is always 1. 
+If the temperature above or equal \(5^\circ\mathrm{C}\), the snow amount is always 0. 
+Otherwise, the snow amount decreases linearly from 1 to 0 as temperature increases.
+
+\[
+  S(t)=
+  \left\{
+    \begin{array}{ll}
+      0 & t\leq 0 \\
+      1 - \frac{t}{5} &  0 < t < 5 \\
+      1 & t\geq 5 \\
+    \end{array} 
+  \right. 
+\]
+\text{where } t \text{ is the temperature in degrees Celsius.}
 
 \section{Experiments}
 \label{headings}
