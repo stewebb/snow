@@ -109,7 +109,6 @@ glm::vec3 computeMatricesFromInputs() {
 	// For the next frame, the "last time" will be "now"
 	lastTime = currentTime;
 
-	//std::cout << "Vector: (" << position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
 	//std::cout << "horizontalAngle: " << horizontalAngle << ", verticalAngle: " << verticalAngle << std::endl;
 
 	return position;

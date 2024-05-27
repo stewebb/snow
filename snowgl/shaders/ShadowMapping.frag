@@ -302,4 +302,9 @@ void main(){
 	// The Full snow equation is the blend of those two colors. 
 	// i,e,, C = c_s * f_p + c_o * (1 - f_p)
 	color = c_s * f_p + c_o * (1.00 - f_p);
+
+	//vec3 n = normalize(Normal_modelspace);
+	//vec3 u = vec3(0, 0, 1);
+	//float dotn = dot(n, u);
+	//color = angleColorMapping(dotn);
 }
