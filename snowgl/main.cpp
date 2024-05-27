@@ -256,12 +256,6 @@ int main(void){
 		int daytime_index = (int)f_daytime_index;
 		auto current_time = daytime_data[daytime_index];
 
-		// Set some parameters based on time
-		glClearColor(current_time.sky_color_r, current_time.sky_color_g, current_time.sky_color_b, 0.0f);
-		glUniform3f(glGetUniformLocation(programID, "sun_color"), current_time.sun_color_r, current_time.sun_color_g, current_time.sun_color_b);
-		glUniform1f(glGetUniformLocation(programID, "snow_amount"), current_time.snow_amount);
-		glUniform1f(glGetUniformLocation(programID, "light_intensity"), current_time.light_intensity);
-
 		glUniform3f(glGetUniformLocation(programID, "snow_color"), SNOW_COLOR_R, SNOW_COLOR_G, SNOW_COLOR_B);
 		glUniform1f(glGetUniformLocation(programID, "distortion_scalar"), DISTORTION_SCALAR);
 
@@ -323,10 +317,32 @@ int main(void){
 		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
 		glUniformMatrix4fv(DepthBiasID, 1, GL_FALSE, &depthBiasMVP[0][0]);
 
-		// Set up light(s)
+		// Set some parameters based on time
 		glm::vec3 lightInvDirs[6];
-		lightInvDirs[0] = glm::vec3(current_time.light_direction_x, current_time.light_direction_y,  current_time.light_direction_z);
+		if(DAYTIME_SIMULATION){
+			glClearColor(current_time.sky_color_r, current_time.sky_color_g, current_time.sky_color_b, 0.0f);
+			glUniform3f(glGetUniformLocation(programID, "sun_color"), current_time.sun_color_r, current_time.sun_color_g, current_time.sun_color_b);
+			glUniform1f(glGetUniformLocation(programID, "snow_amount"), current_time.snow_amount);
+			glUniform1f(glGetUniformLocation(programID, "light_intensity"), current_time.light_intensity);
 			
+			lightInvDirs[0] = glm::vec3(current_time.light_direction_x, current_time.light_direction_y,  current_time.light_direction_z);
+		}
+
+		else{
+
+			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+			glUniform3f(glGetUniformLocation(programID, "sun_color"), 1.0f, 1.0f, 1.0f);
+			glUniform1f(glGetUniformLocation(programID, "snow_amount"), 1.0f);
+			glUniform1f(glGetUniformLocation(programID, "light_intensity"), 0.80f);
+
+			lightInvDirs[0] = glm::vec3(0.00f, -0.85f,  0.52f);
+			//lightInvDirs[1] = glm::vec3( 0.0f,  0.0f, -1.0f);
+			//lightInvDirs[2] = glm::vec3( 0.0f,  1.0f,  0.0f);
+			//lightInvDirs[3] = glm::vec3( 0.0f, -1.0f,  0.0f);
+			//lightInvDirs[4] = glm::vec3( 1.0f,  0.0f,  0.0f);
+			//lightInvDirs[5] = glm::vec3(-1.0f,  0.0f,  0.0f);
+		}
+
 		GLuint lightInvDirID = glGetUniformLocation(programID, "LightInvDirection_worldspace");
 		glUniform3fv(lightInvDirID, 6, &lightInvDirs[0][0]);
 		GLuint numLightsID = glGetUniformLocation(programID, "numLights");
@@ -391,6 +407,8 @@ int main(void){
 		std::string lightIntensityText = "Light Intensity: " + intToString(current_time.light_intensity * 100)	+ "%";
 		std::string elevationAngleText = "Elevation Angle: " + floatToString(current_time.elevation_angle)		+ "deg";
 
+		std::string lightDirectionText = "Light Direction: " + floatToString(current_time.light_direction_x) + ", " + floatToString(current_time.light_direction_y) + ", " + floatToString(current_time.light_direction_z) + ")";
+
 		// Display those statistical texts.
 		int left_pos = 10;
 		int down_pos = 20;
@@ -401,7 +419,9 @@ int main(void){
 		cv::putText(capturedImage, snowAmountText,  	cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
 		cv::putText(capturedImage, temperatureText, 	cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
 		cv::putText(capturedImage, lightIntensityText,	cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
-		cv::putText(capturedImage, elevationAngleText,  cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
+		cv::putText(capturedImage, elevationAngleText,  cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 40;
+        
+		cv::putText(capturedImage, lightDirectionText, 	cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
 
 		video.write(capturedImage);
         cv::imshow(CV_WINDOW_NAME, capturedImage);

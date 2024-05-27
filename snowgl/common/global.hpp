@@ -4,13 +4,14 @@
 
 #define MY_PI       3.1415926
 
-/**
- * OpenGL Rendering Window
-*/
-
+// OpenGL Rendering Window
 #define GL_WINDOW_NAME      "SnowGL (OpenGL Rendering)"
 #define WINDOW_WIDTH        1600
 #define WINDOW_HEIGHT       900
+
+// Operating Mode
+#define DAYTIME_SIMULATION  false      
+#define FRAME_MICRO_STEP    1.0 
 
 /**
  * Eye position
@@ -52,8 +53,7 @@
 
 #define OUTPUT_VIDEO_FILENAME   "outputs/StatueOfLiberty.mp4"
 #define OUTPUT_VIDEO_FPS        25
-#define FRAME_MICRO_STEP        1.0
-#define AUTO_STOP_RECORDING     true
+#define AUTO_STOP_RECORDING     false
 
 /**
  * Snow effect
