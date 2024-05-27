@@ -22,9 +22,7 @@ uniform mat4 M;
 
 uniform int numLights;
 uniform vec3 LightInvDirection_worldspace[6];
-
 uniform mat4 DepthBiasMVP;
-
 
 void main(){
 
@@ -37,8 +35,8 @@ void main(){
 	Position_worldspace = (M * vec4(vertexPosition_modelspace,1)).xyz;
 	
 	// Vector that goes from the vertex to the camera, in camera space.
-	// In camera space, the camera is at the origin (0,0,0).
-	EyeDirection_cameraspace = vec3(0,0,0) - ( V * M * vec4(vertexPosition_modelspace,1)).xyz;
+	// In camera space, the camera is at the origin (0, 0, 0).
+	EyeDirection_cameraspace = vec3(0, 0, 0) - ( V * M * vec4(vertexPosition_modelspace,1)).xyz;
 
 	// Vector that goes from the vertex to the light, in camera space
 	for(int i = 0; i < numLights; i++) {

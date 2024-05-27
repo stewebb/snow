@@ -1,6 +1,7 @@
 #include "util.hpp"
 #include <GL/gl.h>
 
+#ifdef USE_OPENCV
 cv::Mat frameBufferToCVMat(const int width, const int height) {
     std::vector<unsigned char> buffer(width * height * 3);
     glReadPixels(0, 0, width, height, GL_BGR, GL_UNSIGNED_BYTE, buffer.data());
@@ -11,6 +12,7 @@ cv::Mat frameBufferToCVMat(const int width, const int height) {
 
     return resultMat;
 }
+#endif
 
 std::string floatToString(float value) {
     std::ostringstream stream;

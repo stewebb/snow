@@ -19,7 +19,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
-#include <opencv2/opencv.hpp>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -37,6 +36,10 @@ using namespace glm;
 #include <common/global.hpp>
 #include <common/csv_reader.hpp>
 #include <common/util.hpp>
+
+#ifdef USE_OPENCV
+#include <opencv2/opencv.hpp>
+#endif
 
 double f_daytime_index = 0.0f;
 int daytime_size = 0;
@@ -84,12 +87,14 @@ int main(void){
 	}
 
 	// Setup VideoWriter
+	#ifdef USE_OPENCV
     cv::VideoWriter video(OUTPUT_VIDEO_FILENAME, cv::VideoWriter::fourcc('X','2','6','4'), OUTPUT_VIDEO_FPS, cv::Size(WINDOW_WIDTH, WINDOW_HEIGHT));
     if (!video.isOpened()) {
         std::cerr << "Error: Could not open the video file for output\n";
 		getchar();
         return -1;
     }
+	#endif
     
 	if(!glfwInit()){
 		fprintf( stderr, "Failed to initialize GLFW.\n" );
@@ -103,7 +108,7 @@ int main(void){
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow( WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, NULL, NULL);
+	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, GL_WINDOW_NAME, NULL, NULL);
 	if(window == NULL ){
 		fprintf( stderr, "Failed to open GLFW window.\n" );
 		getchar();
@@ -370,8 +375,10 @@ int main(void){
 		glBindBuffer(GL_ARRAY_BUFFER, quad_vertexbuffer);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 		glDisableVertexAttribArray(0);
-
+		
 		// Convert the OpenGL Framebuffer to OpenCV Mat
+
+		#ifdef USE_OPENCV
         cv::Mat capturedImage = frameBufferToCVMat(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		// Set some statistical texts.
@@ -397,17 +404,19 @@ int main(void){
 		cv::putText(capturedImage, elevationAngleText,  cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
 
 		video.write(capturedImage);
-        cv::imshow("OpenGL Capture", capturedImage);
+        cv::imshow(CV_WINDOW_NAME, capturedImage);
 		if (cv::waitKey(1) >= 0) break;
-
-		// Swap buffers
-		glfwSwapBuffers(window);
-		glfwPollEvents();
 
 		frame_count++;
 		if(AUTO_STOP_RECORDING && frame_count >= daytime_size){
 			break;
 		}
+		#endif
+
+		// Swap buffers
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+
 	} 
 	
 	// Check if the ESC key was pressed or the window was closed
@@ -431,8 +440,10 @@ int main(void){
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
 
+	#ifdef USE_OPENCV
 	video.release();
     cv::destroyAllWindows();
+	#endif
 
 	return 0;
 }

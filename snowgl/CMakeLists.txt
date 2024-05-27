@@ -1,10 +1,12 @@
 cmake_minimum_required (VERSION 3.0)
 project (SnowGL)
 
-# option(USE_OPENCV "Enable some optional feature" ON)
+option(USE_OPENCV "Use OpenCV" ON)
 
 find_package(OpenGL REQUIRED)
-find_package(OpenCV REQUIRED)
+if(USE_OPENCV)
+	find_package(OpenCV REQUIRED)
+endif()
 
 # Compile external dependencies 
 add_subdirectory (external)
@@ -19,8 +21,9 @@ if(INCLUDE_DISTRIB)
 	add_subdirectory(distrib)
 endif(INCLUDE_DISTRIB)
 
-include_directories(${OpenCV_INCLUDE_DIRS})
-
+if(USE_OPENCV)
+	include_directories(${OpenCV_INCLUDE_DIRS})
+endif()
 
 include_directories(
 	external/AntTweakBar-1.16/include/

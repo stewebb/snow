@@ -4,6 +4,9 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include "global.hpp"
+
+#ifdef USE_OPENCV
 #include <opencv2/opencv.hpp>
 
 /**
@@ -14,6 +17,7 @@
  */
 
 cv::Mat frameBufferToCVMat(const int width, const int height);
+#endif
 
 /**
  * @brief Converts a floating point number to a string with fixed precision.
