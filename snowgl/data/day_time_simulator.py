@@ -29,7 +29,7 @@ times_segments = np.array([ 0,  1,  2,  3,   4,   5,   6,   7,  8,  9, 10, 11, 1
 temps_segments = np.array([-7, -8, -8, -9, -11, -12, -13, -10, -9, -5, -1,  2,  4,  6,  9,  7,  6,  4,  1, -1, -3, -4, -5, -6])
 
 # Location
-latitude = 0.0
+latitude = 66.6
 azimuth = 0        # degrees from North going clockwise (East)
 
 # Season
@@ -138,6 +138,8 @@ def interpolate_intensity(angle):
 
     bias = 0.25
     zenith_angle = np.radians(90 - angle) * (1.00 - bias)
+    #exponent = 
+
     unbiased_intensity = np.exp(-1 * np.power(zenith_angle, 8))
     return np.clip(unbiased_intensity, 0.0, 1.0)
 
@@ -209,6 +211,65 @@ def interpolate_sky_color(angle, day_sky, twilight_sky, night_sky):
     else:
         return night_sky
 
+"""
+    Calculate sunrise and sunset times from a series of sun elevation measurements.
+
+    This function determines the times at which the sun rises and sets based on elevation data.
+    It also identifies special conditions such as the Midnight Sun and Polar Night by checking
+    if the sun never sets or never rises, respectively, during a 24-hour period.
+
+    Parameters:
+    sun_elevations (list or np.array): A sequence of sun elevation angles measured at consistent time intervals.
+    minute_times (list or np.array): The corresponding times in minutes from midnight for each sun elevation measurement.
+
+    Returns:
+    tuple: 
+        - sunrise_time (float): The time in minutes from midnight when the sun rises, or np.inf if it never rises (Polar Night).
+        - sunset_time (float): The time in minutes from midnight when the sun sets, or -np.inf if it never sets (Midnight Sun).
+
+    Returns np.inf and -np.inf to represent extreme conditions:
+        - Midnight Sun: sunrise_time = -np.inf, sunset_time = np.inf
+        - Polar Night: sunrise_time = np.inf, sunset_time = -np.inf
+
+    Examples:
+    >>> sun_elevations = [-1, -1, 2, 3, -1, -2]
+    >>> minute_times = [0, 240, 480, 720, 960, 1200]
+    >>> sunrise_sunset(sun_elevations, minute_times)
+    (480, 960)  # Sunrise at 08:00, Sunset at 16:00
+
+    Note: For accurate results, ensure sun_elevations and minute_times have the same length and cover a full 24-hour period.
+ """
+
+def sunrise_sunset(sun_elevations, minute_times):
+
+    sunrise_time = None
+    sunset_time = None
+    sun_never_sets = True
+    sun_never_rises = True
+
+    # Check elevations to update flags and find sunrise/sunset times
+    for i in range(1, len(sun_elevations)):
+        if sun_elevations[i-1] < 0 <= sun_elevations[i]:
+            sunrise_time = minute_times[i]
+            sun_never_rises = False
+        elif sun_elevations[i-1] >= 0 > sun_elevations[i]:
+            sunset_time = minute_times[i]
+            sun_never_sets = False
+
+        # Update flags for continuous conditions
+        if sun_elevations[i] > 0:
+            sun_never_rises = False
+        if sun_elevations[i] < 0:
+            sun_never_sets = False
+
+    # Adjust output for Midnight Sun and Polar Night using -inf and inf
+    if sun_never_sets:
+        return (-np.inf, np.inf)            # Midnight Sun: sunrise at -inf, sunset at inf
+    elif sun_never_rises:
+        return (np.inf, -np.inf)            # Polar Night: sunrise at inf, sunset at -inf
+    else:
+        return (sunrise_time, sunset_time)  # Normal day sunrise and sunset times
+
 
 # Time array for minutes in a day
 minute_times = np.linspace(0, 1440, 1441) 
@@ -223,6 +284,10 @@ snow_amounts = np.vectorize(snow_amount)(minute_temperatures)
 # Calculate solar elevation angle and the corresponding light directions
 sun_elevations = [solar_elevation(latitude, declination, minute) for minute in minute_times]
 light_directions = [solar_to_light_direction(elevation, azimuth) for elevation in sun_elevations]
+
+# Calculate sunrise and sunset time
+(sunrise_time, sunset_time) = sunrise_sunset(sun_elevations, minute_times)
+print(sunrise_time, sunset_time)
 
 # Mapping properties through interpolation
 sun_intensities = [interpolate_intensity(angle) for angle in sun_elevations]
@@ -241,16 +306,6 @@ sun_color_b = [sc[2] for sc in sun_colors]
 sky_color_r = [sc[0] for sc in sky_colors]
 sky_color_g = [sc[1] for sc in sky_colors]
 sky_color_b = [sc[2] for sc in sky_colors]
-
-# Calculate sunrise and sunset time
-sunrise_time = 0
-sunset_time  = 0
-
-for i in range(1, len(sun_elevations)):
-    if sun_elevations[i-1] < 0 <= sun_elevations[i]:
-        sunrise_time = minute_times[i]
-    elif sun_elevations[i-1] >= 0 > sun_elevations[i]:
-        sunset_time = minute_times[i]
 
 # Create DataFrame in Pandas
 data = pd.DataFrame({
