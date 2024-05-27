@@ -8,7 +8,7 @@
 
 % ready for submission
 \usepackage[final]{neurips_2023}
-
+\usepackage{amsmath}
 
 % to compile a preprint version, e.g., for submission to arXiv, add add the
 % [preprint] option:
@@ -139,10 +139,15 @@ Please pay special attention to the instructions in Section \ref{others}
 regarding figures, tables, acknowledgments, and references.
 
 \section {Algorithms or Design}
-TODO:
+
+
+\subsection {Snow Rendering}
+TODO: Snow Rendering and CG algorithms
+
 
 \subsection {Environment Simulation}
 
+%  Environment 1: Temperature
 \subsubsection {Temperature}
 The temperature of a location depends on multiple factors, e.g., time of the day, season, altitude, 
 latitude and distance to the ocean. To create a reasonable snow effect, the location used in this paper 
@@ -154,6 +159,7 @@ This location has a large temperature difference. The highest temperature is abo
 obtained on weather forecast websites, and the Cubic Spline method is used to interpolate the 
 intermediate values, making the temperature-time curve smoother.
 
+%  Environment 2: Snow Amount
 \subsubsection {Snow Amount}
 The snow amount on an object is based solely on the environmental temperature. 
 The range of it between 0 and 1, where 0 means that no snow on the object and 1 means
@@ -175,6 +181,7 @@ Otherwise, the snow amount decreases linearly from 1 to 0 as temperature increas
 \]
 \text{where } t \text{ is the temperature in degrees Celsius.}
 
+%  Environment 3: Sunlight Intensity
 \subsubsection {Sunlight Intensity}
 In the real world, there are multiple light sources outside, including the sun, sky, moon, stars, 
 and human-made lights. In this paper, only the sunlight and sky (ambient) light are considered. 
@@ -215,12 +222,27 @@ of the bias can be expressed as:
 \[
   b = \frac{\left(\frac{\pi}{2}\right)^{\frac{m}{60} + 1}}{\log(10)}
 \]
+TODO: Sunlight direction
 
+%  Environment 4: Sunlight and Sky Color
 \subsubsection {Sunlight and Sky Color}
-Light and sky colors depend on the current time. Typically on a sunny day, the sunlight is white
-for most of the day and it becomes orange during sunrise or sunset. The sky is light blue
-in the day, orange during sunrise or sunset and dark brown at night. To simulate those colors, 
+Sunlight and sky colors depend on the current time. Typically on a sunny day, the sunlight is yellow
+to white for most of the day and it becomes orange during sunrise or sunset. The sky is light blue
+in the day, orange during sunrise or sunset and dark purple at night. To simulate those colors, 
 interpolation is also needed to make the transition process smoother. 
+
+\[
+  C_{b}=
+  \left\{
+    \begin{array}{ll}
+      \text{night} & \theta \leq 10 \\
+      \text{interpolate(night, twilight)} &  -10 \leq t < 5 \\
+      \text{interpolate(twilight, day)} &  5 \leq t < 20 \\
+      \text{day} & t \geq 20 \\
+    \end{array} 
+  \right. 
+\]
+
 
 \section{Experiments}
 \label{headings}
