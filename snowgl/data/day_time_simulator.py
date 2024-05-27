@@ -29,9 +29,8 @@ times_segments = np.array([ 0,  1,  2,  3,   4,   5,   6,   7,  8,  9, 10, 11, 1
 temps_segments = np.array([-7, -8, -8, -9, -11, -12, -13, -10, -9, -5, -1,  2,  4,  6,  9,  7,  6,  4,  1, -1, -3, -4, -5, -6])
 
 # Location
-latitude = 40.0
-azimuth = 0        # degrees from North going clockwise (East)
-intensity_bias = 150.0
+latitude = -35.0
+azimuth = 0
 
 # Season
 declination = 23.5  # 23.5 -> Jun 21st, -23.5 -> Dec 22nd, 0.0 -> Mar 21st / Sep 23rd
@@ -124,8 +123,6 @@ def solar_elevation(latitude, declination, minutes):
     Parameters:
         angle (float): Solar elevation angle in degrees.
         daylight_minutes (int): Total minutes of daylight for the day.
-        bias (float): A parameter to adjust the sensitivity of the curve. A higher bias 
-                      makes the decay slower, keeping higher intensity values for lower angles.
 
     Returns:
         float: Normalized intensity of sunlight, between 0 and 1, where 0 indicates no 
@@ -140,13 +137,11 @@ def solar_elevation(latitude, declination, minutes):
         where bias is set to 0.25 to slightly shift the curve for practical adjustments.
 """
 
-def interpolate_intensity(angle, daylight_minutes, bias):
+def interpolate_intensity(angle, daylight_minutes):
     
-    # If daylight hours >= 12 hours, the bias can be estimated as:
-    # bias = (daylight_minutes / 60 - 11) * 150
-
     zenith_angle = np.radians(90 - angle)
     exponent = daylight_minutes / 60 + 1
+    bias = np.power(np.pi * 0.5, exponent) / np.log(10)
 
     unbiased_intensity = np.exp(-1 * np.power(zenith_angle, exponent) / bias)
     return np.clip(unbiased_intensity, 0.0, 1.0)
@@ -297,7 +292,7 @@ light_directions = [solar_to_light_direction(elevation, azimuth) for elevation i
 #print(sunrise_time, sunset_time, daylight_minutes)
 
 # Mapping properties through interpolation
-sun_intensities = [interpolate_intensity(angle, daylight_minutes, intensity_bias) for angle in sun_elevations]
+sun_intensities = [interpolate_intensity(angle, daylight_minutes) for angle in sun_elevations]
 sun_colors      = [interpolate_sky_color(angle, sun_color_day, sun_color_twilight, sun_color_night) for angle in sun_elevations]
 sky_colors      = [interpolate_sky_color(angle, sky_color_day, sky_color_twilight, sky_color_night) for angle in sun_elevations]
 

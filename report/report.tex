@@ -144,7 +144,15 @@ TODO:
 \subsection {Environment Simulation}
 
 \subsubsection {Temperature}
-To simulate the 
+The temperature of a location depends on multiple factors, e.g., time in the day, season, altitude, 
+latitude and distance to ocean. To create a reasonable snow effect, the location used in this paper 
+is an in-land city around the latitude of 35$^{\circ}$ N or 35$^{\circ}$ S and the season is winter.
+
+This location has a large temperature difference. The highest temperature is about 
+\(10^\circ\mathrm{C}\), which can be reached on around 1-2 P.M. The lowest temperature is about 
+\(-10^\circ\mathrm{C}\), which can be reached on around 5-7 A.M. The hourly temperature data can be
+obtained on weather forecast websites, and the Cubic Spline method is used to interpolate the 
+intermediate values, making the temperature-time curve smoother.
 
 \subsubsection {Snow Amount}
 The snow amount on an object is based solely on the environmental temperature. 
@@ -207,6 +215,10 @@ of the bias can be expressed as:
 \[
   b = \frac{\left(\frac{\pi}{2}\right)^{\frac{m}{60} + 1}}{\log(10)}
 \]
+
+\subsubsection {Light and Sky Color}
+
+
 
 
 \section{Experiments}

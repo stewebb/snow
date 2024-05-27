@@ -28,9 +28,7 @@
 
 /**
  * Lighting Configuration for Object Illumination
- *
  */
-
 
 /**
  * Models
