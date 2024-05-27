@@ -106,42 +106,43 @@ The formatting instructions contained in these style files are summarized in
 Sections \ref{gen_inst}, \ref{headings}, and \ref{others} below.
 
 
-\section{Our Method}
-\label{gen_inst}
+% \section{Our Method}
+% \label{gen_inst}
+% 
+% 
+% The text must be confined within a rectangle 5.5~inches (33~picas) wide and
+% 9~inches (54~picas) long. The left margin is 1.5~inch (9~picas).  Use 10~point
+% type with a vertical spacing (leading) of 11~points.  Times New Roman is the
+% preferred typeface throughout, and will be selected for you by default.
+% Paragraphs are separated by \nicefrac{1}{2}~line space (5.5 points), with no
+% indentation.
+% 
+% 
+% The paper title should be 17~point, initial caps/lower case, bold, centered
+% between two horizontal rules. The top rule should be 4~points thick and the
+% bottom rule should be 1~point thick. Allow \nicefrac{1}{4}~inch space above and
+% below the title to rules. All pages should start at 1~inch (6~picas) from the
+% top of the page.
+% 
+% 
+% For the final version, authors' names are set in boldface, and each name is
+% centered above the corresponding address. The lead author's name is to be listed
+% first (left-most), and the co-authors' names (if different address) are set to
+% follow. If there is only one co-author, list both author and co-author side by
+% side.
+% \subsection{ Displaying Trees}
+% 
+% For each tree in the forest, a quad is displayed and rotated around its center to face the camera. The view of the tree which is nearest to the angle between the tree and the camera is drawn to the quad. There is noticeable popping between the views since no interpolation is used, but with 300 views the transitions are smooth. Selection of the nearest view can be accomplished with simple arithmetic using the grid-like distribution of camera positions, while quad placement requires two vector cross products and some vector addition. These are some of the only computations that need to be done with each frame, allowing for interactive control of scenes of thousands of trees.
+% 
+% 
+% 
+% Please pay special attention to the instructions in Section \ref{others}
+% regarding figures, tables, acknowledgments, and references.
+% 
 
-
-The text must be confined within a rectangle 5.5~inches (33~picas) wide and
-9~inches (54~picas) long. The left margin is 1.5~inch (9~picas).  Use 10~point
-type with a vertical spacing (leading) of 11~points.  Times New Roman is the
-preferred typeface throughout, and will be selected for you by default.
-Paragraphs are separated by \nicefrac{1}{2}~line space (5.5 points), with no
-indentation.
-
-
-The paper title should be 17~point, initial caps/lower case, bold, centered
-between two horizontal rules. The top rule should be 4~points thick and the
-bottom rule should be 1~point thick. Allow \nicefrac{1}{4}~inch space above and
-below the title to rules. All pages should start at 1~inch (6~picas) from the
-top of the page.
-
-
-For the final version, authors' names are set in boldface, and each name is
-centered above the corresponding address. The lead author's name is to be listed
-first (left-most), and the co-authors' names (if different address) are set to
-follow. If there is only one co-author, list both author and co-author side by
-side.
-\subsection{ Displaying Trees}
-
-For each tree in the forest, a quad is displayed and rotated around its center to face the camera. The view of the tree which is nearest to the angle between the tree and the camera is drawn to the quad. There is noticeable popping between the views since no interpolation is used, but with 300 views the transitions are smooth. Selection of the nearest view can be accomplished with simple arithmetic using the grid-like distribution of camera positions, while quad placement requires two vector cross products and some vector addition. These are some of the only computations that need to be done with each frame, allowing for interactive control of scenes of thousands of trees.
-
-
-
-Please pay special attention to the instructions in Section \ref{others}
-regarding figures, tables, acknowledgments, and references.
-
-\section {Algorithms or Design}
-
-
+\section {Methods and Algorithms}
+ 
+ 
 \subsection {Snow Rendering}
 TODO: Snow Rendering and CG algorithms
 \subsubsection {Snow Accumulation Prediction Function}
@@ -152,13 +153,13 @@ TODO: Snow Rendering and CG algorithms
   \centering
   \begin{minipage}{0.45\textwidth}
       \centering
-      \includegraphics[width=\textwidth]{images/HeadManualWithoutSnow.png} % First image
+      \includegraphics[width=\textwidth]{images/HeadManualWithoutSnow.png}
       \caption{First image caption}
       \label{fig:image1}
   \end{minipage}\hfill
   \begin{minipage}{0.45\textwidth}
       \centering
-      \includegraphics[width=\textwidth]{images/HeadManualWithSnow.png} % Second image
+      \includegraphics[width=\textwidth]{images/HeadManualWithSnow.png}
       \caption{Second image caption}
       \label{fig:image2}
   \end{minipage}
@@ -205,6 +206,24 @@ Otherwise, the snow amount decreases linearly from 1 to 0 as temperature increas
 \]
 \text{where } t \text{ is the temperature in degrees Celsius.}
 
+% The following figures are temperature - time relationship and snow amount - time relationship
+
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{images/Temperature35N.png}
+      \caption{Temperature throughout the day}
+      \label{fig:Temperature35N}
+  \end{minipage}\hfill
+  \begin{minipage}{0.45\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{images/SnowAmount35N.png}
+      \caption{Snow amount throughout the day}
+      \label{fig:SnowAmount35N}
+  \end{minipage}
+\end{figure}
+
 %  Environment 3: Sunlight Intensity
 \subsubsection {Sunlight Intensity}
 In the real world, there are multiple light sources outside, including the sun, sky, moon, stars, 
@@ -246,7 +265,24 @@ of the bias can be expressed as:
 \[
   b = \frac{\left(\frac{\pi}{2}\right)^{\frac{m}{60} + 1}}{\log(10)}
 \]
-TODO: Sunlight direction
+
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{images/SolarElevetion35N.png}
+      \caption{Solar elevation angle throughout the day}
+      \label{fig:SolarElevetion35N}
+  \end{minipage}\hfill
+  \begin{minipage}{0.45\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{images/SunlightIntensity35N.png}
+      \caption{Sunlight intensity throughout the day}
+      \label{fig:SunlightIntensity35N}
+  \end{minipage}
+\end{figure}
+
+% TODO: Sunlight direction
 
 %  Environment 4: Sunlight and Sky Color
 \subsubsection {Sunlight and Sky Color}
@@ -268,10 +304,27 @@ interpolation is also needed to make the transition process smoother.
 \]
 
 
+
+
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{images/SunColor35N.png}
+      \caption{First image caption}
+      \label{fig:SunColor35N}
+  \end{minipage}\hfill
+  \begin{minipage}{0.45\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{images/SkyColor35N.png}
+      \caption{Second image caption}
+      \label{fig:SkyColor35N}
+  \end{minipage}
+\end{figure}
+
+
 \section{Experiments}
 \label{headings}
-
-
 All headings should be lower case (except for first word and proper nouns),
 flush left, and bold.
 

@@ -430,7 +430,7 @@ if PLOTTING:
 
     # Solar Elevation Angle Plot
     axs[0, 2].plot(minute_times, sun_elevations, color='blue')
-    axs[0, 2].set_title('Sun Elevation Angle')
+    axs[0, 2].set_title('Solar Elevation Angle')
     axs[0, 2].set_xlabel('Time (hours)')
     axs[0, 2].set_ylabel('Solar Elevation Angle (degrees)')
     axs[0, 2].set_xticks(xtick_values)
@@ -441,39 +441,13 @@ if PLOTTING:
 
     # Sun Intensity Plot
     axs[1, 0].plot(minute_times, sun_intensities, color='blue')
-    axs[1, 0].set_title('Sun Intensity Throughout the Day')
+    axs[1, 0].set_title('Sunlight Intensity Throughout the Day')
     axs[1, 0].set_xlabel('Time (hours)')
     axs[1, 0].set_ylabel('Intensity')
     axs[1, 0].set_xticks(xtick_values)
     axs[1, 0].set_xticklabels(xtick_labels)
     axs[1, 0].grid(True)
     axs[1, 0].legend()
-
-    # Sun Color Plot
-    '''
-    axs[1, 1].plot(minute_times, sun_color_r, color='red')
-    axs[1, 1].plot(minute_times, sun_color_g, color='green')
-    axs[1, 1].plot(minute_times, sun_color_b, color='blue')
-    axs[1, 1].set_title('Sun Color Throughout the Day')
-    axs[1, 1].set_xlabel('Time (hours)')
-    axs[1, 1].set_ylabel('Color')
-    axs[1, 1].set_xticks(xtick_values)
-    axs[1, 1].set_xticklabels(xtick_labels)
-    axs[1, 1].grid(True)
-    axs[1, 1].legend()
-
-    # Sky Color Plot
-    axs[1, 2].plot(minute_times, sky_color_r, color='red')
-    axs[1, 2].plot(minute_times, sky_color_g, color='green')
-    axs[1, 2].plot(minute_times, sky_color_b, color='blue')
-    axs[1, 2].set_title('Sky Color Throughout the Day')
-    axs[1, 2].set_xlabel('Time (hours)')
-    axs[1, 2].set_ylabel('Color')
-    axs[1, 2].set_xticks(xtick_values)
-    axs[1, 2].set_xticklabels(xtick_labels)
-    axs[1, 2].grid(True)
-    axs[1, 2].legend()
-    '''
 
     # Sun Color Plot
     sun_colors = np.column_stack((sun_color_r, sun_color_g, sun_color_b))
