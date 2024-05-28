@@ -12,18 +12,18 @@
 #define IS_WINDOWS_OS
 
 // Operating Mode 
-#define DAYTIME_SIMULATION      true      
+#define DAYTIME_SIMULATION      false      
 #define FRAME_MICRO_STEP        1.0 
 
 // Manual defined item (If DAYTIME_SIMULATION is set to false)
-#define MANUAL_SNOW_AMOUNT      0.0
+#define MANUAL_SNOW_AMOUNT      1.0
 #define MANUAL_LIGHT_INTENSITY  1.0
 
 /**
  * Eye position
 */
 
-#define EYE_POS_X               0
+#define EYE_POS_X               0                // Fro
 #define EYE_POS_Y               -30
 #define EYE_POS_Z               12.5
 
