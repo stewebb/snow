@@ -100,7 +100,7 @@ rejection.
 
 
 \section{Previous Works}
-The ground under the trees is dynamically generated at runtime when the program is run. The diamond- square method of fractal terrain generation is used to create a height map, which is then applied to a square grid to create varied terrain. Points are set to the average height of particular surrounding points, then a random offset is added for variation. The offset is generated uniformly at random on the range (−x, x), where x is set before the algorithm is run, and is reduced by 2−y each iteration, where y can be adjusted. x is directly related to the maximum and minimum heights produced, and y is inversely related to the steepness of generated terrain. Lengths in the algorithm are the number of points between the current point and the other point in consideration, and can only be considered in horizontal or vertical lines. Points which are adjacent form a line of length zero. The diamond-square method in pseudocode [3] follows. 
+% The ground under the trees is dynamically generated at runtime when the program is run. The diamond- square method of fractal terrain generation is used to create a height map, which is then applied to a square grid to create varied terrain. Points are set to the average height of particular surrounding points, then a random offset is added for variation. The offset is generated uniformly at random on the range (−x, x), where x is set before the algorithm is run, and is reduced by 2−y each iteration, where y can be adjusted. x is directly related to the maximum and minimum heights produced, and y is inversely related to the steepness of generated terrain. Lengths in the algorithm are the number of points between the current point and the other point in consideration, and can only be considered in horizontal or vertical lines. Points which are adjacent form a line of length zero. The diamond-square method in pseudocode [3] follows. 
 
 
 
@@ -402,7 +402,7 @@ orange again. The snow effect is back due to the dropping temperature.
     \label{fig:ALLT1900L35S}
   }
 
-  \caption{The rendered scene in different time}
+  \caption{The rendered scene in different time (at 35 $^{\circ}$S on June \(22^{nd}\))}
   \label{fig:AllL35S}
 \end{figure}
 
@@ -446,49 +446,43 @@ The following figure group is the rendering effect in the above location. In the
 each day has a long daylight time. Throughout the night (e.g., midnight (a)), the sky is not completely dark even if
 the sun is below the horizon. 
 
+At 8:00 AM (b), the sunlight intensity has already reached the maximum value. The scenes between the two locations are 
+similar during the noon or afternoon time (c or d), except for the solar position. However, because of the high latitude,
+the sunlight intensity keeps the high value at 5:00 PM (e), and finally starts dropping at around 7:00 PM (f).
+
 \begin{figure}[h]
   \centering
-  \subfloat[Time = 00:00]{
+  \subfloat[Time = 12:00 AM]{
     \includegraphics[width=0.3\textwidth]{images/ALLT0000L60N.png}
     \label{fig:ALLT0000L60N}
   }\hfill
-  \subfloat[Time = 08:00]{
+  \subfloat[Time = 08:00 AM]{
     \includegraphics[width=0.3\textwidth]{images/ALLT0800L60N.png}
     \label{fig:ALLT0800L60N}
   }\hfill
-  \subfloat[Time = 11:00]{
+  \subfloat[Time = 11:00 AM]{
     \includegraphics[width=0.3\textwidth]{images/ALLT1100L60N.png}
     \label{fig:ALLT1100L60N}
   }
-
-  \subfloat[Time = 14:00]{
+  
+  \subfloat[Time = 02:00 PM]{
     \includegraphics[width=0.3\textwidth]{images/ALLT1400L60N.png}
     \label{fig:ALLT1400L60N}
   }\hfill
-  \subfloat[Time = 17:00]{
+  \subfloat[Time = 05:00 PM]{
     \includegraphics[width=0.3\textwidth]{images/ALLT1700L60N.png}
     \label{fig:ALLT1700L60N}
   }\hfill
-  \subfloat[Time = 19:00]{
+  \subfloat[Time = 07:00 PM]{
     \includegraphics[width=0.3\textwidth]{images/ALLT1900L60N.png}
     \label{fig:ALLT1900L60N}
   }
 
-  \caption{The rendered scene in different time}
+  \caption{The rendered scene in different time (at 60 $^{\circ}$N on June \(22^{nd}\))}
   \label{fig:AllL60N}
 \end{figure}
 
-
-
-
-
-123'
-123
-123
-
 \section{Discussions and Conclusion}
-
-
 Please prepare submission files with paper size ``US Letter,'' and not, for
 example, ``A4.''
 
@@ -500,25 +494,25 @@ achieve this.
 
 \section*{References}
 
-{
-\small
-
-
-[1] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms for
-connectionist rule extraction. In G.\ Tesauro, D.S.\ Touretzky and T.K.\ Leen
-(eds.), {\it Advances in Neural Information Processing Systems 7},
-pp.\ 609--616. Cambridge, MA: MIT Press.
-
-
-[2] Bower, J.M.\ \& Beeman, D.\ (1995) {\it The Book of GENESIS: Exploring
-  Realistic Neural Models with the GEneral NEural SImulation System.}  New York:
-TELOS/Springer--Verlag.
-
-
-[3] Hasselmo, M.E., Schnell, E.\ \& Barkai, E.\ (1995) Dynamics of learning and
-recall at excitatory recurrent synapses and cholinergic modulation in rat
-hippocampal region CA3. {\it Journal of Neuroscience} {\bf 15}(7):5249-5262.
-}
+%{
+%\small
+%
+%
+%[1] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms for
+%connectionist rule extraction. In G.\ Tesauro, D.S.\ Touretzky and T.K.\ Leen
+%(eds.), {\it Advances in Neural Information Processing Systems 7},
+%pp.\ 609--616. Cambridge, MA: MIT Press.
+%
+%
+%[2] Bower, J.M.\ \& Beeman, D.\ (1995) {\it The Book of GENESIS: Exploring
+%  Realistic Neural Models with the GEneral NEural SImulation System.}  New York:
+%TELOS/Springer--Verlag.
+%
+%
+%[3] Hasselmo, M.E., Schnell, E.\ \& Barkai, E.\ (1995) Dynamics of learning and
+%recall at excitatory recurrent synapses and cholinergic modulation in rat
+%hippocampal region CA3. {\it Journal of Neuroscience} {\bf 15}(7):5249-5262.
+%}
 \section*{Additional Experiment Results}
 
 \section*{Confidential Peer Review} 
