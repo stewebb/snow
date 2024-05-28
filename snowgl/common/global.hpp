@@ -15,7 +15,7 @@
 #define CV_WINDOW_NAME          "SnowGL (OpenCV Capture)"
 
 // OpenCV Output
-#define OUTPUT_IMAGE_FILENAME   "outputs/ALLT1100L35S.png"
+#define OUTPUT_IMAGE_FILENAME   "outputs/ALLT1700L60N.png"
 #define OUTPUT_VIDEO_FILENAME   "outputs/StatueOfLiberty.mp4"
 #define OUTPUT_VIDEO_FPS        25
 #define AUTO_STOP_RECORDING     false
@@ -24,7 +24,7 @@
 //#define IS_WINDOWS_OS           // Comment this line on non-Windows Operating Systems
 #define DAYTIME_SIMULATION      true      
 #define FRAME_MICRO_STEP        0.0
-#define INITIAL_TIME_OF_DAY     11 * 60
+#define INITIAL_TIME_OF_DAY     17 * 60
 
 // Manual defined item (If DAYTIME_SIMULATION is set to false)
 #define MANUAL_SNOW_AMOUNT      0.0
