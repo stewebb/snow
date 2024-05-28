@@ -1,7 +1,7 @@
 \documentclass{article}
 
 
-% if you need to pass options to natbib, use, e.g.:
+% If you need to pass options to natbib, use, e.g.:
 %     \PassOptionsToPackage{numbers, compress}{natbib}
 % before loading neurips_2023
 
@@ -11,22 +11,7 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{float}
-\usepackage{subfig}
-% \usepackage{wrapfig}
-
-% to compile a preprint version, e.g., for submission to arXiv, add add the
-% [preprint] option:
-%     \usepackage[preprint]{neurips_2023}
-
-
-% to compile a camera-ready version, add the [final] option, e.g.:
-%     \usepackage[final]{neurips_2023}
-
-
-% to avoid loading the natbib package, add option nonatbib:
-%    \usepackage[nonatbib]{neurips_2023}
-
-
+\usepackage{subfig}         % display sub-figure
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
 \usepackage{hyperref}       % hyperlinks
@@ -36,7 +21,6 @@
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 \usepackage{xcolor}         % colors
-
 
 \title{Dynamic Daylight Simulation with Snow Effect}
 
@@ -58,9 +42,7 @@
   \AND  The Australian National University 
 }
 
-
 \begin{document}
-
 
 \maketitle
 
@@ -72,40 +54,40 @@
 
 \section{Introduction}
 
-For our final project, we implemented a system for rendering forests of trees in real time. We are using the method outlined in Eric Bruneton and Fabrice Neyret’s Real-time Realistic Rendering and Lighting of Forests[1], specifically their z-field method for rendering trees of apparent sizes larger than a few pixels. Trees are often difficult to render in real-time applications as their geometry is complex, though simplified methods are easy to identify as lower quality. Our program provides fast and accurate rendering of trees as well as a fractal based landscape to simulate a forest. In this paper, we explain the motivation for this model, then describe the algorithms used. We finish up with some ideas for future work and some of the bugs we encountered.
+%For our final project, we implemented a system for rendering forests of trees in real time. We are using the method outlined in Eric Bruneton and Fabrice Neyret’s Real-time Realistic Rendering and Lighting of Forests[1], specifically their z-field method for rendering trees of apparent sizes larger than a few pixels. Trees are often difficult to render in real-time applications as their geometry is complex, though simplified methods are easy to identify as lower quality. Our program provides fast and accurate rendering of trees as well as a fractal based landscape to simulate a forest. In this paper, we explain the motivation for this model, then describe the algorithms used. We finish up with some ideas for future work and some of the bugs we encountered.
 
-Please read the instructions below carefully and follow them faithfully. 
+%Please read the instructions below carefully and follow them faithfully. 
 
 
 \section{Motivation and Problem Statement}
 
-Trees are often a plentiful part of landscapes, and so rendering them at the same level of fidelity as foreground objects can make real-time rendering impossible. At the same time, lower fidelity objects can detract from a scene’s appearance, even if they are part of the background.
- 1
-Moderate quality tree models can be 250,000 or more triangles[2]. Just 20 of such trees would involve 5 million polygons. For comparison, a frame in the 2007 game Lost Planet can have 3 million polygons in a frame. Clearly, conventional rendering methods do not permit the use of such tree models in games. Games must instead rely on include low quality tree models or other workarounds of reduced fidelity.
-Bruneton and Fabrice [1] implemented a fast means of rendering high quality mid-distance trees, display- ing 180,000 such trees at over 30 frames per second. We hoped to duplicate their success, rendering tens of thousands of trees across a landscape in real time.
-Papers to be submitted to NeurIPS 2023 must be prepared according to the
-instructions presented here. Papers may only be up to {\bf nine} pages long,
-including figures. Additional pages \emph{containing only acknowledgments and
-references} are allowed. Papers that exceed the page limit will not be
-reviewed, or in any other way considered for presentation at the conference.
-
-
-The margins in 2023 are the same as those in previous years.
-
-
-Authors are required to use the NeurIPS \LaTeX{} style files obtainable at the
-NeurIPS website as indicated below. Please make sure you use the current files
-and not previous versions. Tweaking the style files may be grounds for
-rejection.
-
+%Trees are often a plentiful part of landscapes, and so rendering them at the same level of fidelity as foreground objects can make real-time rendering impossible. At the same time, lower fidelity objects can detract from a scene’s appearance, even if they are part of the background.
+%# 1
+% Moderate-quality tree models can be 250,000 or more triangles[2]. Just 20 of such trees would involve 5 million polygons. For comparison, a frame in the 2007 game Lost Planet can have 3 million polygons in a frame. Clearly, conventional rendering methods do not permit the use of such tree models in games. Games must instead rely on include low quality tree models or other workarounds of reduced fidelity.
+%Bruneton and Fabrice [1] implemented a fast means of rendering high quality mid-distance trees, display- ing 180,000 such trees at over 30 frames per second. We hoped to duplicate their success, rendering tens of thousands of trees across a landscape in real time.
+%Papers to be submitted to NeurIPS 2023 must be prepared according to the
+%instructions presented here. Papers may only be up to {\bf nine} pages long,
+%including figures. Additional pages \emph{containing only acknowledgments and
+%references} are allowed. Papers that exceed the page limit will not be
+%reviewed, or in any other way considered for presentation at the conference.
+%
+%
+%The margins in 2023 are the same as those in previous years.
+%%
+%
+%Authors are required to use the NeurIPS \LaTeX{} style files obtainable at the
+%NeurIPS website as indicated below. Please make sure you use the current files
+%and not previous versions. Tweaking the style files may be grounds for
+%rejection.
+%
 
 \section{Previous Works}
 % The ground under the trees is dynamically generated at runtime when the program is run. The diamond- square method of fractal terrain generation is used to create a height map, which is then applied to a square grid to create varied terrain. Points are set to the average height of particular surrounding points, then a random offset is added for variation. The offset is generated uniformly at random on the range (−x, x), where x is set before the algorithm is run, and is reduced by 2−y each iteration, where y can be adjusted. x is directly related to the maximum and minimum heights produced, and y is inversely related to the steepness of generated terrain. Lengths in the algorithm are the number of points between the current point and the other point in consideration, and can only be considered in horizontal or vertical lines. Points which are adjacent form a line of length zero. The diamond-square method in pseudocode [3] follows. 
 
 
 
-The formatting instructions contained in these style files are summarized in
-Sections \ref{gen_inst}, \ref{headings}, and \ref{others} below.
+%The formatting instructions contained in these style files are summarized in
+%Sections \ref{gen_inst}, \ref{headings}, and \ref{others} below.
 
 
 % \section{Our Method}
@@ -448,7 +430,7 @@ the sun is below the horizon.
 
 At 8:00 AM (b), the sunlight intensity has already reached the maximum value. The scenes between the two locations are 
 similar during the noon or afternoon time (c or d), except for the solar position. However, because of the high latitude,
-the sunlight intensity keeps the high value at 5:00 PM (e), and finally starts dropping at around 7:00 PM (f).
+the sunlight intensity keeps the high value at 5:00 PM (e) and finally starts dropping at around 7:00 PM (f).
 
 \begin{figure}[h]
   \centering
@@ -494,25 +476,26 @@ achieve this.
 
 \section*{References}
 
-%{
-%\small
-%
-%
-%[1] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms for
-%connectionist rule extraction. In G.\ Tesauro, D.S.\ Touretzky and T.K.\ Leen
-%(eds.), {\it Advances in Neural Information Processing Systems 7},
-%pp.\ 609--616. Cambridge, MA: MIT Press.
-%
-%
-%[2] Bower, J.M.\ \& Beeman, D.\ (1995) {\it The Book of GENESIS: Exploring
-%  Realistic Neural Models with the GEneral NEural SImulation System.}  New York:
-%TELOS/Springer--Verlag.
-%
-%
-%[3] Hasselmo, M.E., Schnell, E.\ \& Barkai, E.\ (1995) Dynamics of learning and
-%recall at excitatory recurrent synapses and cholinergic modulation in rat
-%hippocampal region CA3. {\it Journal of Neuroscience} {\bf 15}(7):5249-5262.
-%}
+{
+\small
+
+
+[1] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms for
+connectionist rule extraction. In G.\ Tesauro, D.S.\ Touretzky and T.K.\ Leen
+(eds.), {\it Advances in Neural Information Processing Systems 7},
+pp.\ 609--616. Cambridge, MA: MIT Press.
+
+
+[2] Bower, J.M.\ \& Beeman, D.\ (1995) {\it The Book of GENESIS: Exploring
+  Realistic Neural Models with the GEneral NEural SImulation System.}  New York:
+TELOS/Springer--Verlag.
+
+
+[3] Hasselmo, M.E., Schnell, E.\ \& Barkai, E.\ (1995) Dynamics of learning and
+recall at excitatory recurrent synapses and cholinergic modulation in rat
+hippocampal region CA3. {\it Journal of Neuroscience} {\bf 15}(7):5249-5262.
+}
+
 \section*{Additional Experiment Results}
 
 \section*{Confidential Peer Review} 
