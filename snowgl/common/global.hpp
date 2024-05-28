@@ -6,14 +6,15 @@
 
 // OpenGL Rendering Window
 #define GL_WINDOW_NAME          "SnowGL (OpenGL Rendering)"
-#define WINDOW_WIDTH            1600
+#define WINDOW_WIDTH            900 //1600
 #define WINDOW_HEIGHT           900
 
 #define IS_WINDOWS_OS
 
 // Operating Mode 
-#define DAYTIME_SIMULATION      false      
-#define FRAME_MICRO_STEP        1.0 
+#define DAYTIME_SIMULATION      true      
+#define FRAME_MICRO_STEP        0.0
+#define INITIAL_TIME_OF_DAY     17 * 60
 
 // Manual defined item (If DAYTIME_SIMULATION is set to false)
 #define MANUAL_SNOW_AMOUNT      1.0

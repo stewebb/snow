@@ -327,64 +327,32 @@ interpolation is also needed to make the transition process smoother.
 
 
 \section{Experiments and Results}
-\subsection {Snow Effect}
+\subsection {Pure Snow Effect}
 The following figure group is the rendering effect with full snow, half snow, and no snow respectively.
 The dynamic environment system is disabled and the light source is always right above the object with
-the maximum intensity. Those three sub-figures illustrate the effect on both declination (the head and
-book of the statue) and occlusion (the feet of it), as well as the color blending mentioned above.
-
-%\begin{figure}[h]
-%  \centering
-%  % Subfigure (a)
-%  \begin{subfigure}{0.30\textwidth}
-%      \centering
-%      \includegraphics[width=\textwidth]{images/AllTimeNaNNoSnow.png}
-%      \caption{First image caption}
-%      \label{fig:9a}
-%  \end{subfigure}\hfill
-%  % Subfigure (b)
-%  \begin{subfigure}{0.30\textwidth}
-%    \centering
-%    \includegraphics[width=\textwidth]{images/AllTimeNaNHalfSnow.png}
-%    \caption{Second image caption}
-%    \label{fig:9b}
-%  \end{subfigure}\hfill
-%  % Subfigure (c)
-%  \begin{subfigure}{0.30\textwidth}
-%      \centering
-%      \includegraphics[width=\textwidth]{images/AllTimeNaNFullSnow.png}
-%      \caption{Third image caption}
-%      \label{fig:9c}
-%  \end{subfigure}%
-%
-%  \caption{Overall caption for all images}
-%  \label{fig:9}
-%\end{figure}
-
+the maximum intensity and white color. Those three sub-figures illustrate the effect on both declination 
+(the head and book of the statue) and occlusion (the feet area of it), as well as the color blending
+mentioned above.
 
 \begin{figure}[h]
   \centering
-  % Subfigure (a)
   \subfloat[Snow Amount = 0.0]{
-    \includegraphics[width=0.25\textwidth]{images/AllTimeNaNNoSnow.png}
-    \label{fig:9a}
+    \includegraphics[width=0.30\textwidth]{images/AllTimeNaNNoSnow.png}
+    \label{fig:AllTimeNaNNoSnow}
   }\hfill
-  % Subfigure (b)
   \subfloat[Snow Amount = 0.5]{
-    \includegraphics[width=0.25\textwidth]{images/AllTimeNaNHalfSnow.png}
-    \label{fig:9b}
+    \includegraphics[width=0.30\textwidth]{images/AllTimeNaNHalfSnow.png}
+    \label{fig:AllTimeNaNHalfSnow}
   }\hfill
-  % Subfigure (c)
   \subfloat[Snow Amount = 1.0]{
-    \includegraphics[width=0.25\textwidth]{images/AllTimeNaNFullSnow.png}
-    \label{fig:9c}
+    \includegraphics[width=0.30\textwidth]{images/AllTimeNaNFullSnow.png}
+    \label{fig:AllTimeNaNFullSnow}
   }
-
-  \caption{Model covered by different snow}
+  \caption{Object covered by different amount of snow}
   \label{fig:9}
 \end{figure}
 
-\subsection {Environment Simulation}
+\subsection {Snow Effect with Dynamic Daylight Simulation}
 \label{headings}
 All headings should be lower case (except for first word and proper nouns),
 flush left, and bold.

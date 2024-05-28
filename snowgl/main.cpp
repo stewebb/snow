@@ -1,21 +1,3 @@
-// -----------------------------------------------------------------------
-// 					  				README
-// 1. Most of this paper can be implemented in ShadowMapping.frag file
-// 2. I am using the shadow map as the occlusion map currently.
-//	  But I set the light source of the shadow map to right above the object
-// 3. I have tried to implement two separate shadow maps, one for normal shadow,
-// 	  another for snow occlusion, but it doesn't work.
-//    Two shadow maps affect each other, which shouldn't happen.
-//	  Try to redo my process, but remember to backup the current code (c++ and glsl) first
-//	  copy the file and add .bak extension.
-// 4. This shadow map supports soft shadowing.
-// 5. I have modified the normal distortion function, so there is no dE anymore.
-// 6. I have modified Snow accumulation prediction function and added a new parameter
-//    to customize/manipulate the snow effect.
-// 7. The dynamic timing system can be used here, as I have found a way to control 
-//	  the snow amount based on time, see day_time_temperature.py in the s folder
-// -----------------------------------------------------------------------
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
@@ -41,7 +23,7 @@ using namespace glm;
 #include <opencv2/opencv.hpp>
 #endif
 
-double f_daytime_index = 0.0f;
+double f_daytime_index = INITIAL_TIME_OF_DAY;
 int daytime_size = 0;
 
 /**
