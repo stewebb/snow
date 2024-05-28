@@ -1,9 +1,8 @@
 cmake_minimum_required (VERSION 3.0)
 project (SnowGL)
 
-
 find_package(OpenGL REQUIRED)
-#find_package(OpenCV REQUIRED)	# Comment me if not using OpenCV
+find_package(OpenCV REQUIRED)	# Comment me if not using OpenCV
 
 # Compile external dependencies 
 add_subdirectory (external)
@@ -17,7 +16,7 @@ include(MSVCMultipleProcessCompile) # /MP
 if(INCLUDE_DISTRIB)
 	add_subdirectory(distrib)
 endif(INCLUDE_DISTRIB)
-#include_directories(${OpenCV_INCLUDE_DIRS})	# Comment me if not using OpenCV
+include_directories(${OpenCV_INCLUDE_DIRS})	# Comment me if not using OpenCV
 
 include_directories(
 	external/AntTweakBar-1.16/include/
@@ -84,7 +83,8 @@ create_target_launcher(SnowGL WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/")
 SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
 SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
 
-set(output_folder "build/Debug")
+#set(output_folder "build/Debug")	# Uncomment me on Visual Studio compilers
+set(output_folder "build")			# Uncomment me on other compilers
 
 if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${output_folder}/models/)
     file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/models/)
@@ -107,13 +107,3 @@ add_custom_command(
 	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/textures/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/textures/"
 	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/outputs/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/outputs/"
 )
-
-# On Windows system
-#add_custom_command(
-#    TARGET SnowGL POST_BUILD
-#    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/data/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/Debug/data"
-#	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/shaders/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/Debug/shaders
-#	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/models/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/Debug/models/"
-#	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/textures/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/Debug/textures/"
-#	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/outputs/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/Debug/outputs/"
-#)

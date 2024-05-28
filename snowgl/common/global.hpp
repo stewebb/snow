@@ -2,16 +2,25 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#define MY_PI                   3.1415926
-
 // OpenGL Rendering Window
 #define GL_WINDOW_NAME          "SnowGL (OpenGL Rendering)"
 #define WINDOW_WIDTH            900 //1600
 #define WINDOW_HEIGHT           900
+#define WINDOW_BORDER           false
 
-#define IS_WINDOWS_OS
+// OpenGL Controls
+
+// OpenCV Capture Window
+#define USE_OPENCV              // Comment this line if OpenCV is not installed
+#define CV_WINDOW_NAME          "SnowGL (OpenCV Capture)"
+
+// OpenCV Output
+#define OUTPUT_VIDEO_FILENAME   "outputs/StatueOfLiberty.mp4"
+#define OUTPUT_VIDEO_FPS        25
+#define AUTO_STOP_RECORDING     false
 
 // Operating Mode 
+//#define IS_WINDOWS_OS           // Comment this line on non-Windows Operating Systems
 #define DAYTIME_SIMULATION      false      
 #define FRAME_MICRO_STEP        0.0
 #define INITIAL_TIME_OF_DAY     17 * 60
@@ -36,18 +45,13 @@
 #define MODEL_LOCATION          "models/StatueOfLiberty.obj"
 #define TEXTURE_LOCATION        "textures/rainbow.bmp"
 
-// OpenCV Capture Window and output
-//#define USE_OPENCV              // Comment this line if OpenCV is not installed
-#define CV_WINDOW_NAME          "SnowGL (OpenCV Capture)"
-
-#define OUTPUT_VIDEO_FILENAME   "outputs/StatueOfLiberty.mp4"
-#define OUTPUT_VIDEO_FPS        25
-#define AUTO_STOP_RECORDING     false
-
 // Snow effect
 #define SNOW_COLOR_R            0.9375
 #define SNOW_COLOR_G            0.9375
 #define SNOW_COLOR_B            1.0000
 #define DISTORTION_SCALAR       0.1000
+
+// Mathematical constants
+#define MY_PI                   3.1415926
 
 #endif // GLOBAL_H

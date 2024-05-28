@@ -37,8 +37,7 @@
 \usepackage{xcolor}         % colors
 
 
-\title{SDSim: Dynamic Daylight Simulation with Snow Effect}
-
+\title{Dynamic Daylight Simulation with Snow Effect}
 
 % The \author macro works with any number of authors. There are two commands
 % used to separate the names and addresses of multiple authors: \And and \AND.
@@ -363,36 +362,30 @@ there is no snow on the scene (e). During the sunset period, the snow emerges ba
 
 \begin{figure}[h]
   \centering
-  % Row 1, Image 1
   \subfloat[Time = 12 AM]{
     \includegraphics[width=0.3\textwidth]{images/AllT0000L35N.png}
-    \label{fig:image1}
+    \label{fig:AllT0000L35N}
   }\hfill
-  % Row 1, Image 2
   \subfloat[Time = 8 AM]{
     \includegraphics[width=0.3\textwidth]{images/AllT0800L35N.png}
-    \label{fig:image2}
+    \label{fig:AllT0800L35N}
   }\hfill
-  % Row 1, Image 3
   \subfloat[Time = 10 AM]{
     \includegraphics[width=0.3\textwidth]{images/AllT1000L35N.png}
-    \label{fig:image3}
+    \label{fig:AllT1000L35N}
   }
 
-  % Row 2, Image 1
   \subfloat[Time = 11 AM]{
     \includegraphics[width=0.3\textwidth]{images/AllT1100L35N.png}
-    \label{fig:image4}
+    \label{fig:AllT1100L35N}
   }\hfill
-  % Row 2, Image 2
   \subfloat[Time = 2 PM]{
     \includegraphics[width=0.3\textwidth]{images/AllT1400L35N.png}
-    \label{fig:image5}
+    \label{fig:AllT1400L35N}
   }\hfill
-  % Row 2, Image 3
   \subfloat[Time = 5 PM]{
     \includegraphics[width=0.3\textwidth]{images/AllT1700L35N.png}
-    \label{fig:image6}
+    \label{fig:AllT1700L35N}
   }
 
   \caption{The rendered scene in different time}
@@ -401,7 +394,37 @@ there is no snow on the scene (e). During the sunset period, the snow emerges ba
 
 First-level headings should be in 12-point type.
 
+\begin{figure}[h]
+  \centering
+  \subfloat[Time = 12 AM]{
+    \includegraphics[width=0.3\textwidth]{images/Temperature60N.png}
+    \label{fig:image1}
+  }\hfill
+  \subfloat[Time = 8 AM]{
+    \includegraphics[width=0.3\textwidth]{images/SnowAmount60N.png}
+    \label{fig:image2}
+  }\hfill
+  \subfloat[Time = 10 AM]{
+    \includegraphics[width=0.3\textwidth]{images/SolarElevetion60N.png}
+    \label{fig:image3}
+  }
 
+  \subfloat[Time = 11 AM]{
+    \includegraphics[width=0.3\textwidth]{images/SunlightIntensity60N.png}
+    \label{fig:image4}
+  }\hfill
+  \subfloat[Time = 2 PM]{
+    \includegraphics[width=0.3\textwidth]{images/SunColor60N.png}
+    \label{fig:image5}
+  }\hfill
+  \subfloat[Time = 5 PM]{
+    \includegraphics[width=0.3\textwidth]{images/SkyColor60N.png}
+    \label{fig:image6}
+  }
+
+  \caption{The rendered scene in different time}
+  \label{fig:mainfigure}
+\end{figure}
 
 
 

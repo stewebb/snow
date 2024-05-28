@@ -76,6 +76,16 @@ int main(void){
 		getchar();
         return -1;
     }
+
+	    // Create a window with the WINDOW_NORMAL to allow resizing and no border
+    cv::namedWindow("capturedImage", cv::WINDOW_NORMAL);
+
+    // Remove window decorations (this might not work on all operating systems or window managers)
+    cv::setWindowProperty("capturedImage", cv::WND_PROP_AUTOSIZE, cv::WINDOW_AUTOSIZE);
+    cv::setWindowProperty("capturedImage", cv::WND_PROP_FULLSCREEN, cv::WINDOW_FULLSCREEN);
+    cv::setWindowProperty("capturedImage", cv::WND_PROP_FULLSCREEN, cv::WINDOW_NORMAL);
+
+
 	#endif
     
 	if(!glfwInit()){
@@ -83,12 +93,13 @@ int main(void){
 		getchar();
 		return -1;
 	}
-
+	
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_DECORATED, WINDOW_BORDER);		// borderless window
 
 	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, GL_WINDOW_NAME, NULL, NULL);
 	if(window == NULL ){

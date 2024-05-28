@@ -30,7 +30,7 @@ times_segments = np.array([ 0,  1,  2,  3,   4,   5,   6,   7,  8,  9, 10, 11, 1
 temps_segments = np.array([-7, -8, -8, -9, -11, -12, -13, -10, -9, -5, -1,  2,  4,  6,  9,  7,  6,  4,  1, -1, -3, -4, -5, -6])
 
 # Location
-latitude = -35.0
+latitude = 60.0
 azimuth = 0
 
 # Season
@@ -405,22 +405,22 @@ if PLOTTING:
     xtick_labels = [int(label) for label in np.linspace(0, 24, 25)]
 
     # Initialize sub-plots
-    fig, axs = plt.subplots(2, 3, figsize=(20, 10))
+    fig, axs = plt.subplots(2, 3, figsize=(20, 7.5))
 
-    # Temperature vs. Time Plot
+    # Temperature Plot
     axs[0, 0].plot(minute_times, minute_temperatures, color='blue')
     axs[0, 0].scatter(times_segments, temps_segments, color='blue')
     axs[0, 0].set_xlabel('Time (hours)')
     axs[0, 0].set_ylabel('Temperature (°C)')
-    axs[0, 0].set_title('Temperature vs. Time')
+    axs[0, 0].set_title('Temperature Throughout the Day')
     axs[0, 0].set_xticks(xtick_values)
     axs[0, 0].set_xticklabels(xtick_labels)
     axs[0, 0].grid(True)
     axs[0, 0].legend()
 
-    # Snow Amount vs Time Plot
+    # Snow Amount Plot
     axs[0, 1].plot(minute_times, snow_amounts, color='blue')
-    axs[0, 1].set_title('Snow Amount vs Time')
+    axs[0, 1].set_title('Snow Amount Throughout the Day')
     axs[0, 1].set_xlabel('Time (hours)')
     axs[0, 1].set_ylabel('Snow Amount (0.0 - 1.0)')
     axs[0, 1].set_xticks(xtick_values)
