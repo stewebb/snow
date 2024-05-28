@@ -70,6 +70,7 @@ int main(void){
 
 	// Setup VideoWriter
 	#ifdef USE_OPENCV
+	//cv::namedWindow(CV_WINDOW_NAME, cv::WINDOW_NORMAL);
     cv::VideoWriter video(OUTPUT_VIDEO_FILENAME, cv::VideoWriter::fourcc('X','2','6','4'), OUTPUT_VIDEO_FPS, cv::Size(WINDOW_WIDTH, WINDOW_HEIGHT));
     if (!video.isOpened()) {
         std::cerr << "Error: Could not open the video file for output\n";
@@ -77,19 +78,16 @@ int main(void){
         return -1;
     }
 
-	    // Create a window with the WINDOW_NORMAL to allow resizing and no border
-    cv::namedWindow("capturedImage", cv::WINDOW_NORMAL);
-
     // Remove window decorations (this might not work on all operating systems or window managers)
-    cv::setWindowProperty("capturedImage", cv::WND_PROP_AUTOSIZE, cv::WINDOW_AUTOSIZE);
-    cv::setWindowProperty("capturedImage", cv::WND_PROP_FULLSCREEN, cv::WINDOW_FULLSCREEN);
-    cv::setWindowProperty("capturedImage", cv::WND_PROP_FULLSCREEN, cv::WINDOW_NORMAL);
+    //cv::setWindowProperty(CV_WINDOW_NAME, cv::WND_PROP_AUTOSIZE, cv::WINDOW_AUTOSIZE);
+    //cv::setWindowProperty(CV_WINDOW_NAME, cv::WND_PROP_FULLSCREEN, cv::WINDOW_FULLSCREEN);
+    //cv::setWindowProperty(CV_WINDOW_NAME, cv::WND_PROP_FULLSCREEN, cv::WINDOW_NORMAL);
 
 
 	#endif
     
 	if(!glfwInit()){
-		fprintf( stderr, "Failed to initialize GLFW.\n" );
+		fprintf(stderr, "Failed to initialize GLFW.\n" );
 		getchar();
 		return -1;
 	}
@@ -403,7 +401,7 @@ int main(void){
 		std::string lightIntensityText = "Light Intensity: " + intToString(current_time.light_intensity * 100)	+ "%";
 		std::string elevationAngleText = "Elevation Angle: " + floatToString(current_time.elevation_angle)		+ "deg";
 
-		std::string lightDirectionText = "Light Direction: " + floatToString(current_time.light_direction_x) + ", " + floatToString(current_time.light_direction_y) + ", " + floatToString(current_time.light_direction_z) + ")";
+		//std::string lightDirectionText = "Light Direction: " + floatToString(current_time.light_direction_x) + ", " + floatToString(current_time.light_direction_y) + ", " + floatToString(current_time.light_direction_z) + ")";
 
 		// Display those statistical texts.
 		int left_pos = 10;
@@ -417,11 +415,15 @@ int main(void){
 		cv::putText(capturedImage, lightIntensityText,	cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
 		cv::putText(capturedImage, elevationAngleText,  cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 40;
         
-		cv::putText(capturedImage, lightDirectionText, 	cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
+		//cv::putText(capturedImage, lightDirectionText, 	cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
 
 		video.write(capturedImage);
         cv::imshow(CV_WINDOW_NAME, capturedImage);
-		if (cv::waitKey(1) >= 0) break;
+
+		if (cv::waitKey(1) >= 0){
+			cv::imwrite(OUTPUT_IMAGE_FILENAME, capturedImage);
+			break;
+		}
 
 		frame_count++;
 		if(AUTO_STOP_RECORDING && frame_count >= daytime_size){

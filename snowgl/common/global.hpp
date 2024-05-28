@@ -4,8 +4,8 @@
 
 // OpenGL Rendering Window
 #define GL_WINDOW_NAME          "SnowGL (OpenGL Rendering)"
-#define WINDOW_WIDTH            900 //1600
-#define WINDOW_HEIGHT           900
+#define WINDOW_WIDTH            1024
+#define WINDOW_HEIGHT           1024
 #define WINDOW_BORDER           false
 
 // OpenGL Controls
@@ -15,15 +15,16 @@
 #define CV_WINDOW_NAME          "SnowGL (OpenCV Capture)"
 
 // OpenCV Output
+#define OUTPUT_IMAGE_FILENAME   "outputs/ALLT1200L60N.png"
 #define OUTPUT_VIDEO_FILENAME   "outputs/StatueOfLiberty.mp4"
 #define OUTPUT_VIDEO_FPS        25
 #define AUTO_STOP_RECORDING     false
 
 // Operating Mode 
 //#define IS_WINDOWS_OS           // Comment this line on non-Windows Operating Systems
-#define DAYTIME_SIMULATION      false      
+#define DAYTIME_SIMULATION      true      
 #define FRAME_MICRO_STEP        0.0
-#define INITIAL_TIME_OF_DAY     17 * 60
+#define INITIAL_TIME_OF_DAY     12 * 60
 
 // Manual defined item (If DAYTIME_SIMULATION is set to false)
 #define MANUAL_SNOW_AMOUNT      0.0
