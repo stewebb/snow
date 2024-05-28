@@ -12,48 +12,31 @@
 #define IS_WINDOWS_OS
 
 // Operating Mode 
-#define DAYTIME_SIMULATION      true      
+#define DAYTIME_SIMULATION      false      
 #define FRAME_MICRO_STEP        0.0
 #define INITIAL_TIME_OF_DAY     17 * 60
 
 // Manual defined item (If DAYTIME_SIMULATION is set to false)
-#define MANUAL_SNOW_AMOUNT      1.0
+#define MANUAL_SNOW_AMOUNT      0.0
 #define MANUAL_LIGHT_INTENSITY  1.0
 
-/**
- * Eye position
-*/
-
+// Eye position
 #define EYE_POS_X               0                // Fro
 #define EYE_POS_Y               -30
 #define EYE_POS_Z               12.5
 
+// Camera view
 #define HORIZONTAL_FIXED        true
 #define VERTICAL_FIXED          true
-
 #define HORIZONTAL_ANGLE        (MY_PI * 1.00)
 #define VERTICAL_ANGLE          (-MY_PI * 1.50)
 
-/**
- * Lighting Configuration
- */
+// Lighting Configuration
+// Models and textures
+#define MODEL_LOCATION          "models/StatueOfLiberty.obj"
+#define TEXTURE_LOCATION        "textures/rainbow.bmp"
 
-/**
- * Models
-*/
-
-#define MODEL_LOCATION "models/StatueOfLiberty.obj"
-//#define MODEL_LOCATION "models/grass.obj"
-//#define MODEL_LOCATION "models/football.obj"
-
-//#define TEXTURE_LOCATION "textures/rainbow.bmp"
-#define TEXTURE_LOCATION "textures/rainbow.bmp"
-//#define TEXTURE_LOCATION "textures/checkerboard.bmp"
-
-/**
- * OpenCV Capture Window and output
-*/
-
+// OpenCV Capture Window and output
 //#define USE_OPENCV              // Comment this line if OpenCV is not installed
 #define CV_WINDOW_NAME          "SnowGL (OpenCV Capture)"
 
@@ -61,10 +44,7 @@
 #define OUTPUT_VIDEO_FPS        25
 #define AUTO_STOP_RECORDING     false
 
-/**
- * Snow effect
-*/
-
+// Snow effect
 #define SNOW_COLOR_R            0.9375
 #define SNOW_COLOR_G            0.9375
 #define SNOW_COLOR_B            1.0000
