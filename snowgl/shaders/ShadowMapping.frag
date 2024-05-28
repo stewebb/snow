@@ -187,7 +187,11 @@ vec3 angleColorMapping(float dotn) {
 	float LightPower = light_intensity;
 
 	// Fixed snow color (white), RGB: (240, 250, 255)
-	vec3 SnowDiffuseColor = snow_color;
+	// It seems that the snow is black in Windows OS
+	// In this situdation, set it manually in GLSL.
+	//vec3 SnowDiffuseColor = snow_color;
+	vec3 SnowDiffuseColor = vec3(0.9375, 0.9375, 1.0000);
+
 	vec3 SnowAmbientColor = vec3(0.10, 0.10, 0.10) * SnowDiffuseColor;
 	vec3 SnowSpecularColor = vec3(0.2, 0.2, 0.2);
 	float SnowSpecularExponent = 25.0f;

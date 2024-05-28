@@ -35,7 +35,7 @@
 \usepackage{xcolor}         % colors
 
 
-\title{Dynamic Daylight Snow Rendering}
+\title{SDSim: Dynamic Daylight Simulation with Snow Effect}
 
 
 % The \author macro works with any number of authors. There are two commands
@@ -243,10 +243,11 @@ the mathematical formula of the light intensity.
 
 where:
 \begin{itemize}
-  \item \( I \) is the light intensity of the sun, \( I \in (0, 1] \).
+  \item \( I \) is the light intensity of the simulated sun, \( I \in (0, 1] \).
   \item \( \theta \) is the solar elevation angle in radians, which is based on the current time, 
   season (declination) and position (latitude).
-  \item \( m \) is the current minutes since midnight, \( m \in [0, 1440) \), \( m \in \mathbb{Z} \).
+  \item \( m \) is the total daylight time (in minutes) in that day, \( m \in [0, 1440) \), \( m \in \mathbb{Z} \). 
+  For example, if the sunrise time is 6 AM and the sunset time is 6 PM, \( m=720 \) (12 hours)
   \item \( b \) is a bias factor adjusting the exponent decay rate, making the light intensity
   transition more realistic.
 \end{itemize}
@@ -323,7 +324,7 @@ interpolation is also needed to make the transition process smoother.
 \end{figure}
 
 
-\section{Experiments}
+\section{Experiments and Results}
 \label{headings}
 All headings should be lower case (except for first word and proper nouns),
 flush left, and bold.
