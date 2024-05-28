@@ -10,8 +10,9 @@
 \usepackage[final]{neurips_2023}
 \usepackage{amsmath}
 \usepackage{graphicx}
-%\usepackage{subcaption}
+\usepackage{float}
 \usepackage{subfig}
+% \usepackage{wrapfig}
 
 % to compile a preprint version, e.g., for submission to arXiv, add add the
 % [preprint] option:
@@ -375,71 +376,75 @@ orange again. The snow effect is back due to the dropping temperature.
 
 \begin{figure}[h]
   \centering
-  \subfloat[Time = 00:00]{
+  \subfloat[Time = 12:00 AM]{
     \includegraphics[width=0.3\textwidth]{images/AllT0000L35S.png}
     \label{fig:AllT0000L35S}
   }\hfill
-  \subfloat[Time = 08:00]{
+  \subfloat[Time = 08:00 AM]{
     \includegraphics[width=0.3\textwidth]{images/ALLT0800L35S.png}
     \label{fig:ALLT0800L35S}
   }\hfill
-  \subfloat[Time = 11:00]{
+  \subfloat[Time = 11:00 AM]{
     \includegraphics[width=0.3\textwidth]{images/ALLT1100L35S.png}
     \label{fig:ALLT1100L35S}
   }
 
-  \subfloat[Time = 14:00]{
+  \subfloat[Time = 02:00 PM]{
     \includegraphics[width=0.3\textwidth]{images/ALLT1400L35S.png}
     \label{fig:ALLT1400L35S}
   }\hfill
-  \subfloat[Time = 17:00]{
+  \subfloat[Time = 05:00 PM]{
     \includegraphics[width=0.3\textwidth]{images/ALLT1700L35S.png}
     \label{fig:ALLT1700L35S}
   }\hfill
-  \subfloat[Time = 19:00]{
+  \subfloat[Time = 07:00 PM]{
     \includegraphics[width=0.3\textwidth]{images/ALLT1900L35S.png}
     \label{fig:ALLT1900L35S}
   }
 
   \caption{The rendered scene in different time}
-  \label{fig:mainfigure}
+  \label{fig:AllL35S}
 \end{figure}
 
-The following figure group is the plot of the data at different times with a high latitude location on summer () and season mentioned 
-above (35 $^{\circ}$S on June \(22^{nd}\)). The sunrise time is about 7 AM and the sunset time is about 5 PM.
+The following figure group is the plot of the data at different times with a high latitude location on the summer 
+solstice (60 $^{\circ}$N on June \(22^{nd}\)). The sunrise time is about 2:30 AM and the sunset time is about 9:30 
+PM, so there are 19 hours of daylight time.
 
 \begin{figure}[h]
   \centering
   \subfloat[Time = s]{
     \includegraphics[width=0.3\textwidth]{images/Temperature60N.png}
-    \label{fig:image1}
+    \label{fig:image111}
   }\hfill
   \subfloat[Time = 8 AM]{
     \includegraphics[width=0.3\textwidth]{images/SnowAmount60N.png}
-    \label{fig:image2}
+    \label{fig:image222}
   }\hfill
   \subfloat[Time = 10 AM]{
     \includegraphics[width=0.3\textwidth]{images/SolarElevetion60N.png}
-    \label{fig:image3}
+    \label{fig:image333}
   }
 
   \subfloat[Time = 11 AM]{
     \includegraphics[width=0.3\textwidth]{images/SunlightIntensity60N.png}
-    \label{fig:image4}
+    \label{fig:image444}
   }\hfill
   \subfloat[Time = 2 PM]{
     \includegraphics[width=0.3\textwidth]{images/SunColor60N.png}
-    \label{fig:image5}
+    \label{fig:image555}
   }\hfill
   \subfloat[Time = 5 PM]{
     \includegraphics[width=0.3\textwidth]{images/SkyColor60N.png}
-    \label{fig:image6}
+    \label{fig:image666}
   }
 
   \caption{The rendered scene in different time}
-  \label{fig:mainfigure}
+  \label{fig:mainfigure123}
 \end{figure}
 
+The following figure group is the rendering effect in the above location. In the summer of the high-latitude locations,
+each day has a long daylight time. Throughout the night (e.g., midnight (a)), the sky is not completely dark even if
+the sun is below the horizon. 
 
 \begin{figure}[h]
   \centering
@@ -470,14 +475,16 @@ above (35 $^{\circ}$S on June \(22^{nd}\)). The sunrise time is about 7 AM and t
   }
 
   \caption{The rendered scene in different time}
-  \label{fig:mainfigure}
+  \label{fig:AllL60N}
 \end{figure}
 
 
 
 
 
-
+123'
+123
+123
 
 \section{Discussions and Conclusion}
 
