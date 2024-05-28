@@ -10,6 +10,8 @@
 \usepackage[final]{neurips_2023}
 \usepackage{amsmath}
 \usepackage{graphicx}
+%\usepackage{subcaption}
+\usepackage{subfig}
 
 % to compile a preprint version, e.g., for submission to arXiv, add add the
 % [preprint] option:
@@ -329,28 +331,56 @@ interpolation is also needed to make the transition process smoother.
 The following figures are the results of the object covered by full snow, half snow, and no snow
 respectively.
 
+%\begin{figure}[h]
+%  \centering
+%  % Subfigure (a)
+%  \begin{subfigure}{0.30\textwidth}
+%      \centering
+%      \includegraphics[width=\textwidth]{images/AllTimeNaNNoSnow.png}
+%      \caption{First image caption}
+%      \label{fig:9a}
+%  \end{subfigure}\hfill
+%  % Subfigure (b)
+%  \begin{subfigure}{0.30\textwidth}
+%    \centering
+%    \includegraphics[width=\textwidth]{images/AllTimeNaNHalfSnow.png}
+%    \caption{Second image caption}
+%    \label{fig:9b}
+%  \end{subfigure}\hfill
+%  % Subfigure (c)
+%  \begin{subfigure}{0.30\textwidth}
+%      \centering
+%      \includegraphics[width=\textwidth]{images/AllTimeNaNFullSnow.png}
+%      \caption{Third image caption}
+%      \label{fig:9c}
+%  \end{subfigure}%
+%
+%  \caption{Overall caption for all images}
+%  \label{fig:9}
+%\end{figure}
+
+
 \begin{figure}[h]
   \centering
-  \begin{minipage}{0.30\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{images/AllTimeNaNNoSnow.png}
-      \caption{First image caption}
-      \label{fig:SunColor35N}
-  \end{minipage}\hfill
-  \begin{minipage}{0.30\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{images/AllTimeNaNHalfSnow.png}
-    \caption{First image caption}
-    \label{fig:SunColor35N}
-\end{minipage}\hfill
-  \begin{minipage}{0.30\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{images/AllTimeNaNFullSnow.png}
-      \caption{Second image caption}
-      \label{fig:SkyColor35N}
-  \end{minipage}
-\end{figure}
+  % Subfigure (a)
+  \subfloat[Snow Amount = 0.0]{
+    \includegraphics[width=0.25\textwidth]{images/AllTimeNaNNoSnow.png}
+    \label{fig:9a}
+  }\hfill
+  % Subfigure (b)
+  \subfloat[Snow Amount = 0.5]{
+    \includegraphics[width=0.25\textwidth]{images/AllTimeNaNHalfSnow.png}
+    \label{fig:9b}
+  }\hfill
+  % Subfigure (c)
+  \subfloat[Snow Amount = 1.0]{
+    \includegraphics[width=0.25\textwidth]{images/AllTimeNaNFullSnow.png}
+    \label{fig:9c}
+  }
 
+  \caption{Model covered by different snow}
+  \label{fig:9}
+\end{figure}
 
 \subsection {Environment Simulation}
 \label{headings}

@@ -116,6 +116,7 @@ int main(void){
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
+	glfwSetWindowPos(window, 0, 0);
     
     int windowWidth = WINDOW_WIDTH;
     int windowHeight = WINDOW_HEIGHT;
