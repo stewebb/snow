@@ -30,7 +30,7 @@ times_segments = np.array([ 0,  1,  2,  3,   4,   5,   6,   7,  8,  9, 10, 11, 1
 temps_segments = np.array([-7, -8, -8, -9, -11, -12, -13, -10, -9, -5, -1,  2,  4,  6,  9,  7,  6,  4,  1, -1, -3, -4, -5, -6])
 
 # Location
-latitude = 60.0
+latitude = -35.0
 azimuth = 0
 
 # Season
