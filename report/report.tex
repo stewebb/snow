@@ -348,17 +348,67 @@ mentioned above.
     \includegraphics[width=0.30\textwidth]{images/AllTimeNaNFullSnow.png}
     \label{fig:AllTimeNaNFullSnow}
   }
-  \caption{Object covered by different amount of snow}
+  \caption{Object covered by different amounts of snow}
   \label{fig:9}
 \end{figure}
 
 \subsection {Snow Effect with Dynamic Daylight Simulation}
 \label{headings}
-All headings should be lower case (except for first word and proper nouns),
-flush left, and bold.
+The following figure group is the rendering effect at different times with the location mentioned above.
+The snow is fully covered throughout the night (a) with only ambient color. In the morning, the sunlight
+intensity increases with an orange color, causing the orange-to-yellow snow color (b). When the clock hits 
+10 AM, it is bright enough but the snow coverage is still 100 \% as the temperature is still below 
+\(0^\circ\mathrm{C}\) (c). The snow starts melting at 11 AM (d). The weather is warmest at 2 PM, as a result,
+there is no snow on the scene (e). 
 
+\begin{figure}[h]
+  \centering
+  % Row 1, Image 1
+  \subfloat[Time = 12 AM]{
+    \includegraphics[width=0.3\textwidth]{images/AllTime0000.png}
+    \label{fig:image1}
+  }\hfill
+  % Row 1, Image 2
+  \subfloat[Time = 8 AM]{
+    \includegraphics[width=0.3\textwidth]{images/AllTime0800.png}
+    \label{fig:image2}
+  }\hfill
+  % Row 1, Image 3
+  \subfloat[Time = 10 AM]{
+    \includegraphics[width=0.3\textwidth]{images/AllTime1000.png}
+    \label{fig:image3}
+  }
+
+  % Row 2, Image 1
+  \subfloat[Time = 11 AM]{
+    \includegraphics[width=0.3\textwidth]{images/AllTime1100.png}
+    \label{fig:image4}
+  }\hfill
+  % Row 2, Image 2
+  \subfloat[Time = 2 PM]{
+    \includegraphics[width=0.3\textwidth]{images/AllTime1400.png}
+    \label{fig:image5}
+  }\hfill
+  % Row 2, Image 3
+  \subfloat[Time = 5 PM]{
+    \includegraphics[width=0.3\textwidth]{images/AllTime1700.png}
+    \label{fig:image6}
+  }
+
+  \caption{The rendered scene in different time}
+  \label{fig:mainfigure}
+\end{figure}
 
 First-level headings should be in 12-point type.
+
+
+
+
+
+
+
+
+
 
 
 
