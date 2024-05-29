@@ -22,12 +22,12 @@
 
 // Operating Mode 
 #define IS_WINDOWS_OS           // Comment this line on non-Windows Operating Systems
-#define DAYTIME_SIMULATION      true      
+#define DAYTIME_SIMULATION      false      
 #define FRAME_MICRO_STEP        0.0
 #define INITIAL_TIME_OF_DAY     17 * 60
 
 // Manual defined item (If DAYTIME_SIMULATION is set to false)
-#define MANUAL_SNOW_AMOUNT      0.0
+#define MANUAL_SNOW_AMOUNT      1.0
 #define MANUAL_LIGHT_INTENSITY  1.0
 
 // Eye position
