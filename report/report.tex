@@ -74,6 +74,7 @@ where:
   \item \( \beta \) is the specular exponent to control the shininess. It should be a small value as snow is not 
   very shiny. In this paper, \( \beta = 25\)
   \item \( I_m \) is the intensity of light source \( m \), \( I_m \in [0, 1]\)
+\end{itemize}
 
 \subsubsection {Snow Accumulation Prediction Coefficient}
 Assume there is no wind in the scene and all snow falls vertically. The snow accumulation prediction coefficient 
@@ -84,12 +85,16 @@ value \( f_{inc} \), and a user-defined value \( f_{u} \).
   f_{s} = f_{e} \cdot f_{inc} \cdot f_{u}
 \]
 
-The exposure function \( f_{e}(p) \) to calculate the occlusion that prevents snow from falling on the surface. % TODO: REF
-\( f_{e}(p) \in (0, 1] \). \( f_{e}(p)=0 \) means that the point is fully occluded by another object, which is right 
-above it, so there are no snowing effects on this point. \( f_{e}(p)=1 \) means that the point is exposed to the falling
-snow. This function is based on a shadow map by setting a virtual directional light right above the object. The light 
-direction is to the ground, so the points in the virtual shadow are also occluded by another object. Besides, to make
-the transition process smoother, soft shadowing techniques can be used. \label{fig:OcclusionMap} is the
+The exposure value \( f_{e} \) indicates occlusions that prevent snow from falling on the surface. % TODO: REF
+\( f_{e} \in (0, 1] \). \( f_{e}=0 \) means that the point is fully occluded by another object, which is right 
+above it, so there are no snowing effects on this point. \( f_{e}=1 \) means that the point is fully exposed to the 
+falling snow. This value is based on a shadow map by setting a virtual directional light right above the object. 
+The light direction is to the ground, so the points in the virtual shadow are also occluded by another object. 
+Besides, to make the transition process smoother, soft shadowing techniques can be used. 
+
+\ref{fig:OcclusionMap} is the occlusion map, which uses different colors to indicate the exposure value. Low hue 
+colors (e.g., red) stand for a low exposure value (i.e., the point is occluded by another object), while high hue
+colors (e.g., purple) stand for a high exposure value.
 
 \begin{figure}[h]
   \centering
@@ -99,55 +104,37 @@ the transition process smoother, soft shadowing techniques can be used. \label{f
       \caption{Occlusion Map}
       \label{fig:OcclusionMap}
   \end{minipage}\hfill
-  
   \begin{minipage}{0.45\textwidth}
       \centering
-      \includegraphics[width=\textwidth]{images/DeclinationMap.PNG}
+      \includegraphics[width=\textwidth]{images/DeclinationMap.png}
       \caption{Declination Map}
       \label{fig:DeclinationMap}
   \end{minipage}
 \end{figure}
-%\begin{figure}[h]
-%  \centering
-%  \subfloat[Snow Amount = 0.0]{
-%    \includegraphics[width=0.30\textwidth]{images/AllTimeNaNNoSnow.png}
-%    \label{fig:AllTimeNaNNoSnow}
-%  }\hfill
-%  \subfloat[Snow Amount = 0.5]{
-%    \includegraphics[width=0.30\textwidth]{images/AllTimeNaNHalfSnow.png}
-%    \label{fig:AllTimeNaNHalfSnow}
-%  }\hfill
-%  \subfloat[Snow Amount = 1.0]{
-%    \includegraphics[width=0.30\textwidth]{images/AllTimeNaNFullSnow.png}
-%    \label{fig:AllTimeNaNFullSnow}
-%  }
-%  \caption{Object covered by different amounts of snow}
-%  \label{fig:9}
-%\end{figure}
 
-
-An inclination function \( f_{inc}(p) \) 
+The inclination value \( f_{inc} \) depends on the angle between the surface normal in world space and the
+horizon. A flat ground
 
 A user-defined function \( f_{u}(p) \) to further customize and manipulate the snow amount. For example, 
 \( f_{u}(p)=0 \) means manually disable the snow effect. This function is crucial in the daytime simulation.
 
 
-
-\begin{figure}[h]
-  \centering
-  \begin{minipage}{0.45\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{images/HeadManualWithoutSnow.png}
-      \caption{First image caption}
-      \label{fig:image1}
-  \end{minipage}\hfill
-  \begin{minipage}{0.45\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{images/HeadManualWithSnow.png}
-      \caption{Second image caption}
-      \label{fig:image2}
-  \end{minipage}
-\end{figure}
+%
+%\begin{figure}[h]
+%  \centering
+%  \begin{minipage}{0.45\textwidth}
+%      \centering
+%      \includegraphics[width=\textwidth]{images/HeadManualWithoutSnow.png}
+%      \caption{First image caption}
+%      \label{fig:image1}
+%  \end{minipage}\hfill
+%  \begin{minipage}{0.45\textwidth}
+%      \centering
+%      \includegraphics[width=\textwidth]{images/HeadManualWithSnow.png}
+%      \caption{Second image caption}
+%      \label{fig:image2}
+%  \end{minipage}
+%\end{figure}
 
 
 
