@@ -76,49 +76,9 @@ fully exposed to the falling snow. This value is based on a shadow map by settin
 The light direction is to the ground, so the points in the virtual shadow are also occluded by an object. Besides, to make the 
 transition process smoother, soft shadowing techniques can be used. 
 
-\begin{figure}[h]
-  \centering
-  \subfloat[Occlusion Map]{
-    \includegraphics[width=0.33\textwidth]{images/MapOcclusion.png}
-    \label{fig:MapOcclusion}
-  }
-  \subfloat[Inclination Map]{
-    \includegraphics[width=0.33\textwidth]{images/MapInclination.png}
-    \label{fig:MapInclination}
-  }
-  \subfloat[Legend of Maps]{
-    \includegraphics[width=0.33\textwidth]{images/MapLegend.png}
-    \label{fig:MapLegend}
-  }
-  \caption{Occlusion and Inclination Map}
-  \label{fig:Maps}
-\end{figure}
-
-%\begin{figure}[h]
-%  \centering
-%  \begin{minipage}{0.33\textwidth}
-%      \centering
-%      \includegraphics[width=\textwidth]{images/OcclusionMap.png}
-%      \caption{Occlusion Map}
-%      \label{fig:OcclusionMap}
-%  \end{minipage}
-%  \begin{minipage}{0.33\textwidth}
-%      \centering
-%      \includegraphics[width=\textwidth]{images/InclinationMap.png}
-%      \caption{Inclination Map}
-%      \label{fig:InclinationMap}
-%  \end{minipage}
-%  \begin{minipage}{0.33\textwidth}
-%    \centering
-%    \includegraphics[width=\textwidth]{images/MapLegend.png}
-%    \caption{Legend of two maps}
-%    \label{fig:MapLegend}
-%\end{minipage}
-%\end{figure}
-
-The inclination value \( f_{inc} \) depends on the angle between the surface normal in world space and the horizon 
-\( f_{inc} \in [0, 1] \). \( f_{inc}=1 \) means that the point is on a flat surface that is parallel to the horizon. 
-\( f_{inc}=0 \) the point is on a surface whose normal is perpendicular to the horizon. This value can be calculated by:
+The inclination value \( f_{inc} \in [0, 1] \) depends on the angle between the surface normal and the horizon. \( f_{inc}=1 \) means 
+that the point is on a flat surface that is parallel to the horizon. \( f_{inc}=0 \) indicates that the point is on a surface which is 
+perpendicular to the horizon. This value can be calculated by:
 \[
   f_{inc}=
   \left\{
@@ -138,16 +98,34 @@ where:
   \item \( n \) is a small random number to make snow have a more natural look. In this paper, \(n = rand(0, 0.4)\).
 \end{itemize}
 
-Figure 2 is the inclination map, which also uses different colors to indicate the exposure value. Low hue values (e.g., red) stand for 
-a low inclination value (i.e., the angle between two surface normals is big), while high hue values (e.g., purple) stand for a high 
-inclination value.
+Figure 1 is the visualization of the occlusion and inclination map with legends. 
 
-The user-defined function \( f_{u} \) is used to further customize and manipulate the snow amount \( f_{u} \in [0, 1] \). For example, 
+\begin{figure}[h]
+  \centering
+  \subfloat[Occlusion Map]{
+    \includegraphics[width=0.33\textwidth]{images/MapOcclusion.png}
+    \label{fig:MapOcclusion}
+  }
+  \subfloat[Inclination Map]{
+    \includegraphics[width=0.33\textwidth]{images/MapInclination.png}
+    \label{fig:MapInclination}
+  }
+  \subfloat[Legend of Maps]{
+    \includegraphics[width=0.33\textwidth]{images/MapLegend.png}
+    \label{fig:MapLegend}
+  }
+  \caption{Occlusion and Inclination Map}
+  \label{fig:Maps}
+\end{figure}
+
+
+
+The user-defined function \( f_{u} \in [0, 1]\) is used to further customize and manipulate the snow amount. For example, 
 \( f_{u}=0 \) means manually disabling the snow effect. This function is crucial in the daytime simulation.
 
 % Snow method 3: Full Snow Equation
 \subsubsection {Full Snow Equation}
-The final color is a blending of the snow color and the surface color (without snow) on that point, by using the snow accumulation 
+The final color \( C \) is a blending of the snow color and the surface color (without snow) on that point, by using the snow accumulation 
 prediction coefficient in the last sub-section. This is also called the "Full Snow Equation".
 \[
   C = f_{s} * C_{s} + (1-f_{s}) * C_{o}
@@ -155,7 +133,6 @@ prediction coefficient in the last sub-section. This is also called the "Full Sn
 
 where:
 \begin{itemize}
-  \item \( C \) is the final color.
   \item \( f_{s} \) is the snow accumulation prediction coefficient.
   \item \( C_{s} \) is the snow color.
   \item \( C_{o} \) is the surface color without snow.
@@ -164,27 +141,23 @@ where:
 % Method part 2: Environment Simulation
 \subsection {Environment Simulation}
 
-%  Environment 1: Temperature
+% Environment 1: Temperature
 \subsubsection {Temperature}
-The temperature of a location depends on multiple factors, e.g., time of the day, season, altitude, latitude and distance to the ocean. 
-To create a reasonable snow effect, the location used in this paper is an in-land city around the latitude of 35$^{\circ}$ N or 35
-$^{\circ}$ S and the season is winter.
+The temperature curve in this paper is based on the real temperature of an in-land city around the latitude of 35$^{\circ}$ N or 35
+$^{\circ}$ S in winter solstice day. This location has a large temperature difference. The highest temperature is about 
+\(10^\circ\mathrm{C}\), which happens at around 1-2 P.M. The lowest temperature is about \(-10^\circ\mathrm{C}\), which can be reached 
+at around 5-7 A.M. The hourly temperature data is obtained on a weather forecast website, and the Cubic Spline method is used to 
+interpolate the intermediate values, making the curve smoother.
+% Environment 1: Temperature
 
-This location has a large temperature difference. The highest temperature is about \(10^\circ\mathrm{C}\), which can be reached at 
-around 1-2 P.M. The lowest temperature is about \(-10^\circ\mathrm{C}\), which can be reached at around 5-7 A.M. The hourly 
-temperature data can be obtained on weather forecast websites, and the Cubic Spline method is used to interpolate the intermediate 
-values, making the temperature-time curve smoother.
-
-%  Environment 2: Snow Factor
+% Environment 2: Snow Factor
 \subsubsection {Snow Factor}
-The snow factor is the user-defined function \( f_{u} \) in Section 4.1, causing a potentially negative effect on the original snow. 
-The range is between 0 and 1, where 0 means that the snow is disabled regardless of the original snow, and 1 means that there are no 
-negative effects. To simplify the simulation, the snow factor is based solely on the environmental temperature. 
-
-If the temperature is below or equal to \(0^\circ\mathrm{C}\), the snow factor is always 1. If the temperature is above or equal to 
-\(5^\circ\mathrm{C}\), the snow factor is always 0. Otherwise, the snow factor decreases linearly from 1 to 0 as temperature increases.
+The snow factor is the user-defined function \( f_{u} \) in Section 4.1, making a potentially negative effect on the original snow. To 
+simplify the simulation, this is based solely on the environmental temperature. If the temperature \( t \leq 0^\circ\mathrm{C}\), the 
+snow factor is always 1. If \( t \geq 5^\circ\mathrm{C}\), the snow factor is always 0. Otherwise, the snow factor decreases linearly 
+from 1 to 0 as temperature increases.
 \[
-  f_{u}(p)=
+  f_{u}=
   \left\{
     \begin{array}{ll}
       0 & t\leq 0 \\
@@ -193,40 +166,31 @@ If the temperature is below or equal to \(0^\circ\mathrm{C}\), the snow factor i
     \end{array} 
   \right. 
 \]
-\text{where } t \text{ is the temperature in degrees Celsius.}
+% Environment 2: Snow Factor
 
 % Environment 3: Sunlight Intensity and Direction
 \subsubsection {Sunlight Intensity and Direction}
-In the real world, there are multiple light sources outside, including the sun, sky, moon, stars, and human-made lights. In this paper, 
-only the sunlight and sky (ambient) light are considered. The intensity of the skylight is a small constant value while that of the 
-sunlight varies by time, ranging from 0 to 1.
-
-Assume the light intensity of the sun is 0 (or a very small value) at night. It starts increasing rapidly (typically 30 minutes) 
-before sunrise and reaches the maximum value in a short time (typically 1-3 hours). It remains stable until several hours before the 
-sunset. The value decreases quickly in the sunset period and finally returns to 0 (or a very small value). Here is the mathematical 
-formula of the light intensity.
+In this paper, only the sunlight and sky (ambient) light are considered. The intensity of the skylight is a small constant value 
+while that of the sunlight varies by time, ranging from 0 to 1. Assume the light intensity of the sun is 0 at night. It starts 
+increasing rapidly (typically 30 minutes) before sunrise and reaches the maximum value in a short time (typically 1-3 hours). It 
+remains stable until several hours before the sunset. The value decreases quickly in the sunset period and finally returns to 0. Here 
+is the mathematical formula of the light intensity \( I \in (0, 1]\), which is based on a bell curve.
 \[
   I = e^{-\frac{\left(\frac{\pi}{2} - \theta\right)^{\frac{m}{60} + 1}}{b}}
 \]
 
 where:
 \begin{itemize}
-  \item \( I \) is the light intensity of the simulated sun, \( I \in (0, 1] \).
   \item \( \theta \) is the solar elevation angle in radians, which is based on the current time, season (Earth declination) and 
   position (latitude).
-  \item \( m \) is the total daylight time (in minutes) in that day, \( m \in [0, 1440) \), \( m \in \mathbb{Z} \). For example, if 
-  the sunrise time is 6 AM and the sunset time is 6 PM, \( m=720 \) (12 hours)
+  \item \( m \in [0, 1440)\) \( m \in \mathbb{Z} \) is the total daylight time (in minutes) on that day. For example, if the sunrise 
+  time is 6 AM and the sunset time is 6 PM, \( m=720 \) (12 hours).
   \item \( b \) is a bias factor adjusting the exponent decay rate, making the light intensity transition more realistic.
 \end{itemize}
 
-The bias \( b \) depends on multiple factors, including the altitude, latitude and time zone. To simplify the simulation, it can be 
-calculated by solving an equation in terms of \( m \) when 
-\( I \) and \( \theta\) is given.
-\[
-  b = -\frac{\left(\frac{\pi}{2} - \theta\right)^{\frac{m}{60} + 1}}{\log(I)}
-\]
-
-Assume the solar light intensity is 0.1 on sunrise or sunset (i.e., \( \theta=0\)), the formula of the bias can be expressed as:
+The bias \( b \) depends on multiple factors, including the location and time zone. A simple approach to estimate it is to solve an 
+equation in terms of \( m \) when \( I \) and \( \theta\) is given. For example, if \( I=0.1 \) on sunrise or sunset (i.e., 
+\( \theta=0\)), the formula of the bias is:
 \[
   b = \frac{\left(\frac{\pi}{2}\right)^{\frac{m}{60} + 1}}{\log(10)}
 \]
@@ -235,6 +199,7 @@ By giving the sun elevation angle \( \theta \) and azimuth angle \( \phi \), the
 \[
   (-sin(\phi)cos(\theta), -cos(\phi)cos(\theta), sin(\theta))
 \]
+% Environment 3: Sunlight Intensity and Direction
 
 %  Environment 4: Sunlight and Sky Color
 \subsubsection {Sunlight and Sky Color}
