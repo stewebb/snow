@@ -21,4 +21,5 @@
 !**/report/*.sty
 !**/report/*.bak
 !**/report/*.py
+!**/report/*.pptx
 !**/report/images/
