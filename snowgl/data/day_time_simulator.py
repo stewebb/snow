@@ -30,7 +30,7 @@ times_segments = np.array([ 0,  1,  2,  3,   4,   5,   6,   7,  8,  9, 10, 11, 1
 temps_segments = np.array([-7, -8, -8, -9, -11, -12, -13, -10, -9, -5, -1,  2,  4,  6,  9,  7,  6,  4,  1, -1, -3, -4, -5, -6])
 
 # Location
-latitude = 60.0
+latitude = -35.0
 azimuth = 0
 
 # Season
@@ -457,9 +457,9 @@ if PLOTTING:
     sun_cbar.set_label('Time of Day')
     sun_cbar.ax.set_xticks(xtick_values)
     sun_cbar.ax.set_xticklabels(xtick_labels)
+    axs[1, 1].set_axis_off()
     axs[1, 1].set_title('Sun Color Throughout the Day')
 
-    
     # Sky Color Plot
     sky_colors = np.column_stack((sky_color_r, sky_color_g, sky_color_b))
     sky_sm = plt.cm.ScalarMappable(cmap=ListedColormap(sky_colors), norm=plt.Normalize(0, len(minute_times) - 1))
@@ -468,6 +468,7 @@ if PLOTTING:
     sky_cbar.set_label('Time of Day')
     sky_cbar.ax.set_xticks(xtick_values)
     sky_cbar.ax.set_xticklabels(xtick_labels)
+    axs[1, 2].set_axis_off()
     axs[1, 2].set_title('Sky Color Throughout the Day')    
 
     # Adjust layout to prevent overlap
