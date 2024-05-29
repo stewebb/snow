@@ -89,8 +89,24 @@ The exposure function \( f_{e}(p) \) to calculate the occlusion that prevents sn
 above it, so there are no snowing effects on this point. \( f_{e}(p)=1 \) means that the point is exposed to the falling
 snow. This function is based on a shadow map by setting a virtual directional light right above the object. The light 
 direction is to the ground, so the points in the virtual shadow are also occluded by another object. Besides, to make
-the transition process smoother, soft shadowing techniques can be used.
+the transition process smoother, soft shadowing techniques can be used. \label{fig:OcclusionMap} is the
 
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{images/OcclusionMap.png}
+      \caption{Occlusion Map}
+      \label{fig:OcclusionMap}
+  \end{minipage}\hfill
+  
+  \begin{minipage}{0.45\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{images/DeclinationMap.PNG}
+      \caption{Declination Map}
+      \label{fig:DeclinationMap}
+  \end{minipage}
+\end{figure}
 %\begin{figure}[h]
 %  \centering
 %  \subfloat[Snow Amount = 0.0]{
