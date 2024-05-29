@@ -216,7 +216,7 @@ vec3 visibilityColorMapping(float visibility) {
 	float LightPower = light_intensity;
 
 	// Fixed snow color (white), RGB: (240, 250, 255)
-	// It seems that the snow is black in Windows OS
+	// It seems that the snow is black in Windows OS if the value is imported via uniform.
 	// In this situdation, set it manually in GLSL.
 	//vec3 SnowDiffuseColor = snow_color;
 	vec3 SnowDiffuseColor = vec3(0.9375, 0.9375, 1.0000);
@@ -336,9 +336,9 @@ void main(){
 	// i,e,, C = c_s * f_p + c_o * (1 - f_p)
 	color = c_s * f_p + c_o * (1.00 - f_p);
 
-	vec3 n = normalize(Normal_modelspace);
-	vec3 u = vec3(0, 0, 1);
-	float dotn = dot(n, u);
-	//color = visibilityColorMapping(visibility);
-	color = angleColorMapping(dotn);
+	// To get the visibility/color mapping, uncomment the following line of code.
+	// color = visibilityColorMapping(visibility);
+
+	// To get the angle/color mapping, uncomment the following line of code.
+	// color = angleColorMapping(dot(normalize(Normal_modelspace), vec3(0, 0, 1)));
 }

@@ -70,7 +70,6 @@ int main(void){
 
 	// Setup VideoWriter
 	#ifdef USE_OPENCV
-	//cv::namedWindow(CV_WINDOW_NAME, cv::WINDOW_NORMAL);
     cv::VideoWriter video(OUTPUT_VIDEO_FILENAME, cv::VideoWriter::fourcc('X','2','6','4'), OUTPUT_VIDEO_FPS, cv::Size(WINDOW_WIDTH, WINDOW_HEIGHT));
     if (!video.isOpened()) {
         std::cerr << "Error: Could not open the video file for output\n";
