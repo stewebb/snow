@@ -44,8 +44,8 @@
 
 \section {Methods and Algorithms}
 
+% Method part 1: Snow Rendering
 \subsection {Snow Rendering}
-TODO: Snow Rendering and CG algorithms
 
 % Snow method 1: Color
 \subsubsection {Snow Color Function}
@@ -163,6 +163,7 @@ where:
   \item \( C_{o} \) is the surface color without snow.
 \end{itemize}
 
+% Method part 2: Environment Simulation
 \subsection {Environment Simulation}
 
 %  Environment 1: Temperature
@@ -179,10 +180,10 @@ intermediate values, making the temperature-time curve smoother.
 
 %  Environment 2: Snow Factor
 \subsubsection {Snow Factor}
-The snow factor is the user-defined function \( f_{u}(p) \) in Section TODO:1, causing a potentially 
-negative effect on the original snow. The range is between 0 and 1, where 0 means that the snow is 
-disabled regardless of the original snow, and 1 means that there are no negative effects.
-To simplify the simulation, the snow factor is based solely on the environmental temperature. 
+The snow factor is the user-defined function \( f_{u} \) in Section 4.1, causing a potentially negative 
+effect on the original snow. The range is between 0 and 1, where 0 means that the snow is disabled 
+regardless of the original snow, and 1 means that there are no negative effects. To simplify the 
+simulation, the snow factor is based solely on the environmental temperature. 
 
 If the temperature is below or equal to \(0^\circ\mathrm{C}\), the snow factor is always 1. 
 If the temperature is above or equal to \(5^\circ\mathrm{C}\), the snow factor is always 0. 
@@ -202,21 +203,21 @@ Otherwise, the snow factor decreases linearly from 1 to 0 as temperature increas
 
 % The following figures are temperature - time relationship and snow amount - time relationship
 
-\begin{figure}[h]
-  \centering
-  \begin{minipage}{0.45\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{images/Temperature35N.png}
-      \caption{Temperature throughout the day}
-      \label{fig:Temperature35N}
-  \end{minipage}\hfill
-  \begin{minipage}{0.45\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{images/SnowAmount35N.png}
-      \caption{Snow amount throughout the day}
-      \label{fig:SnowAmount35N}
-  \end{minipage}
-\end{figure}
+%\begin{figure}[h]
+%  \centering
+%  \begin{minipage}{0.45\textwidth}
+%      \centering
+%      \includegraphics[width=\textwidth]{images/Temperature35N.png}
+%      \caption{Temperature throughout the day}
+%      \label{fig:Temperature35N}
+%  \end{minipage}\hfill
+%  \begin{minipage}{0.45\textwidth}
+%      \centering
+%      \includegraphics[width=\textwidth]{images/SnowAmount35N.png}
+%      \caption{Snow amount throughout the day}
+%      \label{fig:SnowAmount35N}
+%  \end{minipage}
+%\end{figure}
 
 %  Environment 3: Sunlight Intensity
 \subsubsection {Sunlight Intensity}
@@ -261,23 +262,30 @@ of the bias can be expressed as:
   b = \frac{\left(\frac{\pi}{2}\right)^{\frac{m}{60} + 1}}{\log(10)}
 \]
 
-\begin{figure}[h]
-  \centering
-  \begin{minipage}{0.45\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{images/SolarElevetion35N.png}
-      \caption{Solar elevation angle throughout the day}
-      \label{fig:SolarElevetion35N}
-  \end{minipage}\hfill
-  \begin{minipage}{0.45\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{images/SunlightIntensity35N.png}
-      \caption{Sunlight intensity throughout the day}
-      \label{fig:SunlightIntensity35N}
-  \end{minipage}
-\end{figure}
+%\begin{figure}[h]
+%  \centering
+%  \begin{minipage}{0.45\textwidth}
+%      \centering
+%      \includegraphics[width=\textwidth]{images/SolarElevetion35N.png}
+%      \caption{Solar elevation angle throughout the day}
+%      \label{fig:SolarElevetion35N}
+%  \end{minipage}\hfill
+%  \begin{minipage}{0.45\textwidth}
+%      \centering
+%      \includegraphics[width=\textwidth]{images/SunlightIntensity35N.png}
+%      \caption{Sunlight intensity throughout the day}
+%      \label{fig:SunlightIntensity35N}
+%  \end{minipage}
+%\end{figure}
 
-% TODO: Sunlight direction
+%  Environment 4: Sunlight Direction
+\subsubsection {Sunlight Direction}
+By giving the sun elevation angle \( \theta \) and azimuth angle \( \phi \), the sunlight direction
+can be calculated by:
+
+\[
+  (-sin(\phi)cos(\theta), -cos(\phi)cos(\theta), sin(\theta))
+\]
 
 %  Environment 4: Sunlight and Sky Color
 \subsubsection {Sunlight and Sky Color}
@@ -301,21 +309,21 @@ interpolation is also needed to make the transition process smoother.
 
 
 
-\begin{figure}[h]
-  \centering
-  \begin{minipage}{0.45\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{images/SunColor35N.png}
-      \caption{First image caption}
-      \label{fig:SunColor35N}
-  \end{minipage}\hfill
-  \begin{minipage}{0.45\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{images/SkyColor35N.png}
-      \caption{Second image caption}
-      \label{fig:SkyColor35N}
-  \end{minipage}
-\end{figure}
+%\begin{figure}[h]
+%  \centering
+%  \begin{minipage}{0.45\textwidth}
+%      \centering
+%      \includegraphics[width=\textwidth]{images/SunColor35N.png}
+%      \caption{First image caption}
+%      \label{fig:SunColor35N}
+%  \end{minipage}\hfill
+%  \begin{minipage}{0.45\textwidth}
+%      \centering
+%      \includegraphics[width=\textwidth]{images/SkyColor35N.png}
+%      \caption{Second image caption}
+%      \label{fig:SkyColor35N}
+%  \end{minipage}
+%\end{figure}
 
 
 \section{Experiments and Results}
