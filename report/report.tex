@@ -391,16 +391,29 @@ keeps the high value at 5:00 PM (e) and finally starts dropping at around 7:00 P
 \section{Discussions}
 
 % Discussion 1: Temperature and Snow Factor Simulation
-\subsection {Temperature and Snow Factor Simulation}
+\subsection {Temperature Simulation}
 In this paper, the temperature curve throughout the day is based on the real meteorological data of a location with the Cubic Spline 
-interpolation. The curve is hard to express by a regular triangular function as the time between the peak values is not equal. Besides,
-there is no mapping between the location and the temperature. All the temperature data are manually defined so some problems may be 
-caused if the location is set to most of the equator area. However, this may be an efficient method for simulating temperature in some
-applications like video games or movies, as there are only a few scenes that need to be considered.
+interpolation and there is no mapping between the location and the temperature. All the temperature data are manually defined so some 
+problems may be caused in this paper if the location is set to most of the equator area. However, this is not a bad method for 
+simulating temperature in some applications like video games or movies, as there are only a few scenes that need to be considered and 
+in some scenes the temperature curve is irregular (e.g., on a "Hot Jupiter" exoplanet).
 
+\subsection {Temperature Snow factor simulation Simulation}
 Snow factor simulation has similar problems. This paper only implements a simple linear mapping on temperature and the snow factor. But
-in the real world, the causing of snow is very complicated. However, this is still a simple approach to get started on the environment
+in the real world, the cause of snow is very complicated. However, this is still a simple approach to get started on the environment
 simulation. 
+
+% Discussion 1: Complex Scenes
+\subsection {Sunlight and Sky}
+
+% Discussion 1: Complex Scenes
+\subsection {Thickness of the Snow}
+
+% Discussion 1: Complex Scenes
+\subsection {Complex Scenes}
+
+% Discussion 1: Complex Scenes
+\subsection {Performance}
 
 \section{Conclusion and Future Work}
 Please prepare submission files with paper size ``US Letter,'' and not, for
