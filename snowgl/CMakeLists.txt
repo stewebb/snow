@@ -84,8 +84,8 @@ create_target_launcher(SnowGL WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/")
 SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
 SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
 
-#set(output_folder "build/Debug")	# Uncomment me on Visual Studio compilers
-set(output_folder "build")			# Uncomment me on other compilers
+set(output_folder "build/Debug")	# Uncomment me on Visual Studio compilers
+#set(output_folder "build")			# Uncomment me on other compilers
 
 if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${output_folder}/models/)
     file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/models/)

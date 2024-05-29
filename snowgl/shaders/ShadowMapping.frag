@@ -87,13 +87,42 @@ vec2 poissonDisk[16] = vec2[](
 
 vec3 angleColorMapping(float dotn) {
 
-    if (dotn <= 0.0000) {		return vec3(1.00, 0.50, 0.50);	}	// [90, 180] -> Red
+    if (dotn <= 0.0000) 	 {	return vec3(1.00, 0.50, 0.50);	}	// [90, 180] -> Red
 	else if (dotn <= 0.2588) {	return vec3(1.00, 0.65, 0.50);	} 	// [75, 90) -> Orange
 	else if (dotn <= 0.5000) {	return vec3(1.00, 1.00, 0.60);	} 	// [60, 75) -> Yellow
 	else if (dotn <= 0.7071) {	return vec3(0.60, 1.00, 0.60);	} 	// [45, 60) -> Green
 	else if (dotn <= 0.8660) {	return vec3(0.50, 0.70, 1.00);	} 	// [30, 45) -> Blue
 	else if (dotn <= 0.9659) {	return vec3(0.40, 0.40, 0.70);	} 	// [15, 30) -> Indigo
 	else 					 {	return vec3(0.8, 0.6, 1.0);		}	// [0, 15) -> Violet
+}
+
+/**
+ * Maps a visibility value to a specific color to visually represent varying levels of visibility.
+ *
+ * This function uses a single floating-point visibility value, normalized between 0 and 1, to determine
+ * the color output based on predefined thresholds. The mapping is as follows:
+ * - Visibility of 0.0000 or less maps to a red color (vec3(1.00, 0.50, 0.50)).
+ * - Visibility up to 0.1666 maps to orange (vec3(1.00, 0.65, 0.50)).
+ * - Visibility up to 0.3333 maps to yellow (vec3(1.00, 1.00, 0.60)).
+ * - Visibility up to 0.5000 maps to green (vec3(0.60, 1.00, 0.60)).
+ * - Visibility up to 0.6666 maps to blue (vec3(0.50, 0.70, 1.00)).
+ * - Visibility up to 0.8333 maps to indigo (vec3(0.40, 0.40, 0.70)).
+ * - Visibility greater than 0.8333 maps to violet (vec3(0.80, 0.60, 1.00)).
+ *
+ * @param visibility The normalized visibility value, expected to be in the range [0, 1].
+ *
+ * @return vec3 The color associated with the given visibility value.
+ */
+
+vec3 visibilityColorMapping(float visibility) {
+
+    if (visibility <= 0.0000) 	   {	return vec3(1.00, 0.50, 0.50);	}	// Red
+	else if (visibility <= 0.1666) {	return vec3(1.00, 0.65, 0.50);	} 	// Orange
+	else if (visibility <= 0.3333) {	return vec3(1.00, 1.00, 0.60);	} 	// Yellow
+	else if (visibility <= 0.5000) {	return vec3(0.60, 1.00, 0.60);	} 	// Green
+	else if (visibility <= 0.6666) {	return vec3(0.50, 0.70, 1.00);	} 	// Blue
+	else if (visibility <= 0.8333) {	return vec3(0.40, 0.40, 0.70);	} 	// Indigo
+	else 					 	   {	return vec3(0.8, 0.6, 1.0);		}	// Violet
 }
 
 /**
@@ -307,8 +336,9 @@ void main(){
 	// i,e,, C = c_s * f_p + c_o * (1 - f_p)
 	color = c_s * f_p + c_o * (1.00 - f_p);
 
-	//vec3 n = normalize(Normal_modelspace);
-	//vec3 u = vec3(0, 0, 1);
-	//float dotn = dot(n, u);
-	//color = angleColorMapping(dotn);
+	vec3 n = normalize(Normal_modelspace);
+	vec3 u = vec3(0, 0, 1);
+	float dotn = dot(n, u);
+	//color = visibilityColorMapping(visibility);
+	color = angleColorMapping(dotn);
 }
