@@ -49,14 +49,16 @@
 TODO: Snow Rendering and CG algorithms
 
 \subsubsection {Snow Color Function}
-The snow color is defined by a modified Phong reflection model.
+The snow color is defined by a modified Phong reflection model, where the diffuse color has been set to nearly white 
+and the surface normal has been distorted for a more realistic snowing effect.
+
 \[
-  C_{snow} = k_a \cdot I_a + \sum_{m \in \text{lights}} (k_d \cdot (L_m \cdot (N + \alpha n)) + k_s \cdot (R_m \cdot V)^\beta) \cdot I_m  
+  C_{s} = k_a \cdot I_a + \sum_{m \in \text{lights}} (k_d \cdot (L_m \cdot (N + \alpha n)) + k_s \cdot (R_m \cdot V)^\beta) \cdot I_m  
 \]
 
 where:
 \begin{itemize}
-  \item \( C_{snow} \) is the calculated snow color.
+  \item \( C_{s} \) is the calculated snow color.
   \item \( k_a \) is the ambient reflection coefficient. In this paper, \( k_a = (0.05, 0.05, 0.05)\)
   \item \( I_a \) is the ambient light intensity, \( I_a \in [0, 1]\)
   \item \( k_d \) is the diffuse reflection coefficient, which is the snow color. To make a more glittering effect, % TODO: REF
@@ -65,17 +67,22 @@ where:
   \item \( L_m \) is a vector from the point to the light source \( m \). It must be normalized.
   \item \( N \) is the surface normal (in camera space) of the point. It must be normalized.
   \item \( \alpha \) is the distortion coefficient. In this paper, \( \alpha = 0.1\)
-  \item \( n \) is a random vector, together with \( \alpha \) to control the distortion of the surface normal,
-  making the snow effect more realistic. Each element of this vector \(\in [0, 1]\)
+  \item \( n \) is a random vector, together with \( \alpha \) to control the distortion of the surface normal. Each 
+  element of this vector \(\in [0, 1]\)
   \item \( R_m \) is the direction of the reflected light. It must be normalized.
   \item \( V \) is a vector from the surface point to the eye/camera position. It must be normalized.
   \item \( \beta \) is the specular exponent to control the shininess. It should be a small value as snow is not 
   very shiny. In this paper, \( \beta = 25\)
   \item \( I_m \) is the intensity of light source \( m \), \( I_m \in [0, 1]\)
 
-\subsubsection {Snow Accumulation Prediction Function}
-Assume there is no wind in the scene, so all snow will fall vertically. The snow amount on a point can be 
-determined by an exposure function, an inclination function, and a user-defined function.
+\subsubsection {Snow Accumulation Prediction Coefficient}
+Assume there is no wind in the scene and all snow falls vertically. The snow accumulation prediction coefficient 
+\( f_{s} \) on a point can be calculated by the multiplication of an exposure value \( f_{e} \), an inclination 
+value \( f_{inc} \), and a user-defined value \( f_{u} \).
+
+\[
+  f_{s} = f_{e} \cdot f_{inc} \cdot f_{u}
+\]
 
 The exposure function \( f_{e}(p) \) to calculate the occlusion that prevents snow from falling on the surface. % TODO: REF
 \( f_{e}(p) \in (0, 1] \). \( f_{e}(p)=0 \) means that the point is fully occluded by another object, which is right 
