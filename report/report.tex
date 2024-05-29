@@ -91,6 +91,22 @@
 TODO: Snow Rendering and CG algorithms
 
 \subsubsection {Snow Color Function}
+The snow color is defined by a modified Phong reflection model.
+\[
+  C_{snow} = k_a \cdot I_a + \sum_{m \in \text{lights}} (k_d \cdot (L_m \cdot (N + \alpha n)) + k_s \cdot (R_m \cdot V)^\beta) \cdot I_m  
+\]
+
+where:
+\begin{itemize}
+  \item \( C_{snow} \) is the calculated snow color.
+  \item \( k_a \) is the ambient reflection coefficient. In this paper, \( k_a = (0.05, 0.05, 0.05)\)
+  \item \( I_a \) is the ambient light intensity.
+  \item \( k_d \) is the diffuse reflection coefficient, which is the snow color. To make a more glittering effect, % TODO: REF
+  the blue component of it can be slightly higher. In this paper, \( k_d = (0.9375, 0.9375, 1)\)
+  \item \( k_s \) is the specular reflection coefficient. In this paper, \( k_s = (0.2, 0.2, 0.2)\)
+  \item \( L_m \) is a vector from the point to the light source \( m \). It must be normalized.
+  \item \( N \) is the surface normal (in camera space) of the point. It must be normalized.
+\end{itemize}
 
 \subsubsection {Snow Accumulation Prediction Function}
 Assume there is no wind in the scene, so all snow will fall vertically. The snow amount on a point can be 
