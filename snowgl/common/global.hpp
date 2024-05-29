@@ -21,7 +21,7 @@
 // Operating Mode 
 #define IS_WINDOWS_OS           // Comment this line on non-Windows Operating Systems
 #define DAYTIME_SIMULATION      true      
-#define FRAME_MICRO_STEP        0.0
+#define FRAME_MICRO_STEP        0.5
 #define INITIAL_TIME_OF_DAY     0 * 60
 
 // Manual defined item (If DAYTIME_SIMULATION is set to false)
