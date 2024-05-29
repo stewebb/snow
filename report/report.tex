@@ -389,8 +389,18 @@ keeps the high value at 5:00 PM (e) and finally starts dropping at around 7:00 P
 \end{figure}
 
 \section{Discussions}
-Please prepare submission files with paper size ``US Letter,'' and not, for
-example, ``A4.''
+
+% Discussion 1: Temperature and Snow Factor Simulation
+\subsection {Temperature and Snow Factor Simulation}
+In this paper, the temperature curve throughout the day is based on the real meteorological data of a location with the Cubic Spline 
+interpolation. The curve is hard to express by a regular triangular function as the time between the peak values is not equal. Besides,
+there is no mapping between the location and the temperature. All the temperature data are manually defined so some problems may be 
+caused if the location is set to most of the equator area. However, this may be an efficient method for simulating temperature in some
+applications like video games or movies, as there are only a few scenes that need to be considered.
+
+Snow factor simulation has similar problems. This paper only implements a simple linear mapping on temperature and the snow factor. But
+in the real world, the causing of snow is very complicated. However, this is still a simple approach to get started on the environment
+simulation. 
 
 \section{Conclusion and Future Work}
 Please prepare submission files with paper size ``US Letter,'' and not, for
