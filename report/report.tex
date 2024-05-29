@@ -195,8 +195,8 @@ Otherwise, the snow factor decreases linearly from 1 to 0 as temperature increas
 \]
 \text{where } t \text{ is the temperature in degrees Celsius.}
 
-%  Environment 3: Sunlight Intensity
-\subsubsection {Sunlight Intensity}
+%  Environment 3: Sunlight Intensity and Direction
+\subsubsection {Sunlight Intensity and Direction}
 In the real world, there are multiple light sources outside, including the sun, sky, moon, stars, 
 and human-made lights. In this paper, only the sunlight and sky (ambient) light are considered. 
 The intensity of the skylight is a small constant value while that of the sunlight varies by 
@@ -235,8 +235,6 @@ of the bias can be expressed as:
   b = \frac{\left(\frac{\pi}{2}\right)^{\frac{m}{60} + 1}}{\log(10)}
 \]
 
-%  Environment 4: Sunlight Direction
-\subsubsection {Sunlight Direction}
 By giving the sun elevation angle \( \theta \) and azimuth angle \( \phi \), the sunlight direction
 can be calculated by:
 \[
@@ -325,26 +323,26 @@ orange again. The snow effect is back due to the dropping temperature.
   \subfloat[Time = 12:00 AM]{
     \includegraphics[width=0.33\textwidth]{images/AllT0000L35S.png}
     \label{fig:AllT0000L35S}
-  }\hfill
+  }
   \subfloat[Time = 08:00 AM]{
     \includegraphics[width=0.33\textwidth]{images/ALLT0800L35S.png}
     \label{fig:ALLT0800L35S}
-  }\hfill
+  }
   \subfloat[Time = 11:00 AM]{
-    \includegraphics[width=0.34\textwidth]{images/ALLT1100L35S.png}
+    \includegraphics[width=0.33\textwidth]{images/ALLT1100L35S.png}
     \label{fig:ALLT1100L35S}
   }
 
   \subfloat[Time = 02:00 PM]{
     \includegraphics[width=0.33\textwidth]{images/ALLT1400L35S.png}
     \label{fig:ALLT1400L35S}
-  }\hfill
+  }
   \subfloat[Time = 05:00 PM]{
     \includegraphics[width=0.33\textwidth]{images/ALLT1700L35S.png}
     \label{fig:ALLT1700L35S}
-  }\hfill
+  }
   \subfloat[Time = 07:00 PM]{
-    \includegraphics[width=0.34\textwidth]{images/ALLT1900L35S.png}
+    \includegraphics[width=0.33\textwidth]{images/ALLT1900L35S.png}
     \label{fig:ALLT1900L35S}
   }
 
