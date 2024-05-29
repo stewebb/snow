@@ -35,11 +35,9 @@
 TODO:
 \end{abstract}
 
-\section{Introduction}
+\section{Introduction and Background}
 
-\section{Motivation and Problem Statement}
-
-\section{Previous Works}
+\section{Motivations and Aims}
 
 \section {Methods and Algorithms}
 
@@ -48,8 +46,8 @@ TODO:
 
 % Snow method 1: Color
 \subsubsection {Snow Color Function}
-The snow color is defined by a modified Phong reflection model, where the diffuse color has been set to nearly white 
-and the surface normal has been distorted for a more realistic snowing effect.
+The snow color is defined by a modified Phong reflection model, where the diffuse color has been set to nearly white and the surface 
+normal has been distorted for a more realistic snowing effect.
 \[
   C_{s} = k_a \cdot I_a + \sum_{m \in \text{lights}} (k_d \cdot (L_m \cdot (N + \alpha n)) + k_s \cdot (R_m \cdot V)^\beta) \cdot I_m  
 \]
@@ -65,12 +63,12 @@ where:
   \item \( L_m \) is a vector from the point to the light source \( m \). It must be normalized.
   \item \( N \) is the surface normal (in camera space) of the point. It must be normalized.
   \item \( \alpha \) is the distortion coefficient. In this paper, \( \alpha = 0.1\)
-  \item \( n \) is a random vector, together with \( \alpha \) to control the distortion of the surface normal. Each 
-  element of this vector \(\in [0, 1]\)
+  \item \( n \) is a random vector, together with \( \alpha \) to control the distortion of the surface normal. Each element of this 
+  vector \(\in [0, 1]\)
   \item \( R_m \) is the direction of the reflected light. It must be normalized.
   \item \( V \) is a vector from the surface point to the eye/camera position. It must be normalized.
-  \item \( \beta \) is the specular exponent to control the shininess. It should be a small value as snow is not 
-  very shiny. In this paper, \( \beta = 25\)
+  \item \( \beta \) is the specular exponent to control the shininess. It should be a small value as snow is not very shiny. In this 
+  paper, \( \beta = 25\)
   \item \( I_m \) is the intensity of light source \( m \), \( I_m \in [0, 1]\)
 \end{itemize}
 
@@ -110,10 +108,9 @@ values (e.g., purple) stand for a high exposure value.
   \end{minipage}
 \end{figure}
 
-The inclination value \( f_{inc} \) depends on the angle between the surface normal in world space and the
-horizon \( f_{inc} \in [0, 1] \). \( f_{inc}=1 \) means that the point is on a flat surface that is parallel 
-to the horizon. \( f_{inc}=0 \) the point is on a surface whose normal is perpendicular to the horizon. This
-value can be calculated by:
+The inclination value \( f_{inc} \) depends on the angle between the surface normal in world space and the horizon 
+\( f_{inc} \in [0, 1] \). \( f_{inc}=1 \) means that the point is on a flat surface that is parallel to the horizon. 
+\( f_{inc}=0 \) the point is on a surface whose normal is perpendicular to the horizon. This value can be calculated by:
 \[
   f_{inc}=
   \left\{
@@ -128,24 +125,22 @@ where:
 \begin{itemize}
   \item \( N \) is the surface normal of the target point (normalized).
   \item \( U \) is the surface normal of the horizon (normalized). It is a constant vector \((0, 0, 1)\)
-  \item \( N \cdot U \) is the cosine of the angle between the above two surface normals, ranging from 
-  -1 to 1. If the angle is less than 90$^{\circ}$, \( N \cdot U > 0\).
-  \item \( n \) is a small random number to make snow has a more natural look. In this paper, 
-  \(n = rand(0, 0.4)\).
+  \item \( N \cdot U \) is the cosine of the angle between the above two surface normals, ranging from -1 to 1. If the angle is less 
+  than 90$^{\circ}$, \( N \cdot U > 0\).
+  \item \( n \) is a small random number to make snow have a more natural look. In this paper, \(n = rand(0, 0.4)\).
 \end{itemize}
 
-Figure 2 is the inclination map, which also uses different colors to indicate the exposure value. 
-Low hue values (e.g., red) stand for a low inclination value (i.e., the angle between two surface normals is big),
-while high hue values (e.g., purple) stand for a high inclination value.
+Figure 2 is the inclination map, which also uses different colors to indicate the exposure value. Low hue values (e.g., red) stand for 
+a low inclination value (i.e., the angle between two surface normals is big), while high hue values (e.g., purple) stand for a high 
+inclination value.
 
-The user-defined function \( f_{u} \) is used to further customize and manipulate the snow amount 
-\( f_{u} \in [0, 1] \). For example, \( f_{u}=0 \) means manually disabling the snow effect. This function is crucial 
-in the daytime simulation.
+The user-defined function \( f_{u} \) is used to further customize and manipulate the snow amount \( f_{u} \in [0, 1] \). For example, 
+\( f_{u}=0 \) means manually disabling the snow effect. This function is crucial in the daytime simulation.
 
 % Snow method 3: Full Snow Equation
 \subsubsection {Full Snow Equation}
-The final color is a blending of the snow color and the surface color (without snow) on that point, by using the snow
-accumulation prediction coefficient in the last sub-section. This is also called the "Full Snow Equation".
+The final color is a blending of the snow color and the surface color (without snow) on that point, by using the snow accumulation 
+prediction coefficient in the last sub-section. This is also called the "Full Snow Equation".
 \[
   C = f_{s} * C_{s} + (1-f_{s}) * C_{o}
 \]
@@ -163,26 +158,23 @@ where:
 
 %  Environment 1: Temperature
 \subsubsection {Temperature}
-The temperature of a location depends on multiple factors, e.g., time of the day, season, altitude, 
-latitude and distance to the ocean. To create a reasonable snow effect, the location used in this paper 
-is an in-land city around the latitude of 35$^{\circ}$ N or 35$^{\circ}$ S and the season is winter.
+The temperature of a location depends on multiple factors, e.g., time of the day, season, altitude, latitude and distance to the ocean. 
+To create a reasonable snow effect, the location used in this paper is an in-land city around the latitude of 35$^{\circ}$ N or 35
+$^{\circ}$ S and the season is winter.
 
-This location has a large temperature difference. The highest temperature is about 
-\(10^\circ\mathrm{C}\), which can be reached at around 1-2 P.M. The lowest temperature is about 
-\(-10^\circ\mathrm{C}\), which can be reached at around 5-7 A.M. The hourly temperature data can be
-obtained on weather forecast websites, and the Cubic Spline method is used to interpolate the 
-intermediate values, making the temperature-time curve smoother.
+This location has a large temperature difference. The highest temperature is about \(10^\circ\mathrm{C}\), which can be reached at 
+around 1-2 P.M. The lowest temperature is about \(-10^\circ\mathrm{C}\), which can be reached at around 5-7 A.M. The hourly 
+temperature data can be obtained on weather forecast websites, and the Cubic Spline method is used to interpolate the intermediate 
+values, making the temperature-time curve smoother.
 
 %  Environment 2: Snow Factor
 \subsubsection {Snow Factor}
-The snow factor is the user-defined function \( f_{u} \) in Section 4.1, causing a potentially negative 
-effect on the original snow. The range is between 0 and 1, where 0 means that the snow is disabled 
-regardless of the original snow, and 1 means that there are no negative effects. To simplify the 
-simulation, the snow factor is based solely on the environmental temperature. 
+The snow factor is the user-defined function \( f_{u} \) in Section 4.1, causing a potentially negative effect on the original snow. 
+The range is between 0 and 1, where 0 means that the snow is disabled regardless of the original snow, and 1 means that there are no 
+negative effects. To simplify the simulation, the snow factor is based solely on the environmental temperature. 
 
-If the temperature is below or equal to \(0^\circ\mathrm{C}\), the snow factor is always 1. 
-If the temperature is above or equal to \(5^\circ\mathrm{C}\), the snow factor is always 0. 
-Otherwise, the snow factor decreases linearly from 1 to 0 as temperature increases.
+If the temperature is below or equal to \(0^\circ\mathrm{C}\), the snow factor is always 1. If the temperature is above or equal to 
+\(5^\circ\mathrm{C}\), the snow factor is always 0. Otherwise, the snow factor decreases linearly from 1 to 0 as temperature increases.
 \[
   f_{u}(p)=
   \left\{
@@ -195,18 +187,16 @@ Otherwise, the snow factor decreases linearly from 1 to 0 as temperature increas
 \]
 \text{where } t \text{ is the temperature in degrees Celsius.}
 
-%  Environment 3: Sunlight Intensity and Direction
+% Environment 3: Sunlight Intensity and Direction
 \subsubsection {Sunlight Intensity and Direction}
-In the real world, there are multiple light sources outside, including the sun, sky, moon, stars, 
-and human-made lights. In this paper, only the sunlight and sky (ambient) light are considered. 
-The intensity of the skylight is a small constant value while that of the sunlight varies by 
-time, ranging from 0 to 1.
+In the real world, there are multiple light sources outside, including the sun, sky, moon, stars, and human-made lights. In this paper, 
+only the sunlight and sky (ambient) light are considered. The intensity of the skylight is a small constant value while that of the 
+sunlight varies by time, ranging from 0 to 1.
 
-Assume the light intensity of the sun is 0 (or a very small value) at night. It starts increasing 
-rapidly (typically 30 minutes) before sunrise and reaches the maximum value in a short time 
-(typically 1-3 hours). It remains stable until several hours before the sunset. The value 
-decreases quickly in the sunset period and finally returns to 0 (or a very small value). Here is 
-the mathematical formula of the light intensity.
+Assume the light intensity of the sun is 0 (or a very small value) at night. It starts increasing rapidly (typically 30 minutes) 
+before sunrise and reaches the maximum value in a short time (typically 1-3 hours). It remains stable until several hours before the 
+sunset. The value decreases quickly in the sunset period and finally returns to 0 (or a very small value). Here is the mathematical 
+formula of the light intensity.
 \[
   I = e^{-\frac{\left(\frac{\pi}{2} - \theta\right)^{\frac{m}{60} + 1}}{b}}
 \]
@@ -214,39 +204,35 @@ the mathematical formula of the light intensity.
 where:
 \begin{itemize}
   \item \( I \) is the light intensity of the simulated sun, \( I \in (0, 1] \).
-  \item \( \theta \) is the solar elevation angle in radians, which is based on the current time, 
-  season (declination) and position (latitude).
-  \item \( m \) is the total daylight time (in minutes) in that day, \( m \in [0, 1440) \), \( m \in \mathbb{Z} \). 
-  For example, if the sunrise time is 6 AM and the sunset time is 6 PM, \( m=720 \) (12 hours)
-  \item \( b \) is a bias factor adjusting the exponent decay rate, making the light intensity
-  transition more realistic.
+  \item \( \theta \) is the solar elevation angle in radians, which is based on the current time, season (Earth declination) and 
+  position (latitude).
+  \item \( m \) is the total daylight time (in minutes) in that day, \( m \in [0, 1440) \), \( m \in \mathbb{Z} \). For example, if 
+  the sunrise time is 6 AM and the sunset time is 6 PM, \( m=720 \) (12 hours)
+  \item \( b \) is a bias factor adjusting the exponent decay rate, making the light intensity transition more realistic.
 \end{itemize}
 
-The bias \( b \) depends on multiple factors, including the altitude, latitude and time zone. To
-simplify the simulation, it can be calculated by solving an equation in terms of \( m \) when 
+The bias \( b \) depends on multiple factors, including the altitude, latitude and time zone. To simplify the simulation, it can be 
+calculated by solving an equation in terms of \( m \) when 
 \( I \) and \( \theta\) is given.
 \[
   b = -\frac{\left(\frac{\pi}{2} - \theta\right)^{\frac{m}{60} + 1}}{\log(I)}
 \]
 
-Assume the solar light intensity is 0.1 on sunrise or sunset (i.e., \( \theta=0\)), the formula 
-of the bias can be expressed as:
+Assume the solar light intensity is 0.1 on sunrise or sunset (i.e., \( \theta=0\)), the formula of the bias can be expressed as:
 \[
   b = \frac{\left(\frac{\pi}{2}\right)^{\frac{m}{60} + 1}}{\log(10)}
 \]
 
-By giving the sun elevation angle \( \theta \) and azimuth angle \( \phi \), the sunlight direction
-can be calculated by:
+By giving the sun elevation angle \( \theta \) and azimuth angle \( \phi \), the sunlight direction can be calculated by:
 \[
   (-sin(\phi)cos(\theta), -cos(\phi)cos(\theta), sin(\theta))
 \]
 
 %  Environment 4: Sunlight and Sky Color
 \subsubsection {Sunlight and Sky Color}
-Sunlight and sky colors depend on the current time. Typically on a sunny day, the sunlight is yellow
-to white for most of the day and it becomes orange during sunrise or sunset. The sky is light blue
-in the day, orange during sunrise or sunset and dark purple at night. To simulate those colors, 
-interpolation is also needed to make the transition process smoother. 
+Sunlight and sky colors depend on the current time. Typically on a sunny day, the sunlight is yellow to white for most of the day and 
+it becomes orange during sunrise or sunset. The sky is light blue in the day, orange during sunrise or sunset and dark purple at night. 
+To simulate those colors, interpolation is also needed to make the transition process smoother. 
 \[
   C_{b}=
   \left\{
@@ -263,36 +249,34 @@ interpolation is also needed to make the transition process smoother.
 
 % Result 1: Pure Snow Effect
 \subsection {Pure Snow Effect}
-The following figure group is the rendering effect with full snow, half snow, and no snow respectively.
-The dynamic environment system is disabled and the light source is always right above the object with
-the maximum intensity and white color. Those three sub-figures illustrate the effect on both declination 
-(the head and book of the statue) and occlusion (the feet area of it), as well as the color blending
-mentioned above.
+Figure 3 is the rendering effect with full snow (a), half snow (b), and no snow (c) respectively. The dynamic daylight simulation is 
+disabled and the light source is always right above the object with the maximum intensity and white color. Those three sub-figures 
+illustrate the effect on both declination (the head and book part of the statue) and occlusion (the feet area of it), as well as the 
+color blending mentioned above.
 
 \begin{figure}[h]
   \centering
-  \subfloat[Snow Amount = 0.0]{
-    \includegraphics[width=0.30\textwidth]{images/AllTimeNaNNoSnow.png}
-    \label{fig:AllTimeNaNNoSnow}
-  }\hfill
-  \subfloat[Snow Amount = 0.5]{
-    \includegraphics[width=0.30\textwidth]{images/AllTimeNaNHalfSnow.png}
-    \label{fig:AllTimeNaNHalfSnow}
-  }\hfill
   \subfloat[Snow Amount = 1.0]{
-    \includegraphics[width=0.30\textwidth]{images/AllTimeNaNFullSnow.png}
-    \label{fig:AllTimeNaNFullSnow}
+    \includegraphics[width=0.33\textwidth]{images/T9999M10P.png}
+    \label{fig:T9999M10P}
+  }
+  \subfloat[Snow Amount = 0.5]{
+    \includegraphics[width=0.33\textwidth]{images/T9999M05P.png}
+    \label{fig:T9999M05P}
+  }
+  \subfloat[Snow Amount = 0.0]{
+    \includegraphics[width=0.33\textwidth]{images/T9999M00P.png}
+    \label{fig:T9999M00P}
   }
   \caption{Object covered by different amounts of snow}
-  \label{fig:9}
+  \label{fig:PureSnow}
 \end{figure}
 
 % Result 2: Snow Effect with Dynamic Daylight Simulation (Medium Latitude)
 \subsection {Snow Effect with Dynamic Daylight Simulation (Medium Latitude)}
 
-\ref{fig:Plot35N} is the plot of the data at different times with a medium latitude location on the winter 
-solstice (35 $^{\circ}$S on June \(22^{nd}\)). The sunrise time is about 7:00 AM and the sunset time is about 
-5:00 PM, so there are 10 hours of daylight time.
+Figure 4 is the plot of the data at different times with a medium latitude location on the winter solstice (35 $^{\circ}$S on June 
+\(22^{nd}\)). The sunrise time is about 7:00 AM and the sunset time is about 5:00 PM, so there are 10 hours of daylight time.
 
 \begin{figure}[h]
   \centering
@@ -304,58 +288,56 @@ solstice (35 $^{\circ}$S on June \(22^{nd}\)). The sunrise time is about 7:00 AM
   \end{minipage}
 \end{figure}
 
-\ref{fig:AllL35S} is the rendering effect at different times in the above location. Throughout the night (e.g.,
-midnight (a) or 7:00 PM (f)), the temperature is quite low and the sunlight intensity is almost zero so the 
-object is fully covered by white snow and only ambient colors can be seen. The sky color should be very dark.
+Figure 5 shows the rendering effect at different times in the above location. Throughout the night (e.g., midnight (a) or 7:00 PM (f)), 
+the temperature is quite low and the sunlight intensity is almost zero so the object is fully covered by white snow and only ambient 
+colors can be seen. The sky color should be very dark.
 
-In the morning (e.g., 8:00 AM (b)), the sunlight intensity increases with an orange color, resulting in a yellow
-snow color and an orange sky color. The snow coverage is still 100 \% as the temperature is still below 
-\(0^\circ\mathrm{C}\). Around noon (e.g., 11:00 AM (c)), the sky becomes light blue and the snow color becomes 
-back to white as the sunlight color is pretty white. The snow starts melting at this time so part of the covered 
-object can be seen now. 
+In the morning (e.g., 8:00 AM (b)), the sunlight intensity increases with an orange color, resulting in a yellow snow color and an 
+orange sky color. The snow coverage is still 100 \% as the temperature is still below \(0^\circ\mathrm{C}\). Around noon (e.g., 11:00 
+AM (c)), the sky becomes light blue and the snow color becomes back to white as the sunlight color is pretty white. The snow starts 
+melting at this time so part of the covered object can be seen now. 
 
-In the afternoon (e.g., 2:00 PM (d)), the weather is warmest. As a result, there is no snow on the scene. During 
-the sunset period, (e.g., 5:00 PM (e)), the sunlight intensity drops back and the sunlight color/sky color becomes
-orange again. The snow effect is back due to the dropping temperature.
+In the afternoon (e.g., 2:00 PM (d)), the weather is warmest. As a result, there is no snow on the scene. During the sunset period, 
+(e.g., 5:00 PM (e)), the sunlight intensity drops back and the sunlight color/sky color becomes orange again. The snow effect is back 
+due to the dropping temperature.
 
 \begin{figure}[h]
   \centering
   \subfloat[Time = 12:00 AM]{
-    \includegraphics[width=0.33\textwidth]{images/AllT0000L35S.png}
-    \label{fig:AllT0000L35S}
+    \includegraphics[width=0.33\textwidth]{images/T0000L35S.png}
+    \label{fig:T0000L35S}
   }
   \subfloat[Time = 08:00 AM]{
-    \includegraphics[width=0.33\textwidth]{images/ALLT0800L35S.png}
-    \label{fig:ALLT0800L35S}
+    \includegraphics[width=0.33\textwidth]{images/T0800L35S.png}
+    \label{fig:T0800L35S}
   }
   \subfloat[Time = 11:00 AM]{
-    \includegraphics[width=0.33\textwidth]{images/ALLT1100L35S.png}
-    \label{fig:ALLT1100L35S}
+    \includegraphics[width=0.33\textwidth]{images/T1100L35S.png}
+    \label{fig:T1100L35S}
   }
 
   \subfloat[Time = 02:00 PM]{
-    \includegraphics[width=0.33\textwidth]{images/ALLT1400L35S.png}
-    \label{fig:ALLT1400L35S}
+    \includegraphics[width=0.33\textwidth]{images/T1400L35S.png}
+    \label{fig:T1400L35S}
   }
   \subfloat[Time = 05:00 PM]{
-    \includegraphics[width=0.33\textwidth]{images/ALLT1700L35S.png}
-    \label{fig:ALLT1700L35S}
+    \includegraphics[width=0.33\textwidth]{images/T1700L35S.png}
+    \label{fig:T1700L35S}
   }
   \subfloat[Time = 07:00 PM]{
-    \includegraphics[width=0.33\textwidth]{images/ALLT1900L35S.png}
-    \label{fig:ALLT1900L35S}
+    \includegraphics[width=0.33\textwidth]{images/T1900L35S.png}
+    \label{fig:T1900L35S}
   }
 
   \caption{The rendered scene in different time (at 35 $^{\circ}$S on June \(22^{nd}\))}
-  \label{fig:AllL35S}
+  \label{fig:L35S}
 \end{figure}
 
-% Result 2: Snow Effect with Dynamic Daylight Simulation (High Latitude)
+% Result 3: Snow Effect with Dynamic Daylight Simulation (High Latitude)
 \subsection {Snow Effect with Dynamic Daylight Simulation (High Latitude)}
 
-\ref{fig:Plot60S} is the plot of the data at different times with a high latitude location on the summer solstice 
-(60 $^{\circ}$N on June \(22^{nd}\)). The sunrise time is about 2:30 AM and the sunset time is about 9:30 PM, so 
-there are 19 hours of daylight time.
+Figure 6 is the plot of the data at different times with a high latitude location on the summer solstice (60 $^{\circ}$N on June 
+\(22^{nd}\)). The sunrise time is about 2:30 AM and the sunset time is about 9:30 PM, so there are 19 hours of daylight time.
 
 \begin{figure}[h]
   \centering
@@ -367,50 +349,52 @@ there are 19 hours of daylight time.
   \end{minipage}
 \end{figure}
 
-The following figure group is the rendering effect in the above location. In the summer of the high-latitude locations,
-each day has a long daylight time. Throughout the night (e.g., midnight (a)), the sky is not completely dark even if
-the sun is below the horizon. 
+Figure 7 is the rendering effect in the above location. In the summer of the high-latitude locations, each day has a long daylight 
+time. Throughout the night (e.g., midnight (a)), the sky is not completely dark even if the sun is below the horizon. 
 
-At 8:00 AM (b), the sunlight intensity has already reached the maximum value. The scenes between the two locations are 
-similar during the noon or afternoon time (c or d), except for the solar position. However, because of the high latitude,
-the sunlight intensity keeps the high value at 5:00 PM (e) and finally starts dropping at around 7:00 PM (f).
+At 8:00 AM (b), the sunlight intensity has already reached the maximum value. The scenes between the two locations are similar during 
+the noon or afternoon time (c or d), except for the solar position. However, because of the high latitude, the sunlight intensity 
+keeps the high value at 5:00 PM (e) and finally starts dropping at around 7:00 PM (f).
 
 \begin{figure}[h]
   \centering
   \subfloat[Time = 12:00 AM]{
-    \includegraphics[width=0.3\textwidth]{images/ALLT0000L60N.png}
-    \label{fig:ALLT0000L60N}
+    \includegraphics[width=0.3\textwidth]{images/T0000L60N.png}
+    \label{fig:T0000L60N}
   }\hfill
   \subfloat[Time = 08:00 AM]{
-    \includegraphics[width=0.3\textwidth]{images/ALLT0800L60N.png}
-    \label{fig:ALLT0800L60N}
+    \includegraphics[width=0.3\textwidth]{images/T0800L60N.png}
+    \label{fig:T0800L60N}
   }\hfill
   \subfloat[Time = 11:00 AM]{
-    \includegraphics[width=0.3\textwidth]{images/ALLT1100L60N.png}
-    \label{fig:ALLT1100L60N}
+    \includegraphics[width=0.3\textwidth]{images/T1100L60N.png}
+    \label{fig:T1100L60N}
   }
   
   \subfloat[Time = 02:00 PM]{
-    \includegraphics[width=0.3\textwidth]{images/ALLT1400L60N.png}
-    \label{fig:ALLT1400L60N}
+    \includegraphics[width=0.3\textwidth]{images/T1400L60N.png}
+    \label{fig:T1400L60N}
   }\hfill
   \subfloat[Time = 05:00 PM]{
-    \includegraphics[width=0.3\textwidth]{images/ALLT1700L60N.png}
-    \label{fig:ALLT1700L60N}
+    \includegraphics[width=0.3\textwidth]{images/T1700L60N.png}
+    \label{fig:T1700L60N}
   }\hfill
   \subfloat[Time = 07:00 PM]{
-    \includegraphics[width=0.3\textwidth]{images/ALLT1900L60N.png}
-    \label{fig:ALLT1900L60N}
+    \includegraphics[width=0.3\textwidth]{images/T1900L60N.png}
+    \label{fig:T1900L60N}
   }
 
   \caption{The rendered scene in different time (at 60 $^{\circ}$N on June \(22^{nd}\))}
-  \label{fig:AllL60N}
+  \label{fig:L60N}
 \end{figure}
 
-\section{Discussions and Conclusion}
+\section{Discussions}
 Please prepare submission files with paper size ``US Letter,'' and not, for
 example, ``A4.''
 
+\section{Conclusion and Future Work}
+Please prepare submission files with paper size ``US Letter,'' and not, for
+example, ``A4.''
 
 Fonts were the main cause of problems in the past years. Your PDF file must only
 contain Type 1 or Embedded TrueType fonts. Here are a few instructions to
@@ -430,7 +414,7 @@ pp.\ 609--616. Cambridge, MA: MIT Press.
 
 
 [2] Bower, J.M.\ \& Beeman, D.\ (1995) {\it The Book of GENESIS: Exploring
-  Realistic Neural Models with the GEneral NEural SImulation System.}  New York:
+  Realistic Neural Models with the General Neural Simulation System.}  New York:
 TELOS/Springer--Verlag.
 
 
