@@ -363,36 +363,31 @@ PM (e) and finally starts dropping at around 7:00 PM (f).
 
 \section{Discussions}
 
-% Discussion 1: Temperature and Snow Factor Simulation
+% Discussion 1: Simulation Issues
 \subsection {Simulation Issues}
 In this paper, almost all the simulations are simplified for demonstrations only. For example, temperatures are only based on the data
 of a single city and not bonded with the location parameters (e.g., altitude, latitude and ocean currents). Altitude and time zone
 shift are not considered in the sunlight intensity formula, and snow is not simplify depends on temperature. To make a more precise
 simulation, advanced knowledge of Physics, Mathematics, Geography, Astronomy and Meteorology is required and field measurements are
 essential. New technologies like Machine Learning can also be used here.
+% Discussion 1: Simulation Issues
 
-%temperature curve throughout the day is based on the real meteorological data of a location with the Cubic Spline 
-%interpolation and there is no mapping between the location and the temperature. All the temperature data are manually defined so some 
-%problems may be caused in this paper if the location is set to most of the equator area. However, this is not a bad method for 
-%simulating temperature in some applications like video games or movies, as there are only a few scenes that need to be considered and 
-%in some scenes the temperature curve is irregular (e.g., on a "Hot Jupiter" exoplanet).
+% Discussion 2: Properties of the Snow TODO ref
+\subsection {Properties of the Snow}
+There are no special properties of the snow in this paper. However, for a better and more robust visual effect, they should be 
+implemented. For example, a Snowy Realm should be full of thick snow. Feet and wheels should change the shape of the snow (e.g.,
+footprints). If there is a war happening in the realm, the blood of wounded soldiers should dye snow red. When snow melts, water 
+will be generated. Those special properties can be achieved by other techniques in Computer Graphics like texture mapping, vertex
+displacement and ray tracing.
+% Discussion 2: Properties of the Snow
 
-\subsection {Snow factor Simulation}
-Snow factor simulation has similar problems. This paper only implements a simple linear mapping on temperature and the snow factor. But
-in the real world, the cause of snow is very complicated. However, this is still a simple approach to get started on the environment
-simulation. 
-
-% Discussion 1: Complex Scenes
-\subsection {Sunlight and Sky}
-
-% Discussion 1: Complex Scenes
-\subsection {Thickness of the Snow}
-
-% Discussion 1: Complex Scenes
-\subsection {Complex Scenes}
-
-% Discussion 1: Complex Scenes
+% Discussion 3: Performance TODO ref
 \subsection {Performance}
+The code used in this paper achieves a satisfactory performance thanks to OpenGL, a modern open-source Computer Graphics Library, 
+and improved computer hardware. The value of FPS reaches 40 when the window resolution is set to 900*900 (px) on an average laptop 
+with an integrated GPU. This is much better than the paper. In that paper, the FPS value was only 1-3 with a window resolution of 
+around 700*600 (px). However, this paper does not test complicated scenes like a Snowy Realm with a complex castle set.
+% Discussion 3: Performance
 
 \section{Conclusion}
 Please prepare submission files with paper size ``US Letter,'' and not, for
