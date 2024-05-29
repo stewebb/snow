@@ -28,12 +28,18 @@
 }
 
 \begin{document}
-
 \maketitle
 
+% Abstract
 \begin{abstract}
-TODO:
+This paper illustrates a method to render accumulated snow. It uses color blending to create a reasonable snowy scene. The color of 
+a point relies on the snow color (based on a white background and distorted normals) and the surface color without snow, as well as a
+snow accumulation prediction coefficient to control the blending Result. The paper also designs a method to map the environment 
+temperature and maximum snow amount on a point, a bell-curve sunlight intensity formula, and an interpolation schema for sun color 
+and sky color. Lastly, the paper demonstrates the results of the above approaches and algorithms, including the static pure snow 
+effect and two dynamic snow effects based on location.
 \end{abstract}
+% /Abstract
 
 % 1. Introduction
 \section{Introduction}
@@ -429,7 +435,9 @@ and another buffer map to keep the records of the snow depth.
 
 Linking the environment temperature with the location is also a good idea. Once this feature is feasible, the environment simulation 
 should be more realistic and automatic. However, this requires a lot of field measurements and data analysis.
+% /7. Future Work
 
+% References
 \section*{References}
 
 {
@@ -455,11 +463,13 @@ the Corresponding Azimuths. Kartografija i Geoinformacije, 14(24), 26-41.
 [6] Ohlsson, Per \& Seipel, Stefan. (2004). Real-time Rendering of Accumulated Snow. Proceedings of SIGRAD. 
 
 }
-\section*{Additional Experiment Results}
+% /References
 
-\section*{Confidential Peer Review} 
+% \section*{Additional Experiment Results}
 
-The percentage, who did what, ratio weights. 
+% \section*{Confidential Peer Review} 
+
+% The percentage, who did what, ratio weights. 
 
 
 
