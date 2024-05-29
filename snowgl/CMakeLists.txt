@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.0)
 project (SnowGL)
 
 find_package(OpenGL REQUIRED)
-#find_package(OpenCV REQUIRED)	# Comment me if not using OpenCV
+find_package(OpenCV REQUIRED)	# Comment me if not using OpenCV
 
 # Compile external dependencies 
 add_subdirectory (external)
@@ -26,7 +26,7 @@ include_directories(
 	external/assimp-3.0.1270/include/
 	external/bullet-2.81-rev2613/src/
 	external/bullet-2.81-rev2613/src/
-	external/opencv/build/include
+	#external/opencv/build/include
 	.
 )
 

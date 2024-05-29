@@ -19,7 +19,7 @@
 #define AUTO_STOP_RECORDING     false
 
 // Operating Mode 
-#define IS_WINDOWS_OS           // Comment this line on non-Windows Operating Systems
+//#define IS_WINDOWS_OS           // Comment this line on non-Windows Operating Systems
 #define DAYTIME_SIMULATION      true      
 #define FRAME_MICRO_STEP        0.5
 #define INITIAL_TIME_OF_DAY     0 * 60
