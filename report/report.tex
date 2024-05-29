@@ -22,7 +22,7 @@
 \usepackage{microtype}      % microtypography
 \usepackage{xcolor}         % colors
 
-\title{Dynamic Daylight Simulation with Snow Effect}
+\title{Dynamic Daytime Simulation with Snow Effect}
 
 % The \author macro works with any number of authors. There are two commands
 % used to separate the names and addresses of multiple authors: \And and \AND.
@@ -130,7 +130,15 @@
 \subsection {Snow Rendering}
 TODO: Snow Rendering and CG algorithms
 \subsubsection {Snow Accumulation Prediction Function}
+Assume there is no wind in the scene, so all snow will fall vertically. The snow amount on a point can be 
+determined by the following three aspects:
 
+\begin{itemize}
+  \item An exposure function \( f_{e}(p) \) 
+  \item An inclination function \( f_{inc}(p) \) 
+  \item A user-defined function \( f_{u}(p) \) to further customize and manipulate the snow amount. For example, 
+  \( f_{u}(p)=0 \) means manually disable the snow effect. This function is crucial in the daytime simulation.
+\end{itemize}
 
 
 \begin{figure}[h]
@@ -168,11 +176,12 @@ This location has a large temperature difference. The highest temperature is abo
 obtained on weather forecast websites, and the Cubic Spline method is used to interpolate the 
 intermediate values, making the temperature-time curve smoother.
 
-%  Environment 2: Snow Amount
-\subsubsection {Snow Amount}
-The snow amount on an object is based solely on the environmental temperature. 
-The range of it between 0 and 1, where 0 means that no snow on the object and 1 means
-that the object is fully covered by snow.
+%  Environment 2: Snow Factor
+\subsubsection {Snow Factor}
+The snow factor is the user-defined function \( f_{u}(p) \) defined in Section TODO: 
+, causing a potential negative effect on the original snow. The range is between 0 and 1, where 0 means that 
+the snow is disabled regardless of the original snow, and 1 means that there are no negative effects.
+To simplify the simulation, the snow factor is based solely on the environmental temperature. 
 
 If the temperature is below or equal to \(0^\circ\mathrm{C}\), the snow amount is always 1. 
 If the temperature is above or equal to \(5^\circ\mathrm{C}\), the snow amount is always 0. 
