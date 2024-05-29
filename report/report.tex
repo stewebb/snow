@@ -90,19 +90,19 @@ falling snow. This value is based on a shadow map by setting a virtual direction
 The light direction is to the ground, so the points in the virtual shadow are also occluded by another object. 
 Besides, to make the transition process smoother, soft shadowing techniques can be used. 
 
-\ref{fig:OcclusionMap} is the occlusion map, which uses different colors to indicate the exposure value. Low hue 
-values (e.g., red) stand for a low exposure value (i.e., the point is occluded by another object), while high hue
+figure 1 is the occlusion map, which uses different colors to indicate the exposure value. Low hue 
+values (e.g., red) stand for a low exposure value (i.e., the point is occluded by another object), while high hue 
 values (e.g., purple) stand for a high exposure value.
 
 \begin{figure}[h]
   \centering
-  \begin{minipage}{0.45\textwidth}
+  \begin{minipage}{0.4\textwidth}
       \centering
       \includegraphics[width=\textwidth]{images/OcclusionMap.png}
       \caption{Occlusion Map}
       \label{fig:OcclusionMap}
   \end{minipage}\hfill
-  \begin{minipage}{0.45\textwidth}
+  \begin{minipage}{0.4\textwidth}
       \centering
       \includegraphics[width=\textwidth]{images/InclinationMap.png}
       \caption{Inclination Map}
@@ -134,7 +134,7 @@ where:
   \(n = rand(0, 0.4)\).
 \end{itemize}
 
-\ref{fig:InclinationMap} is the inclination map, which also uses different colors to indicate the exposure value. 
+Figure 2 is the inclination map, which also uses different colors to indicate the exposure value. 
 Low hue values (e.g., red) stand for a low inclination value (i.e., the angle between two surface normals is big),
 while high hue values (e.g., purple) stand for a high inclination value.
 
@@ -287,8 +287,8 @@ mentioned above.
   \label{fig:9}
 \end{figure}
 
-% Result 2: Snow Effect with Dynamic Daylight Simulation
-\subsection {Snow Effect with Dynamic Daylight Simulation}
+% Result 2: Snow Effect with Dynamic Daylight Simulation (Medium Latitude)
+\subsection {Snow Effect with Dynamic Daylight Simulation (Medium Latitude)}
 
 \ref{fig:Plot35N} is the plot of the data at different times with a medium latitude location on the winter 
 solstice (35 $^{\circ}$S on June \(22^{nd}\)). The sunrise time is about 7:00 AM and the sunset time is about 
@@ -349,6 +349,9 @@ orange again. The snow effect is back due to the dropping temperature.
   \caption{The rendered scene in different time (at 35 $^{\circ}$S on June \(22^{nd}\))}
   \label{fig:AllL35S}
 \end{figure}
+
+% Result 2: Snow Effect with Dynamic Daylight Simulation (High Latitude)
+\subsection {Snow Effect with Dynamic Daylight Simulation (High Latitude)}
 
 \ref{fig:Plot60S} is the plot of the data at different times with a high latitude location on the summer solstice 
 (60 $^{\circ}$N on June \(22^{nd}\)). The sunrise time is about 2:30 AM and the sunset time is about 9:30 PM, so 
