@@ -35,41 +35,42 @@
 TODO:
 \end{abstract}
 
-\section{Introduction and Background}
+\section{Introduction}
 
-\section{Motivations and Aims}
+\section{Background}
 
-\section {Methods and Algorithms}
+\section{Motivations}
+
+\section {Methods}
 
 % Method part 1: Snow Rendering
 \subsection {Snow Rendering}
 
 % Snow method 1: Color
 \subsubsection {Snow Color Function}
-The snow color is defined by a modified Phong reflection model, where the diffuse color has been set to nearly white and the surface 
-normal has been distorted for a more realistic snowing effect.
-\[
-  C_{s} = k_a \cdot I_a + \sum_{m \in \text{lights}} (k_d \cdot (L_m \cdot (N + \alpha n)) + k_s \cdot (R_m \cdot V)^\beta) \cdot I_m  
-\]
+The snow color is based on the Phong reflection model with the following modifications.
+% where the diffuse color has been set to nearly white and the surface 
+%normal has been distorted for a more realistic snowing effect.
+%\[
+%  C_{s} = k_a \cdot I_a + \sum_{m \in \text{lights}} (k_d \cdot (L_m \cdot (N + \alpha n)) + k_s \cdot (R_m \cdot V)^\beta) \cdot I_m  
+%\]
 
-where:
+%where:
 \begin{itemize}
-  \item \( C_{s} \) is the calculated snow color.
-  \item \( k_a \) is the ambient reflection coefficient. In this paper, \( k_a = (0.05, 0.05, 0.05)\)
-  \item \( I_a \) is the ambient light intensity, \( I_a \in [0, 1]\)
-  \item \( k_d \) is the diffuse reflection coefficient, which is the snow color. To make a more glittering effect, % TODO: REF
-  the blue component of it can be slightly higher. In this paper, \( k_d = (0.9375, 0.9375, 1)\)
-  \item \( k_s \) is the specular reflection coefficient. In this paper, \( k_s = (0.2, 0.2, 0.2)\)
-  \item \( L_m \) is a vector from the point to the light source \( m \). It must be normalized.
-  \item \( N \) is the surface normal (in camera space) of the point. It must be normalized.
-  \item \( \alpha \) is the distortion coefficient. In this paper, \( \alpha = 0.1\)
-  \item \( n \) is a random vector, together with \( \alpha \) to control the distortion of the surface normal. Each element of this 
-  vector \(\in [0, 1]\)
-  \item \( R_m \) is the direction of the reflected light. It must be normalized.
-  \item \( V \) is a vector from the surface point to the eye/camera position. It must be normalized.
-  \item \( \beta \) is the specular exponent to control the shininess. It should be a small value as snow is not very shiny. In this 
-  paper, \( \beta = 25\)
-  \item \( I_m \) is the intensity of light source \( m \), \( I_m \in [0, 1]\)
+  %\item \( C_{s} \) is the calculated snow color.
+  %\item \( k_a \) is the ambient reflection coefficient. In this paper, \( k_a = (0.05, 0.05, 0.05)\)
+  %\item \( I_a \) is the ambient light intensity, \( I_a \in [0, 1]\)
+  % TODO: REF
+  \item The diffuse reflection coefficient \( k_d \) becomes a fixed value, which is the snow color. To make a more glittering effect, the 
+  blue component of it can be slightly higher. In this paper, \( k_d = (0.9375, 0.9375, 1)\)
+  %\item \( k_s \) is the specular reflection coefficient. In this paper, \( k_s = (0.2, 0.2, 0.2)\)
+  %\item \( L_m \) is a vector from the point to the light source \( m \). It must be normalized.
+  \item A distortion is added to the surface normal \( N \). In the modified model, \( N = N_{o} + \alpha * n\), where \( \alpha \) is 
+  the distortion coefficient and \( n \) is a random vector. In this paper, \( \alpha = 0.1\).
+  %\item \( R_m \) is the direction of the reflected light. It must be normalized.
+  %\item \( V \) is a vector from the surface point to the eye/camera position. It must be normalized.
+  \item The specular exponent \( \beta \) is a small value to make sure snow is not very shiny. In this paper, \( \beta = 25\).
+  %\item \( I_m \) is the intensity of light source \( m \), \( I_m \in [0, 1]\)
 \end{itemize}
 
 % Snow method 2: Accumulation Prediction Coefficient
@@ -245,7 +246,7 @@ To simulate those colors, interpolation is also needed to make the transition pr
   \right. 
 \]
 
-\section{Experiments and Results}
+\section{Results}
 
 % Result 1: Pure Snow Effect
 \subsection {Pure Snow Effect}
@@ -398,7 +399,7 @@ problems may be caused in this paper if the location is set to most of the equat
 simulating temperature in some applications like video games or movies, as there are only a few scenes that need to be considered and 
 in some scenes the temperature curve is irregular (e.g., on a "Hot Jupiter" exoplanet).
 
-\subsection {Temperature Snow factor simulation Simulation}
+\subsection {Snow factor Simulation}
 Snow factor simulation has similar problems. This paper only implements a simple linear mapping on temperature and the snow factor. But
 in the real world, the cause of snow is very complicated. However, this is still a simple approach to get started on the environment
 simulation. 
@@ -415,9 +416,11 @@ simulation.
 % Discussion 1: Complex Scenes
 \subsection {Performance}
 
-\section{Conclusion and Future Work}
+\section{Conclusion}
 Please prepare submission files with paper size ``US Letter,'' and not, for
 example, ``A4.''
+
+\section{Future Work}
 
 Fonts were the main cause of problems in the past years. Your PDF file must only
 contain Type 1 or Embedded TrueType fonts. Here are a few instructions to
