@@ -94,8 +94,8 @@ The light direction is to the ground, so the points in the virtual shadow are al
 Besides, to make the transition process smoother, soft shadowing techniques can be used. 
 
 \ref{fig:OcclusionMap} is the occlusion map, which uses different colors to indicate the exposure value. Low hue 
-colors (e.g., red) stand for a low exposure value (i.e., the point is occluded by another object), while high hue
-colors (e.g., purple) stand for a high exposure value.
+values (e.g., red) stand for a low exposure value (i.e., the point is occluded by another object), while high hue
+values (e.g., purple) stand for a high exposure value.
 
 \begin{figure}[h]
   \centering
@@ -107,14 +107,14 @@ colors (e.g., purple) stand for a high exposure value.
   \end{minipage}\hfill
   \begin{minipage}{0.45\textwidth}
       \centering
-      \includegraphics[width=\textwidth]{images/DeclinationMap.png}
-      \caption{Declination Map}
-      \label{fig:DeclinationMap}
+      \includegraphics[width=\textwidth]{images/InclinationMap.png}
+      \caption{Inclination Map}
+      \label{fig:InclinationMap}
   \end{minipage}
 \end{figure}
 
 The inclination value \( f_{inc} \) depends on the angle between the surface normal in world space and the
-horizon.\( f_{inc} \in [0, 1] \). \( f_{inc}=1 \) means that the point is on a flat surface that is parallel 
+horizon \( f_{inc} \in [0, 1] \). \( f_{inc}=1 \) means that the point is on a flat surface that is parallel 
 to the horizon. \( f_{inc}=0 \) the point is on a surface whose normal is perpendicular to the horizon. This
 value can be calculated by:
 
@@ -138,30 +138,30 @@ where:
   \(n = rand(0, 0.4)\).
 \end{itemize}
 
-A user-defined function \( f_{u}(p) \) to further customize and manipulate the snow amount. For example, 
-\( f_{u}(p)=0 \) means manually disable the snow effect. This function is crucial in the daytime simulation.
+\ref{fig:InclinationMap} is the inclination map, which also uses different colors to indicate the exposure value. 
+Low hue values (e.g., red) stand for a low inclination value (i.e., the angle between two surface normals is big),
+while high hue values (e.g., purple) stand for a high inclination value.
 
+The user-defined function \( f_{u} \) is used to further customize and manipulate the snow amount 
+\( f_{u} \in [0, 1] \). For example, \( f_{u}=0 \) means manually disabling the snow effect. This function is crucial 
+in the daytime simulation.
 
-%
-%\begin{figure}[h]
-%  \centering
-%  \begin{minipage}{0.45\textwidth}
-%      \centering
-%      \includegraphics[width=\textwidth]{images/HeadManualWithoutSnow.png}
-%      \caption{First image caption}
-%      \label{fig:image1}
-%  \end{minipage}\hfill
-%  \begin{minipage}{0.45\textwidth}
-%      \centering
-%      \includegraphics[width=\textwidth]{images/HeadManualWithSnow.png}
-%      \caption{Second image caption}
-%      \label{fig:image2}
-%  \end{minipage}
-%\end{figure}
-
-
-
+% Snow method 3: Full Snow Equation
 \subsubsection {Full Snow Equation}
+The final color is a blending of the snow color and the surface color (without snow) on that point, by using the snow
+accumulation prediction coefficient in the last sub-section. This is also called the "Full Snow Equation".
+
+\[
+  C = f_{s} * C_{s} + (1-f_{s}) * C_{o}
+\]
+
+where:
+\begin{itemize}
+  \item \( C \) is the final color.
+  \item \( f_{s} \) is the snow accumulation prediction coefficient.
+  \item \( C_{s} \) is the snow color.
+  \item \( C_{o} \) is the surface color without snow.
+\end{itemize}
 
 \subsection {Environment Simulation}
 
