@@ -223,7 +223,7 @@ To simulate those colors, interpolation is also needed to make the transition pr
 
 % Result 1: Pure Snow Effect
 \subsection {Pure Snow Effect}
-Figure 3 is the rendering effect with full snow (a), half snow (b), and no snow (c) respectively. The dynamic daylight simulation is 
+Figure 2 is the rendering effect with full snow (a), half snow (b), and no snow (c) respectively. The dynamic daylight simulation is 
 disabled and the light source is always right above the object with the maximum intensity and white color. Those three sub-figures 
 illustrate the effect on both declination (the head and book part of the statue) and occlusion (the feet area of it), as well as the 
 color blending mentioned above.
@@ -245,11 +245,12 @@ color blending mentioned above.
   \caption{Object covered by different amounts of snow}
   \label{fig:PureSnow}
 \end{figure}
+% Result 1: Pure Snow Effect
 
 % Result 2: Snow Effect with Dynamic Daylight Simulation (Medium Latitude)
 \subsection {Snow Effect with Dynamic Daylight Simulation (Medium Latitude)}
 
-Figure 4 is the plot of the data at different times with a medium latitude location on the winter solstice (35 $^{\circ}$S on June 
+Figure 3 is the plot of the data at different times with a medium latitude location on the winter solstice (35 $^{\circ}$S on June 
 \(22^{nd}\)). The sunrise time is about 7:00 AM and the sunset time is about 5:00 PM, so there are 10 hours of daylight time.
 
 \begin{figure}[h]
@@ -262,18 +263,15 @@ Figure 4 is the plot of the data at different times with a medium latitude locat
   \end{minipage}
 \end{figure}
 
-Figure 5 shows the rendering effect at different times in the above location. Throughout the night (e.g., midnight (a) or 7:00 PM (f)), 
-the temperature is quite low and the sunlight intensity is almost zero so the object is fully covered by white snow and only ambient 
-colors can be seen. The sky color should be very dark.
+Figure 4 shows the rendering effect at different times. Throughout the night (e.g., midnight (a) or 7:00 PM (f)), the object is fully 
+covered by white snow and only ambient colors can be seen due to low temperature and sunlight intensity. In the morning (e.g., 8:00 
+AM (b)), the sunlight intensity increases with an orange color, changing the sky and snow color. The snow coverage is still 100 \% due
+to the low temperature. 
 
-In the morning (e.g., 8:00 AM (b)), the sunlight intensity increases with an orange color, resulting in a yellow snow color and an 
-orange sky color. The snow coverage is still 100 \% as the temperature is still below \(0^\circ\mathrm{C}\). Around noon (e.g., 11:00 
-AM (c)), the sky becomes light blue and the snow color becomes back to white as the sunlight color is pretty white. The snow starts 
-melting at this time so part of the covered object can be seen now. 
-
-In the afternoon (e.g., 2:00 PM (d)), the weather is warmest. As a result, there is no snow on the scene. During the sunset period, 
-(e.g., 5:00 PM (e)), the sunlight intensity drops back and the sunlight color/sky color becomes orange again. The snow effect is back 
-due to the dropping temperature.
+Around noon (e.g., 11:00 AM (c)), the sky becomes light blue and the snow (back to white color) starts melting at this time. Part of 
+the covered object can be seen now. In the afternoon (e.g., 2:00 PM (d)), there is no snow on the scene thanks to the warm temperature. 
+During the sunset period, (e.g., 5:00 PM (e)), the sunlight intensity drops back and the sunlight color/sky color becomes orange again. 
+The snow effect is back due to the dropping temperature.
 
 \begin{figure}[h]
   \centering
@@ -306,11 +304,12 @@ due to the dropping temperature.
   \caption{The rendered scene in different time (at 35 $^{\circ}$S on June \(22^{nd}\))}
   \label{fig:L35S}
 \end{figure}
+% Result 2: Snow Effect with Dynamic Daylight Simulation (Medium Latitude)
 
 % Result 3: Snow Effect with Dynamic Daylight Simulation (High Latitude)
 \subsection {Snow Effect with Dynamic Daylight Simulation (High Latitude)}
 
-Figure 6 is the plot of the data at different times with a high latitude location on the summer solstice (60 $^{\circ}$N on June 
+Figure 5 is the plot of the data at different times with a high latitude location on the summer solstice (60 $^{\circ}$N on June 
 \(22^{nd}\)). The sunrise time is about 2:30 AM and the sunset time is about 9:30 PM, so there are 19 hours of daylight time.
 
 \begin{figure}[h]
@@ -323,12 +322,11 @@ Figure 6 is the plot of the data at different times with a high latitude locatio
   \end{minipage}
 \end{figure}
 
-Figure 7 is the rendering effect in the above location. In the summer of the high-latitude locations, each day has a long daylight 
-time. Throughout the night (e.g., midnight (a)), the sky is not completely dark even if the sun is below the horizon. 
-
-At 8:00 AM (b), the sunlight intensity has already reached the maximum value. The scenes between the two locations are similar during 
-the noon or afternoon time (c or d), except for the solar position. However, because of the high latitude, the sunlight intensity 
-keeps the high value at 5:00 PM (e) and finally starts dropping at around 7:00 PM (f).
+Figure 6 is the rendering effect. In the summer of the high-latitude locations, each day has a long daylight time. Throughout the 
+night (e.g., midnight (a)), the sky is not completely dark even if the sun is below the horizon. At 8:00 AM (b), the sunlight 
+intensity has already reached the maximum value. The scenes between the two locations are similar during the noon or afternoon time 
+(c or d), except for the solar position. However, because of the high latitude, the sunlight intensity keeps the high value at 5:00 
+PM (e) and finally starts dropping at around 7:00 PM (f).
 
 \begin{figure}[h]
   \centering
@@ -361,16 +359,23 @@ keeps the high value at 5:00 PM (e) and finally starts dropping at around 7:00 P
   \caption{The rendered scene in different time (at 60 $^{\circ}$N on June \(22^{nd}\))}
   \label{fig:L60N}
 \end{figure}
+% Result 3: Snow Effect with Dynamic Daylight Simulation (High Latitude)
 
 \section{Discussions}
 
 % Discussion 1: Temperature and Snow Factor Simulation
-\subsection {Temperature Simulation}
-In this paper, the temperature curve throughout the day is based on the real meteorological data of a location with the Cubic Spline 
-interpolation and there is no mapping between the location and the temperature. All the temperature data are manually defined so some 
-problems may be caused in this paper if the location is set to most of the equator area. However, this is not a bad method for 
-simulating temperature in some applications like video games or movies, as there are only a few scenes that need to be considered and 
-in some scenes the temperature curve is irregular (e.g., on a "Hot Jupiter" exoplanet).
+\subsection {Simulation Issues}
+In this paper, almost all the simulations are simplified for demonstrations only. For example, temperatures are only based on the data
+of a single city and not bonded with the location parameters (e.g., altitude, latitude and ocean currents). Altitude and time zone
+shift are not considered in the sunlight intensity formula, and snow is not simplify depends on temperature. To make a more precise
+simulation, advanced knowledge of Physics, Mathematics, Geography, Astronomy and Meteorology is required and field measurements are
+essential. New technologies like Machine Learning can also be used here.
+
+%temperature curve throughout the day is based on the real meteorological data of a location with the Cubic Spline 
+%interpolation and there is no mapping between the location and the temperature. All the temperature data are manually defined so some 
+%problems may be caused in this paper if the location is set to most of the equator area. However, this is not a bad method for 
+%simulating temperature in some applications like video games or movies, as there are only a few scenes that need to be considered and 
+%in some scenes the temperature curve is irregular (e.g., on a "Hot Jupiter" exoplanet).
 
 \subsection {Snow factor Simulation}
 Snow factor simulation has similar problems. This paper only implements a simple linear mapping on temperature and the snow factor. But
