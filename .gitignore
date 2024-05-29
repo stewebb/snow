@@ -2,6 +2,7 @@
 **/build
 **/output/*
 !**/output/.gitkeep
+**/opencv
 
 # IDE-related files
 **/.vscode

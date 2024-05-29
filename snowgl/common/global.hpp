@@ -11,7 +11,7 @@
 // OpenGL Controls
 
 // OpenCV Capture Window
-#define USE_OPENCV              // Comment this line if OpenCV is not installed
+//#define USE_OPENCV              // Comment this line if OpenCV is not installed
 #define CV_WINDOW_NAME          "SnowGL (OpenCV Capture)"
 
 // OpenCV Output
@@ -21,7 +21,7 @@
 #define AUTO_STOP_RECORDING     false
 
 // Operating Mode 
-//#define IS_WINDOWS_OS           // Comment this line on non-Windows Operating Systems
+#define IS_WINDOWS_OS           // Comment this line on non-Windows Operating Systems
 #define DAYTIME_SIMULATION      true      
 #define FRAME_MICRO_STEP        0.0
 #define INITIAL_TIME_OF_DAY     17 * 60
