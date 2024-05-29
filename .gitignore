@@ -20,4 +20,5 @@
 !**/report/*.tex
 !**/report/*.sty
 !**/report/*.bak
+!**/report/*.py
 !**/report/images/
