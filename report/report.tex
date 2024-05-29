@@ -44,10 +44,10 @@
 
 \section {Methods and Algorithms}
 
-%  Snow method 1: Color
 \subsection {Snow Rendering}
 TODO: Snow Rendering and CG algorithms
 
+% Snow method 1: Color
 \subsubsection {Snow Color Function}
 The snow color is defined by a modified Phong reflection model, where the diffuse color has been set to nearly white 
 and the surface normal has been distorted for a more realistic snowing effect.
@@ -76,6 +76,7 @@ where:
   \item \( I_m \) is the intensity of light source \( m \), \( I_m \in [0, 1]\)
 \end{itemize}
 
+% Snow method 2: Accumulation Prediction Coefficient
 \subsubsection {Snow Accumulation Prediction Coefficient}
 Assume there is no wind in the scene and all snow falls vertically. The snow accumulation prediction coefficient 
 \( f_{s} \) on a point can be calculated by the multiplication of an exposure value \( f_{e} \), an inclination 
@@ -86,7 +87,7 @@ value \( f_{inc} \), and a user-defined value \( f_{u} \).
 \]
 
 The exposure value \( f_{e} \) indicates occlusions that prevent snow from falling on the surface. % TODO: REF
-\( f_{e} \in (0, 1] \). \( f_{e}=0 \) means that the point is fully occluded by another object, which is right 
+\( f_{e} \in [0, 1] \). \( f_{e}=0 \) means that the point is fully occluded by another object, which is right 
 above it, so there are no snowing effects on this point. \( f_{e}=1 \) means that the point is fully exposed to the 
 falling snow. This value is based on a shadow map by setting a virtual directional light right above the object. 
 The light direction is to the ground, so the points in the virtual shadow are also occluded by another object. 
@@ -113,7 +114,29 @@ colors (e.g., purple) stand for a high exposure value.
 \end{figure}
 
 The inclination value \( f_{inc} \) depends on the angle between the surface normal in world space and the
-horizon. A flat ground
+horizon.\( f_{inc} \in [0, 1] \). \( f_{inc}=1 \) means that the point is on a flat surface that is parallel 
+to the horizon. \( f_{inc}=0 \) the point is on a surface whose normal is perpendicular to the horizon. This
+value can be calculated by:
+
+\[
+  f_{inc}=
+  \left\{
+    \begin{array}{ll}
+      N \cdot U + n & N \cdot U > 0 \\
+      0 & N \cdot U \leq 0 \\
+    \end{array} 
+  \right. 
+\]
+
+where:
+\begin{itemize}
+  \item \( N \) is the surface normal of the target point (normalized).
+  \item \( U \) is the surface normal of the horizon (normalized). It is a constant vector \((0, 0, 1)\)
+  \item \( N \cdot U \) is the cosine of the angle between the above two surface normals, ranging from 
+  -1 to 1. If the angle is less than 90$^{\circ}$, \( N \cdot U > 0\).
+  \item \( n \) is a small random number to make snow has a more natural look. In this paper, 
+  \(n = rand(0, 0.4)\).
+\end{itemize}
 
 A user-defined function \( f_{u}(p) \) to further customize and manipulate the snow amount. For example, 
 \( f_{u}(p)=0 \) means manually disable the snow effect. This function is crucial in the daytime simulation.
