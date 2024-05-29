@@ -16,7 +16,7 @@
 \usepackage{microtype}      % microtypography
 \usepackage{xcolor}         % colors
 
-\title{Dynamic Daytime Simulation with Snow Effect}
+\title{Dynamic Daytime Simulation with Accumulated Snow Effect}
 
 \author{%
   Steven Webb\\\\
@@ -35,7 +35,20 @@
 TODO:
 \end{abstract}
 
+% 1. Introduction
 \section{Introduction}
+Snow rendering and daytime simulation are two important applications in the Computer Graphics fields. Both of them can be used in 
+other applications like video games, movies and virtual reality. Snow is one of the most valuable natural resources and it is also
+important to render it in the Computer Graphics applications. There are two major kinds of snow rendering, which are falling snow 
+which is based on particles floating in the air [1], and accumulated snow covering objects. The snow rendering type in his paper 
+is the accumulated snow.
+
+Daytime simulation is also an important field in Computer Graphics. For instance, many 3D video games require a robust daytime 
+simulation system to calculate the sunlight/moonlight position, intensity and color. This can also change the color of the sky and all  
+relevant scenes, providing players with an immersive gaming experience. The daytime simulation also has a strong connection with snow 
+rendering as it determines the snow color in the eye view. This paper will implement both accumulated snow rendering and a dynamic
+daylight system, as well as the connections between them.
+% 1. Introduction
 
 \section{Background}
 
@@ -390,9 +403,7 @@ around 700*600 (px). However, this paper does not test complicated scenes like a
 % Discussion 3: Performance
 
 \section{Conclusion}
-Please prepare submission files with paper size ``US Letter,'' and not, for
-example, ``A4.''
-
+This paper
 \section{Future Work}
 
 Fonts were the main cause of problems in the past years. Your PDF file must only
@@ -405,11 +416,8 @@ achieve this.
 {
 \small
 
-
-[1] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms for
-connectionist rule extraction. In G.\ Tesauro, D.S.\ Touretzky and T.K.\ Leen
-(eds.), {\it Advances in Neural Information Processing Systems 7},
-pp.\ 609--616. Cambridge, MA: MIT Press.
+[1] Tan, Jian & Fan, Xiangtao. (2011). Particle System Based Snow Simulating in Real Time. Procedia Environmental Sciences. 
+10. 1244–1249. 10.1016/j.proenv.2011.09.199. 
 
 
 [2] Bower, J.M.\ \& Beeman, D.\ (1995) {\it The Book of GENESIS: Exploring
