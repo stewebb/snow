@@ -16,7 +16,7 @@
 \usepackage{microtype}      % microtypography
 \usepackage{xcolor}         % colors
 
-\title{Dynamic Daytime Simulation with Accumulated Snow Effect}
+\title{Dynamic Environment Simulation with Accumulated Snow Effect}
 
 \author{%
   Steven Webb\\\\
@@ -37,28 +37,28 @@ TODO:
 
 % 1. Introduction
 \section{Introduction}
-Snow rendering and daytime simulation are two important applications in Computer Graphics. Both of them can be used in other 
+Snow rendering and environment simulation are two important applications in Computer Graphics. Both of them can be used in other 
 applications like video games, movies and virtual reality. Snow is one of the most valuable natural resources and it is also
 important to render it in the Computer Graphics applications. There are two major kinds of snow rendering, which are falling snow 
 which is based on particles floating in the air [1], and accumulated snow covering objects. The snow rendering type in his paper 
 is the accumulated snow.
 
-Daytime simulation is also an important field in Computer Graphics. For instance, many 3D video games require a robust daytime 
-simulation system to calculate the sunlight/moonlight position, intensity and color. This can also change the color of the sky and all  
-relevant scenes, providing players with an immersive gaming experience. The daytime simulation also has a strong connection with snow 
-rendering as it determines the snow color in the eye view. 
+Environment simulation is also an important field in Computer Graphics. For instance, many 3D video games require a robust daytime
+and weather simulation system to calculate the sunlight/moonlight position, intensity and color. This can also change the color of 
+the sky and all relevant scenes, providing players with an immersive gaming experience. The environment simulation also has a strong 
+connection with snow rendering as it determines the snow amount and color in the eye view. 
 
 This paper is inspired by the snowy effects in a fancy movie and the dynamic weather/season systems in a popular video game. It will 
 explore how snow is generated and how the time of the day affects the whole scene (especially in the summer of high latitude areas).
-It also implements a simple snow rendering and dynamic daylight system, as well as the connections between them.
+It also implements a simple snow rendering and dynamic environment system, as well as the connections between them.
 % /1. Introduction
 
 % 2. Background
 \section{Background}
-There are a lot of previous works on both snow rendering and daytime simulation. A researcher at the University of British Columbia
-designed a snow pipeline in 2000 [2]. Metaball is also a good approach to model and render snow [3]. Sunrise times over a digital 
-terrain can be calculated by using ray tracing [4]. The Solar Time, Sunrise and Sunset time can be calculated and predicted by a set 
-of non-linear equations accurately [5].
+There are a lot of previous works on both snow rendering and environment simulation. A researcher at the University of British 
+Columbia designed a snow pipeline in 2000 [2]. Metaball is also a good approach to model and render snow [3]. Sunrise times over a 
+digital terrain can be calculated by using ray tracing [4]. The Solar Time, Sunrise and Sunset time can be calculated and predicted 
+by a set of non-linear equations accurately [5].
 % /2. Background
 
 % 3. Methods 
@@ -409,19 +409,26 @@ displacement and ray tracing.
 \subsection {Performance}
 The code used in this paper achieves a satisfactory performance thanks to OpenGL, a modern open-source Computer Graphics Library, 
 and improved computer hardware. The value of FPS reaches 40 when the window resolution is set to 900*900 (px) on an average laptop 
-with an integrated GPU. This is much better than the paper. In that paper, the FPS value was only 1-3 with a window resolution of 
+with an integrated GPU. This is much better than the paper [6]. In that paper, the FPS value was only 1-3 with a window resolution of 
 around 700*600 (px). However, this paper does not test complicated scenes like a Snowy Realm with a complex castle set.
 % /Discussion 3: Performance
 % /5. Discussions 
 
+% 6. Conclusion
 \section{Conclusion}
-This paper
+This paper implements a basic accumulated snow renderer by blending the snow color and the original surface color. It also implements 
+a dynamic environment system to control the snow amount by adjusting the temperature and simulating the daylight conditions. There is 
+also an experiment on irregular conditions (summer in high-latitude locations) with some interesting findings. 
+% /6. Conclusion
+
+% 7. Future Work
 \section{Future Work}
+There are a lot of potential extensions on this paper. An interesting example is to add the depth or thickness of the snow. The depth 
+can also be adjusted by interacting with other objects like the car wheels. It may be achieved by using the vertex displacement method 
+and another buffer map to keep the records of the snow depth.
 
-Fonts were the main cause of problems in the past years. Your PDF file must only
-contain Type 1 or Embedded TrueType fonts. Here are a few instructions to
-achieve this.
-
+Linking the environment temperature with the location is also a good idea. Once this feature is feasible, the environment simulation 
+should be more realistic and automatic. However, this requires a lot of field measurements and data analysis.
 
 \section*{References}
 
