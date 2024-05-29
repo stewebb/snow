@@ -76,31 +76,45 @@ fully exposed to the falling snow. This value is based on a shadow map by settin
 The light direction is to the ground, so the points in the virtual shadow are also occluded by an object. Besides, to make the 
 transition process smoother, soft shadowing techniques can be used. 
 
-figure 1 is the occlusion map, which uses different colors to indicate the exposure value. Low hue 
-values (e.g., red) stand for a low exposure value (i.e., the point is occluded by another object), while high hue 
-values (e.g., purple) stand for a high exposure value.
-
 \begin{figure}[h]
   \centering
-  \begin{minipage}{0.33\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{images/OcclusionMap.png}
-      \caption{Occlusion Map}
-      \label{fig:OcclusionMap}
-  \end{minipage}
-  \begin{minipage}{0.33\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{images/InclinationMap.png}
-      \caption{Inclination Map}
-      \label{fig:InclinationMap}
-  \end{minipage}
-  \begin{minipage}{0.33\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{images/MapLegend.png}
-    \caption{Legend of two maps}
+  \subfloat[Occlusion Map]{
+    \includegraphics[width=0.33\textwidth]{images/MapOcclusion.png}
+    \label{fig:MapOcclusion}
+  }
+  \subfloat[Inclination Map]{
+    \includegraphics[width=0.33\textwidth]{images/MapInclination.png}
+    \label{fig:MapInclination}
+  }
+  \subfloat[Legend of Maps]{
+    \includegraphics[width=0.33\textwidth]{images/MapLegend.png}
     \label{fig:MapLegend}
-\end{minipage}
+  }
+  \caption{Occlusion and Inclination Map}
+  \label{fig:Maps}
 \end{figure}
+
+%\begin{figure}[h]
+%  \centering
+%  \begin{minipage}{0.33\textwidth}
+%      \centering
+%      \includegraphics[width=\textwidth]{images/OcclusionMap.png}
+%      \caption{Occlusion Map}
+%      \label{fig:OcclusionMap}
+%  \end{minipage}
+%  \begin{minipage}{0.33\textwidth}
+%      \centering
+%      \includegraphics[width=\textwidth]{images/InclinationMap.png}
+%      \caption{Inclination Map}
+%      \label{fig:InclinationMap}
+%  \end{minipage}
+%  \begin{minipage}{0.33\textwidth}
+%    \centering
+%    \includegraphics[width=\textwidth]{images/MapLegend.png}
+%    \caption{Legend of two maps}
+%    \label{fig:MapLegend}
+%\end{minipage}
+%\end{figure}
 
 The inclination value \( f_{inc} \) depends on the angle between the surface normal in world space and the horizon 
 \( f_{inc} \in [0, 1] \). \( f_{inc}=1 \) means that the point is on a flat surface that is parallel to the horizon. 
