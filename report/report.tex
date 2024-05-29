@@ -46,19 +46,22 @@ is the accumulated snow.
 Daytime simulation is also an important field in Computer Graphics. For instance, many 3D video games require a robust daytime 
 simulation system to calculate the sunlight/moonlight position, intensity and color. This can also change the color of the sky and all  
 relevant scenes, providing players with an immersive gaming experience. The daytime simulation also has a strong connection with snow 
-rendering as it determines the snow color in the eye view. This paper will implement both accumulated snow rendering and a dynamic
-daylight system, as well as the connections between them.
+rendering as it determines the snow color in the eye view. 
+
+This paper is inspired by the snowy effects in a fancy movie and the dynamic weather/season systems in a popular video game. It will 
+explore how snow is generated and how the time of the day affects the whole scene (especially in the summer of high latitude areas).
+It also implements a simple snow rendering and dynamic daylight system, as well as the connections between them.
 % 1. Introduction
 
 % 2. Background
 \section{Background}
 There are a lot of previous works on both snow rendering and daytime simulation. A researcher at the University of British Columbia
 designed a snow pipeline in 2000 [2]. Metaball is also a good approach to model and render snow [3]. Sunrise times over a digital 
-terrain can be calculated by using ray tracing [4].
+terrain can be calculated by using ray tracing [4]. The Solar Time, Sunrise and Sunset time can be calculated and predicted by a set 
+of non-linear equations accurately [5].
 % 2. Background
 
-\section{Motivations}
-
+% 3. Methods 
 \section {Methods}
 
 % Method part 1: Snow Rendering
@@ -66,7 +69,7 @@ terrain can be calculated by using ray tracing [4].
 
 % Snow method 1: Color
 \subsubsection {Snow Color Function}
-The snow color is based on the Phong reflection model with the following modifications.
+The snow color is based on the Phong reflection model with the following modifications [6].
 
 %where:
 \begin{itemize}
@@ -95,7 +98,7 @@ The light direction is to the ground, so the points in the virtual shadow are al
 transition process smoother, soft shadowing techniques can be used. 
 
 The inclination value \( f_{inc} \in [0, 1] \) depends on the angle between the surface normal and the horizon. \( f_{inc}=1 \) means 
-that the point is on a flat surface that is parallel to the horizon. \( f_{inc}=0 \) indicates that the point is on a surface which is 
+that the point is on a flat surface that is parallel to the horizon. \( f_{inc}=0 \) indicates that the point is on a surface that is 
 perpendicular to the horizon. This value can be calculated by:
 \[
   f_{inc}=
@@ -424,14 +427,23 @@ achieve this.
 [1] Tan, Jian \& Fan, Xiangtao. (2011). Particle System Based Snow Simulating in Real Time. Procedia Environmental Sciences. 
 10. 1244-1249. 10.1016/j.proenv.2011.09.199. 
 
-% [2] Fearing, P. (2000). Computer modelling of fallen snow. International Conference on Computer Graphics and Interactive 
-% Techniques: Proceedings of the 27th Annual Conference on Computer Graphics and Interactive Techniques, 37–46. https://doi.org/10.1145/344779.344809
+[2] Fearing, P. (2000). Computer modelling of fallen snow. International Conference on Computer Graphics and Interactive 
+Techniques: Proceedings of the 27th Annual Conference on Computer Graphics and Interactive Techniques, 37-46. 
+https://doi.org/10.1145/344779.344809
 
-% [3] Nishita, T., Iwasaki, H., Dobashi, Y., & Nakamae, E. (1997). A Modeling and Rendering Method for Snow by Using Metaballs. 
-% Computer Graphics Forum, 16(3), C357–C364. https://doi.org/10.1111/1467-8659.00173
+[3] Nishita, T., Iwasaki, H., Dobashi, Y., \& Nakamae, E. (1997). A Modeling and Rendering Method for Snow by Using Metaballs. 
+Computer Graphics Forum, 16(3), C357-C364. https://doi.org/10.1111/1467-8659.00173
 
-% [4]  Keller, C., & Hall, J. K. (2022). Using a ray tracing program to calculate sunrise times over a digital terrain model based visible horizon using a simplified atmospheric model, part II. Computers & Geosciences, 161, 105044-. https://doi.org/10.1016/j.cageo.2022.105044
+[4] Keller, C., \& Hall, J. K. (2022). Using a ray tracing program to calculate sunrise times over a digital terrain model based 
+visible horizon using a simplified atmospheric model, part II. Computers \& Geosciences, 161, 105044-. 
+https://doi.org/10.1016/j.cageo.2022.105044
 
+[5] Goran Tomac, \& Drago Špoljarić. (2015). Online Ephemerides - the Equation of Time and True Solar Time, Sunrise and Sunset and 
+the Corresponding Azimuths. Kartografija i Geoinformacije, 14(24), 26-41.
+
+[6] Ohlsson, Per \& Seipel, Stefan. (2004). Real-time Rendering of Accumulated Snow. Proceedings of SIGRAD. 
+
+}
 \section*{Additional Experiment Results}
 
 \section*{Confidential Peer Review} 
