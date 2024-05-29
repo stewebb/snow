@@ -84,61 +84,49 @@
 \section{Previous Works}
 % The ground under the trees is dynamically generated at runtime when the program is run. The diamond- square method of fractal terrain generation is used to create a height map, which is then applied to a square grid to create varied terrain. Points are set to the average height of particular surrounding points, then a random offset is added for variation. The offset is generated uniformly at random on the range (−x, x), where x is set before the algorithm is run, and is reduced by 2−y each iteration, where y can be adjusted. x is directly related to the maximum and minimum heights produced, and y is inversely related to the steepness of generated terrain. Lengths in the algorithm are the number of points between the current point and the other point in consideration, and can only be considered in horizontal or vertical lines. Points which are adjacent form a line of length zero. The diamond-square method in pseudocode [3] follows. 
 
-
-
-%The formatting instructions contained in these style files are summarized in
-%Sections \ref{gen_inst}, \ref{headings}, and \ref{others} below.
-
-
-% \section{Our Method}
-% \label{gen_inst}
-% 
-% 
-% The text must be confined within a rectangle 5.5~inches (33~picas) wide and
-% 9~inches (54~picas) long. The left margin is 1.5~inch (9~picas).  Use 10~point
-% type with a vertical spacing (leading) of 11~points.  Times New Roman is the
-% preferred typeface throughout, and will be selected for you by default.
-% Paragraphs are separated by \nicefrac{1}{2}~line space (5.5 points), with no
-% indentation.
-% 
-% 
-% The paper title should be 17~point, initial caps/lower case, bold, centered
-% between two horizontal rules. The top rule should be 4~points thick and the
-% bottom rule should be 1~point thick. Allow \nicefrac{1}{4}~inch space above and
-% below the title to rules. All pages should start at 1~inch (6~picas) from the
-% top of the page.
-% 
-% 
-% For the final version, authors' names are set in boldface, and each name is
-% centered above the corresponding address. The lead author's name is to be listed
-% first (left-most), and the co-authors' names (if different address) are set to
-% follow. If there is only one co-author, list both author and co-author side by
-% side.
-% \subsection{ Displaying Trees}
-% 
-% For each tree in the forest, a quad is displayed and rotated around its center to face the camera. The view of the tree which is nearest to the angle between the tree and the camera is drawn to the quad. There is noticeable popping between the views since no interpolation is used, but with 300 views the transitions are smooth. Selection of the nearest view can be accomplished with simple arithmetic using the grid-like distribution of camera positions, while quad placement requires two vector cross products and some vector addition. These are some of the only computations that need to be done with each frame, allowing for interactive control of scenes of thousands of trees.
-% 
-% 
-% 
-% Please pay special attention to the instructions in Section \ref{others}
-% regarding figures, tables, acknowledgments, and references.
-% 
-
 \section {Methods and Algorithms}
- 
- 
+
+%  Snow method 1: Color
 \subsection {Snow Rendering}
 TODO: Snow Rendering and CG algorithms
+
+\subsubsection {Snow Color Function}
+
 \subsubsection {Snow Accumulation Prediction Function}
 Assume there is no wind in the scene, so all snow will fall vertically. The snow amount on a point can be 
-determined by the following three aspects:
+determined by an exposure function, an inclination function, and a user-defined function.
 
-\begin{itemize}
-  \item An exposure function \( f_{e}(p) \) 
-  \item An inclination function \( f_{inc}(p) \) 
-  \item A user-defined function \( f_{u}(p) \) to further customize and manipulate the snow amount. For example, 
-  \( f_{u}(p)=0 \) means manually disable the snow effect. This function is crucial in the daytime simulation.
-\end{itemize}
+The exposure function \( f_{e}(p) \) to calculate the occlusion that prevents snow from falling on the surface. % TODO: REF
+\( f_{e}(p) \in (0, 1] \). \( f_{e}(p)=0 \) means that the point is fully occluded by another object, which is right 
+above it, so there are no snowing effects on this point. \( f_{e}(p)=1 \) means that the point is exposed to the falling
+snow. This function is based on a shadow map by setting a virtual directional light right above the object. The light 
+direction is to the ground, so the points in the virtual shadow are also occluded by another object. Besides, to make
+the transition process smoother, soft shadowing techniques can be used.
+
+%\begin{figure}[h]
+%  \centering
+%  \subfloat[Snow Amount = 0.0]{
+%    \includegraphics[width=0.30\textwidth]{images/AllTimeNaNNoSnow.png}
+%    \label{fig:AllTimeNaNNoSnow}
+%  }\hfill
+%  \subfloat[Snow Amount = 0.5]{
+%    \includegraphics[width=0.30\textwidth]{images/AllTimeNaNHalfSnow.png}
+%    \label{fig:AllTimeNaNHalfSnow}
+%  }\hfill
+%  \subfloat[Snow Amount = 1.0]{
+%    \includegraphics[width=0.30\textwidth]{images/AllTimeNaNFullSnow.png}
+%    \label{fig:AllTimeNaNFullSnow}
+%  }
+%  \caption{Object covered by different amounts of snow}
+%  \label{fig:9}
+%\end{figure}
+
+
+An inclination function \( f_{inc}(p) \) 
+
+A user-defined function \( f_{u}(p) \) to further customize and manipulate the snow amount. For example, 
+\( f_{u}(p)=0 \) means manually disable the snow effect. This function is crucial in the daytime simulation.
+
 
 
 \begin{figure}[h]
@@ -158,7 +146,6 @@ determined by the following three aspects:
 \end{figure}
 
 
-\subsubsection {Snow Color Function}
 
 \subsubsection {Full Snow Equation}
 
@@ -178,17 +165,17 @@ intermediate values, making the temperature-time curve smoother.
 
 %  Environment 2: Snow Factor
 \subsubsection {Snow Factor}
-The snow factor is the user-defined function \( f_{u}(p) \) defined in Section TODO: 
-, causing a potential negative effect on the original snow. The range is between 0 and 1, where 0 means that 
-the snow is disabled regardless of the original snow, and 1 means that there are no negative effects.
+The snow factor is the user-defined function \( f_{u}(p) \) in Section TODO:1, causing a potentially 
+negative effect on the original snow. The range is between 0 and 1, where 0 means that the snow is 
+disabled regardless of the original snow, and 1 means that there are no negative effects.
 To simplify the simulation, the snow factor is based solely on the environmental temperature. 
 
-If the temperature is below or equal to \(0^\circ\mathrm{C}\), the snow amount is always 1. 
-If the temperature is above or equal to \(5^\circ\mathrm{C}\), the snow amount is always 0. 
-Otherwise, the snow amount decreases linearly from 1 to 0 as temperature increases.
+If the temperature is below or equal to \(0^\circ\mathrm{C}\), the snow factor is always 1. 
+If the temperature is above or equal to \(5^\circ\mathrm{C}\), the snow factor is always 0. 
+Otherwise, the snow factor decreases linearly from 1 to 0 as temperature increases.
 
 \[
-  S=
+  f_{u}(p)=
   \left\{
     \begin{array}{ll}
       0 & t\leq 0 \\
