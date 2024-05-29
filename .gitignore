@@ -22,4 +22,5 @@
 !**/report/*.bak
 !**/report/*.py
 !**/report/*.pptx
+!**/report/*.ods
 !**/report/images/
