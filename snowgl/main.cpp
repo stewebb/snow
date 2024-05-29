@@ -76,11 +76,6 @@ int main(void){
 		getchar();
         return -1;
     }
-
-    // Remove window decorations (this might not work on all operating systems or window managers)
-    //cv::setWindowProperty(CV_WINDOW_NAME, cv::WND_PROP_AUTOSIZE, cv::WINDOW_AUTOSIZE);
-    //cv::setWindowProperty(CV_WINDOW_NAME, cv::WND_PROP_FULLSCREEN, cv::WINDOW_FULLSCREEN);
-
 	#endif
     
 	if(!glfwInit()){

@@ -42,7 +42,7 @@
 // Lighting Configuration
 // Models and textures
 #define MODEL_LOCATION          "models/StatueOfLiberty.obj"
-#define TEXTURE_LOCATION        "textures/rainbow.bmp"
+#define TEXTURE_LOCATION        "models/rainbow.bmp"
 
 // Snow effect
 #define SNOW_COLOR_R            0.9375
