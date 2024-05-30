@@ -62,18 +62,18 @@ well as the connections between them.
 \section{Background}
 There are a lot of previous works on both snow rendering and environment simulation. A researcher at the University of British 
 Columbia designed a snow pipeline in 2000 [2]. Besides, Metaball is also a good approach to model and render snow [3]. Moreover, Sunrise 
-times over a digital terrain can be calculated by using ray tracing [4]. Lastly, the Solar Time, Sunrise and Sunset time can be calculated and predicted 
-by a set of non-linear equations accurately [5].
+times over a digital terrain can be calculated by using ray tracing [4]. Lastly, the Solar Time, Sunrise and Sunset time can be calculated 
+and predicted by a set of non-linear equations accurately [5].
 % /2. Background
 
 % 3. Methods 
-\section {Methods}
+\section{Methods}
 
 % Method part 1: Snow Rendering
-\subsection {Snow Rendering}
+\subsection{Snow Rendering}
 
 % Snow method 1: Color
-\subsubsection {Snow Color Function}
+\subsubsection{Snow Color Function}
 The snow color is based on the Phong reflection model with the following modifications [6].
 \begin{itemize}
   \item The diffuse reflection coefficient \( k_d \) becomes a fixed value, which is the snow color. To make a more glittering effect, the 
@@ -85,7 +85,7 @@ The snow color is based on the Phong reflection model with the following modific
 % /Snow method 1: Color
 
 % Snow method 2: Accumulation Prediction Coefficient
-\subsubsection {Snow Accumulation Prediction Coefficient}
+\subsubsection{Snow Accumulation Prediction Coefficient}
 Assume there is no wind in the scene and all snow falls vertically. The snow accumulation prediction coefficient \( f_{s} \) on a 
 point can be calculated by the multiplication of an exposure value \( f_{e} \), an inclination value \( f_{inc} \), and a user-defined 
 value \( f_{u} \).
