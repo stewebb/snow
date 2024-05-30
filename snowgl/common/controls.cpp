@@ -101,8 +101,6 @@ glm::vec3 computeMatricesFromInputs() {
 
 	// Camera matrix
 	ViewMatrix  = glm::lookAt(position, position+direction,	up);
-	std::cout << horizontalAngle << " " << verticalAngle << std::endl;
-
 
 	// For the next frame, the "last time" will be "now"
 	lastTime = currentTime;

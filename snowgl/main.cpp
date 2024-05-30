@@ -395,7 +395,7 @@ int main(void){
 		// Display those statistical texts.
 		int left_pos = 10;
 		int down_pos = 20;
-        cv::putText(capturedImage, fpsText, 			cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
+        //cv::putText(capturedImage, fpsText, 			cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
         cv::putText(capturedImage, eyePosText, 			cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 40;
 		
 		cv::putText(capturedImage, timeText, 			cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;

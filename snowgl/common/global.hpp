@@ -9,49 +9,50 @@
 #define WINDOW_BORDER           false
 
 // OpenCV Capture Window
-//#define USE_OPENCV              // Comment this line if OpenCV is not installed
+#define USE_OPENCV              // Comment this line if OpenCV is not installed
 #define CV_WINDOW_NAME          "SnowGL (OpenCV Capture)"
 
 // OpenCV Output
-#define OUTPUT_IMAGE_FILENAME   "outputs/ALLT1700L60N.png"
+#define OUTPUT_IMAGE_FILENAME   "outputs/F2200L35ST1.png"
 #define OUTPUT_VIDEO_FILENAME   "outputs/L35S.asf"
 #define OUTPUT_VIDEO_FPS        60
 #define AUTO_STOP_RECORDING     true
 
 // Operating Mode 
-#define IS_WINDOWS_OS           // Comment this line on non-Windows Operating Systems
+//#define IS_WINDOWS_OS           // Comment this line on non-Windows Operating Systems
 #define DAYTIME_SIMULATION      true      
-#define FRAME_MICRO_STEP        1.0
-#define INITIAL_TIME_OF_DAY     0 * 60
+#define FRAME_MICRO_STEP        0.0
+#define INITIAL_TIME_OF_DAY     22 * 60
 
 // Manual defined item (If DAYTIME_SIMULATION is set to false)
 #define MANUAL_SNOW_AMOUNT      0.0
 #define MANUAL_LIGHT_INTENSITY  1.0
 
 // Eye position (front of the statue)
-//#define EYE_POS_X               0
-//#define EYE_POS_Y               -30
-//#define EYE_POS_Z               12.5
-
-// Eye position (end of the statue)
 #define EYE_POS_X               0
-#define EYE_POS_Y               30
+#define EYE_POS_Y               -30
 #define EYE_POS_Z               12.5
 
+// Eye position (end of the statue)
+//#define EYE_POS_X               0
+//#define EYE_POS_Y               30
+//#define EYE_POS_Z               12.5
+
 // Camera view (front of the statue)
-#define HORIZONTAL_FIXED        false
-#define VERTICAL_FIXED          false
-//#define HORIZONTAL_ANGLE        (MY_PI * 1.00)
-//#define VERTICAL_ANGLE          (-MY_PI * 1.50)
+#define HORIZONTAL_FIXED        true
+#define VERTICAL_FIXED          true
+#define HORIZONTAL_ANGLE        (MY_PI * 1.00)
+#define VERTICAL_ANGLE          (-MY_PI * 1.50)
 
 // Camera view (end of the statue)
-#define HORIZONTAL_ANGLE        (MY_PI * 2.00)
-#define VERTICAL_ANGLE          (-MY_PI * 0.50)
+//#define HORIZONTAL_ANGLE        (MY_PI * 2.00)
+//#define VERTICAL_ANGLE          (-MY_PI * 0.50)
 
-// Lighting Configuration
 // Models and textures
 #define MODEL_LOCATION          "models/StatueOfLiberty.obj"
 #define TEXTURE_LOCATION        "models/rainbow.bmp"
+//#define TEXTURE_LOCATION        "models/checkerboard.bmp"
+//#define TEXTURE_LOCATION        "models/pure_color.bmp"
 
 // Snow effect
 #define SNOW_COLOR_R            0.9375
