@@ -99,7 +99,7 @@ fully exposed to the falling snow. This value is based on a shadow map by settin
 The light direction is to the ground, so the points in the virtual shadow are also occluded by an object. Besides, to make the 
 transition process smoother, soft shadowing techniques can be used. 
 
-The inclination value \( f_{inc} \in [0, 1] \) depends on the angle between the surface normal and the horizon. \( f_{inc}=1 \) means 
+The inclination value \( f_{inc} \in [0, 1] \) depends on the angle between the surface normal and the horizon normal. \( f_{inc}=1 \) means 
 that the point is on a flat surface that is parallel to the horizon. \( f_{inc}=0 \) indicates that the point is on a surface that is 
 perpendicular to the horizon. This value can be calculated by:
 \[
@@ -146,7 +146,7 @@ The user-defined function \( f_{u} \in [0, 1]\) is used to further customize and
 % /Snow method 2: Accumulation Prediction Coefficient
 
 % Snow method 3: Full Snow Equation
-\subsubsection {Full Snow Equation}
+\subsubsection{Full Snow Equation}
 The final color \( C \) is a blending of the snow color and the surface color (without snow) on that point, by using the snow accumulation 
 prediction coefficient in the last sub-section. This is also called the "Full Snow Equation".
 \[
@@ -163,10 +163,10 @@ where:
 % /Method part 1: Snow Rendering
 
 % Method part 2: Environment Simulation
-\subsection {Environment Simulation}
+\subsection{Environment Simulation}
 
 % Environment 1: Temperature
-\subsubsection {Temperature}
+\subsubsection{Temperature}
 The temperature curve in this paper is based on the real temperature of an in-land city around the latitude of 35$^{\circ}$ N or 35
 $^{\circ}$ S in winter solstice day. This location has a large temperature difference. The highest temperature is about 
 \(10^\circ\mathrm{C}\), which happens at around 1-2 P.M. The lowest temperature is about \(-10^\circ\mathrm{C}\), which can be reached 
@@ -175,9 +175,9 @@ interpolate the intermediate values, making the curve smoother.
 % /Environment 1: Temperature
 
 % Environment 2: Snow Factor
-\subsubsection {Snow Factor}
-The snow factor is the user-defined function \( f_{u} \) in Section 4.1, making a potentially negative effect on the original snow. To 
-simplify the simulation, this is based solely on the environmental temperature. If the temperature \( t \leq 0^\circ\mathrm{C}\), the 
+\subsubsection{Snow Factor}
+The snow factor is the user-defined function \( f_{u} \) in Section 3.1, making a potentially negative effect on the original snow. To 
+simplify the simulation, the factor is based solely on the environmental temperature. If the temperature \( t \leq 0^\circ\mathrm{C}\), the 
 snow factor is always 1. If \( t \geq 5^\circ\mathrm{C}\), the snow factor is always 0. Otherwise, the snow factor decreases linearly 
 from 1 to 0 as temperature increases.
 \[
@@ -193,12 +193,12 @@ from 1 to 0 as temperature increases.
 % /Environment 2: Snow Factor
 
 % Environment 3: Sunlight Intensity and Direction
-\subsubsection {Sunlight Intensity and Direction}
+\subsubsection{Sunlight Intensity and Direction}
 In this paper, only the sunlight and sky (ambient) light are considered. The intensity of the skylight is a small constant value 
-while that of the sunlight varies by time, ranging from 0 to 1. Assume the light intensity of the sun is 0 at night. It starts 
+while that of the sunlight varies by time, ranging from 0 to 1. Assume the sunlight intensity is 0 at night. It starts 
 increasing rapidly (typically 30 minutes) before sunrise and reaches the maximum value in a short time (typically 1-3 hours). It 
 remains stable until several hours before the sunset. The value decreases quickly in the sunset period and finally returns to 0. Here 
-is the mathematical formula of the light intensity \( I \in (0, 1]\), which is based on a bell curve.
+is the mathematical formula of the light intensity \( I \in (0, 1]\), which is a modified bell-shape curve.
 \[
   I = e^{-\frac{\left(\frac{\pi}{2} - \theta\right)^{\frac{m}{60} + 1}}{b}}
 \]
@@ -221,15 +221,15 @@ equation in terms of \( m \) when \( I \) and \( \theta\) is given. For example,
 
 By giving the sun elevation angle \( \theta \) and azimuth angle \( \phi \), the sunlight direction can be calculated by:
 \[
-  (-sin(\phi)cos(\theta), -cos(\phi)cos(\theta), sin(\theta))
+  [-\sin(\phi)\cos(\theta), -\cos(\phi)\cos(\theta), \sin(\theta)]
 \]
 % /Environment 3: Sunlight Intensity and Direction
 
 % Environment 4: Sunlight and Sky Color
-\subsubsection {Sunlight and Sky Color}
+\subsubsection{Sunlight and Sky Color}
 Sunlight and sky colors depend on the current time. Typically on a sunny day, the sunlight is yellow to white for most of the day and 
 it becomes orange during sunrise or sunset. The sky is light blue in the day, orange during sunrise or sunset and dark purple at night. 
-To simulate those colors, interpolation is also needed to make the transition process smoother. 
+To simulate those colors, interpolation is needed to make the transition process smoother. 
 \[
   C_{b}=
   \left\{
@@ -249,8 +249,8 @@ To simulate those colors, interpolation is also needed to make the transition pr
 \section{Results}
 
 % Result 1: Pure Snow Effect
-\subsection {Pure Snow Effect}
-Figure 2 is the rendering effect with full snow (a), half snow (b), and no snow (c) respectively. The dynamic daylight simulation is 
+\subsection{Pure Snow Effect}
+Figure 2 is the rendering effect with full snow (a), half snow (b), and no snow (c) respectively. The dynamic environment simulation is 
 disabled and the light source is always right above the object with the maximum intensity and white color. Those three sub-figures 
 illustrate the effect on both declination (the head and book part of the statue) and occlusion (the feet area of it), as well as the 
 color blending mentioned above.
@@ -334,7 +334,7 @@ The snow effect is back due to the dropping temperature.
 % /Result 2: Snow Effect with Dynamic Daylight Simulation (Medium Latitude)
 
 % Result 3: Snow Effect with Dynamic Daylight Simulation (High Latitude)
-\subsection {Snow Effect with Dynamic Daylight Simulation (High Latitude)}
+\subsection{Snow Effect with Dynamic Daylight Simulation (High Latitude)}
 
 Figure 5 is the plot of the data at different times with a high latitude location on the summer solstice (60 $^{\circ}$N on June 
 \(22^{nd}\)). The sunrise time is about 2:30 AM and the sunset time is about 9:30 PM, so there are 19 hours of daylight time.
@@ -410,7 +410,7 @@ will be generated. Those special properties can be achieved by other techniques 
 displacement and ray tracing.
 % /Discussion 2: Properties of the Snow
 
-% Discussion 3: Performance TODO ref
+% Discussion 3: Performance
 \subsection{Performance}
 The code used in this paper achieves a satisfactory performance thanks to OpenGL [7], a modern open-source Computer Graphics Library, 
 and improved computer hardware. The value of FPS reaches 40 when the window resolution is set to 900*900 (px) on an average laptop 
@@ -422,8 +422,8 @@ resolution of around 700*600 (px). However, this paper does not test complicated
 % 6. Conclusion
 \section{Conclusion}
 This paper implements a basic accumulated snow renderer by blending the snow color and the original surface color. It also implements 
-a dynamic environment system to control the snow amount by adjusting the temperature and simulating the daylight conditions. There is 
-also an experiment on irregular conditions (summer in high-latitude locations) with some interesting findings. 
+a dynamic environment system to control the snow amount and color-in-view by adjusting the temperature and simulating the daylight 
+conditions. There is also an experiment on irregular conditions (summer in high-latitude locations) with some interesting findings. 
 % /6. Conclusion
 
 % 7. Future Work
@@ -467,5 +467,4 @@ Retrieved from https://www.microsoft.com/en-us/research/publication/the-opengl-g
 }
 % /References
 
-% \section*{Additional Experiment Results}
 \end{document}
