@@ -6,14 +6,14 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{subfig}         % display sub-figure
-\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[utf8]{inputenc} % allow the utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
 \usepackage{hyperref}       % hyperlinks
 \usepackage{url}            % simple URL typesetting
 \usepackage{booktabs}       % professional-quality tables
 \usepackage{amsfonts}       % blackboard math symbols
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
-\usepackage{microtype}      % microtypography
+\usepackage{microtype}      % micro typography
 \usepackage{xcolor}         % colors
 
 \title{Dynamic Environment Simulation with Accumulated Snow Effect}
@@ -34,36 +34,35 @@
 \begin{abstract}
 This paper illustrates a method to render accumulated snow. It uses color blending to create a reasonable snowy scene. The color of 
 a point relies on the snow color (based on a white background and distorted normals) and the surface color without snow, as well as a
-snow accumulation prediction coefficient to control the blending Result. The paper also designs a method to map the environment 
-temperature and maximum snow amount on a point, a bell-curve sunlight intensity formula, and an interpolation schema for sun color 
-and sky color. Lastly, the paper demonstrates the results of the above approaches and algorithms, including the static pure snow 
-effect and two dynamic snow effects based on location.
+snow accumulation prediction coefficient to control the blending result. The paper also designs a method to map the environment 
+temperature and maximum snow amount on a point, a bell-curve sunlight intensity formula, and an interpolation schema for sun and sky 
+color. Lastly, this paper demonstrates the results of the above approaches and algorithms, including the static pure snow effect and 
+two dynamic snow effects in different locations.
 \end{abstract}
 % /Abstract
 
 % 1. Introduction
 \section{Introduction}
-Snow rendering and environment simulation are two important applications in Computer Graphics. Both of them can be used in other 
-applications like video games, movies and virtual reality. Snow is one of the most valuable natural resources and it is also
-important to render it in the Computer Graphics applications. There are two major kinds of snow rendering, which are falling snow 
-which is based on particles floating in the air [1], and accumulated snow covering objects. The snow rendering type in his paper 
-is the accumulated snow.
+Snow rendering and environment simulation are two important topics in Computer Graphics. Both of them can be used in applications like 
+video games, movies and virtual reality. Snow is one of the most valuable and beautiful natural resources. It is also important to 
+render the snow scene in Computer Graphics applications. There are two major kinds of snow rendering, which are falling snow based on 
+particles floating in the air [1], and accumulated snow covering objects. The snow rendering type in this paper is the accumulated snow.
 
 Environment simulation is also an important field in Computer Graphics. For instance, many 3D video games require a robust daytime
-and weather simulation system to calculate the sunlight/moonlight position, intensity and color. This can also change the color of 
-the sky and all relevant scenes, providing players with an immersive gaming experience. The environment simulation also has a strong 
-connection with snow rendering as it determines the snow amount and color in the eye view. 
+and weather simulation system to calculate sunlight/moonlight position, intensity and color. This can also change the color of the sky 
+and all relevant scenes, providing players with an immersive gaming experience. The environment simulation also has a strong connection 
+with snow rendering as it determines the snow amount and color in the eye view. 
 
-This paper is inspired by the snowy effects in a fancy movie and the dynamic weather/season systems in a popular video game. It will 
-explore how snow is generated and how the time of the day affects the whole scene (especially in the summer of high latitude areas).
-It also implements a simple snow rendering and dynamic environment system, as well as the connections between them.
+This paper is inspired by the snowy effects in movies and the dynamic weather/season systems in video games. It will explore how snow is 
+generated and how the environment affects the whole scene. It also implements a simple snow rendering and dynamic environment system, as 
+well as the connections between them.
 % /1. Introduction
 
 % 2. Background
 \section{Background}
 There are a lot of previous works on both snow rendering and environment simulation. A researcher at the University of British 
-Columbia designed a snow pipeline in 2000 [2]. Metaball is also a good approach to model and render snow [3]. Sunrise times over a 
-digital terrain can be calculated by using ray tracing [4]. The Solar Time, Sunrise and Sunset time can be calculated and predicted 
+Columbia designed a snow pipeline in 2000 [2]. Besides, Metaball is also a good approach to model and render snow [3]. Moreover, Sunrise 
+times over a digital terrain can be calculated by using ray tracing [4]. Lastly, the Solar Time, Sunrise and Sunset time can be calculated and predicted 
 by a set of non-linear equations accurately [5].
 % /2. Background
 
@@ -394,7 +393,7 @@ PM (e) and finally starts dropping at around 7:00 PM (f).
 \section{Discussions}
 
 % Discussion 1: Simulation Issues
-\subsection {Simulation Issues}
+\subsection{Simulation Issues}
 In this paper, almost all the simulations are simplified for demonstrations only. For example, temperatures are only based on the data
 of a single city and not bonded with the location parameters (e.g., altitude, latitude and ocean currents). Altitude and time zone
 shift are not considered in the sunlight intensity formula, and snow is not simplify depends on temperature. To make a more precise
@@ -403,7 +402,7 @@ essential. New technologies like Machine Learning can also be used here.
 % /Discussion 1: Simulation Issues
 
 % Discussion 2: Properties of the Snow TODO ref
-\subsection {Properties of the Snow}
+\subsection{Properties of the Snow}
 There are no special properties of the snow in this paper. However, for a better and more robust visual effect, they should be 
 implemented. For example, a Snowy Realm should be full of thick snow. Feet and wheels should change the shape of the snow (e.g.,
 footprints). If there is a war happening in the realm, the blood of wounded soldiers should dye snow red. When snow melts, water 
@@ -412,7 +411,7 @@ displacement and ray tracing.
 % /Discussion 2: Properties of the Snow
 
 % Discussion 3: Performance TODO ref
-\subsection {Performance}
+\subsection{Performance}
 The code used in this paper achieves a satisfactory performance thanks to OpenGL [7], a modern open-source Computer Graphics Library, 
 and improved computer hardware. The value of FPS reaches 40 when the window resolution is set to 900*900 (px) on an average laptop 
 with an integrated GPU. This is much better than the paper [6] cited above. In that paper, the FPS value was only 1-3 with a window 

@@ -1,2 +1,7 @@
 Page 1
-Hello everyone, today I'll talk about the group project, 
+Hello everyone, today I'll talk about our group project, which is the Dynamic Environment Simulation with Accumulated Snow Effect. Our group number is one hundred and twenty.
+
+Page 2
+Firstly, let's talk about the introduction part. there are a lot of applications for both snow rendering and environment simulation, for example, video games and movies. The snow rendering type in this project is not the falling Snow but the accumulated Snow. For environment simulation, we need to consider the sunlight, skylight, temperature and daylight time.
+
+Page 3
