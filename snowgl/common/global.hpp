@@ -14,9 +14,9 @@
 
 // OpenCV Output
 #define OUTPUT_IMAGE_FILENAME   "outputs/ALLT1700L60N.png"
-#define OUTPUT_VIDEO_FILENAME   "outputs/StatueOfLiberty.mp4"
+#define OUTPUT_VIDEO_FILENAME   "outputs/StatueOfLiberty.avi"
 #define OUTPUT_VIDEO_FPS        60
-#define AUTO_STOP_RECORDING     false
+#define AUTO_STOP_RECORDING     true
 
 // Operating Mode 
 //#define IS_WINDOWS_OS           // Comment this line on non-Windows Operating Systems
