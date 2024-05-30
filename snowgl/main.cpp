@@ -240,7 +240,6 @@ int main(void){
 		int daytime_index = (int)f_daytime_index;
 		auto current_time = daytime_data[daytime_index];
 
-		//std::cout <<  SNOW_COLOR_R << SNOW_COLOR_G << SNOW_COLOR_B << std::endl; 
 		//glUniform3f(glGetUniformLocation(programID, "snow_color"), 1.0f , 1.0f, 1.0f);
 		glUniform3f(glGetUniformLocation(programID, "snow_color"), SNOW_COLOR_R, SNOW_COLOR_G, SNOW_COLOR_B);
 		glUniform1f(glGetUniformLocation(programID, "distortion_scalar"), DISTORTION_SCALAR);

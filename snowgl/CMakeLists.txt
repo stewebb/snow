@@ -103,14 +103,10 @@ if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${output_folder}/outputs/)
     file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/outputs/)
 endif()
 
-
-
 # On Unix-based systems
 add_custom_command(
     TARGET SnowGL POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/data/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/data"
 	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/shaders/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/shaders"
 	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/models/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/models/"
-	#COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/textures/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/textures/"
-	#COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/outputs/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/outputs/"
 )
