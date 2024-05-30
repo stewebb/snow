@@ -87,17 +87,23 @@ SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
 #set(output_folder "build/Debug")	# Uncomment me on Visual Studio compilers
 set(output_folder "build")			# Uncomment me on other compilers
 
-if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${output_folder}/models/)
-    file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/models/)
-endif()
-
-if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${output_folder}/textures/)
-    file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/textures/)
+if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${output_folder}/data/)
+    file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/data/)
 endif()
 
 if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${output_folder}/shaders/)
     file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/shaders/)
 endif()
+
+if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${output_folder}/models/)
+    file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/models/)
+endif()
+
+if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${output_folder}/outputs/)
+    file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/outputs/)
+endif()
+
+
 
 # On Unix-based systems
 add_custom_command(
@@ -106,5 +112,5 @@ add_custom_command(
 	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/shaders/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/shaders"
 	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/models/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/models/"
 	#COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/textures/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/textures/"
-	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/outputs/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/outputs/"
+	#COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/outputs/" "${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/outputs/"
 )
