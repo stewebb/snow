@@ -14,7 +14,7 @@
 
 // OpenCV Output
 #define OUTPUT_IMAGE_FILENAME   "outputs/ALLT1700L60N.png"
-#define OUTPUT_VIDEO_FILENAME   "outputs/StatueOfLiberty.avi"
+#define OUTPUT_VIDEO_FILENAME   "outputs/L35S.asf"
 #define OUTPUT_VIDEO_FPS        60
 #define AUTO_STOP_RECORDING     true
 
