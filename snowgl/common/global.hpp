@@ -19,7 +19,7 @@
 #define AUTO_STOP_RECORDING     true
 
 // Operating Mode 
-//#define IS_WINDOWS_OS           // Comment this line on non-Windows Operating Systems
+//#define IS_WINDOWS_OS         // Comment this line on non-Windows Operating Systems
 #define DAYTIME_SIMULATION      true      
 #define FRAME_MICRO_STEP        0.0
 #define INITIAL_TIME_OF_DAY     22 * 60
@@ -34,9 +34,9 @@
 #define EYE_POS_Z               12.5
 
 // Eye position (end of the statue)
-//#define EYE_POS_X               0
-//#define EYE_POS_Y               30
-//#define EYE_POS_Z               12.5
+//#define EYE_POS_X             0
+//#define EYE_POS_Y             30
+//#define EYE_POS_Z             12.5
 
 // Camera view (front of the statue)
 #define HORIZONTAL_FIXED        true
@@ -45,14 +45,14 @@
 #define VERTICAL_ANGLE          (-MY_PI * 1.50)
 
 // Camera view (end of the statue)
-//#define HORIZONTAL_ANGLE        (MY_PI * 2.00)
-//#define VERTICAL_ANGLE          (-MY_PI * 0.50)
+//#define HORIZONTAL_ANGLE      (MY_PI * 2.00)
+//#define VERTICAL_ANGLE        (-MY_PI * 0.50)
 
 // Models and textures
 #define MODEL_LOCATION          "models/StatueOfLiberty.obj"
 #define TEXTURE_LOCATION        "models/rainbow.bmp"
-//#define TEXTURE_LOCATION        "models/checkerboard.bmp"
-//#define TEXTURE_LOCATION        "models/pure_color.bmp"
+//#define TEXTURE_LOCATION      "models/checkerboard.bmp"
+//#define TEXTURE_LOCATION      "models/pure_color.bmp"
 
 // Snow effect
 #define SNOW_COLOR_R            0.9375

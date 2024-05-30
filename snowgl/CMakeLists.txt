@@ -26,7 +26,6 @@ include_directories(
 	external/assimp-3.0.1270/include/
 	external/bullet-2.81-rev2613/src/
 	external/bullet-2.81-rev2613/src/
-	#external/opencv/build/include
 	.
 )
 
