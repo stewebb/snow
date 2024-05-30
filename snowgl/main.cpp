@@ -393,8 +393,6 @@ int main(void){
 		std::string lightIntensityText = "Light Intensity: " + intToString(current_time.light_intensity * 100)	+ "%";
 		std::string elevationAngleText = "Elevation Angle: " + floatToString(current_time.elevation_angle)		+ "deg";
 
-		//std::string lightDirectionText = "Light Direction: " + floatToString(current_time.light_direction_x) + ", " + floatToString(current_time.light_direction_y) + ", " + floatToString(current_time.light_direction_z) + ")";
-
 		// Display those statistical texts.
 		int left_pos = 10;
 		int down_pos = 20;
@@ -407,8 +405,6 @@ int main(void){
 		cv::putText(capturedImage, lightIntensityText,	cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
 		cv::putText(capturedImage, elevationAngleText,  cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 40;
         
-		//cv::putText(capturedImage, lightDirectionText, 	cv::Point(left_pos, down_pos), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);	down_pos += 20;
-
 		video.write(capturedImage);
         cv::imshow(CV_WINDOW_NAME, capturedImage);
 
