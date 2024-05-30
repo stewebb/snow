@@ -28,7 +28,11 @@
 #define MANUAL_SNOW_AMOUNT      0.0
 #define MANUAL_LIGHT_INTENSITY  1.0
 
-// Eye position
+// Eye position (front of the statue)
+#define EYE_POS_X               0
+#define EYE_POS_Y               -30
+#define EYE_POS_Z               12.5
+
 #define EYE_POS_X               0
 #define EYE_POS_Y               -30
 #define EYE_POS_Z               12.5
