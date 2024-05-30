@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.0)
 project (SnowGL)
 
 find_package(OpenGL REQUIRED)
-find_package(OpenCV REQUIRED)	# Comment me if not using OpenCV
+#find_package(OpenCV REQUIRED)	# Comment me if not using OpenCV
 
 # Compile external dependencies 
 add_subdirectory (external)
@@ -16,7 +16,7 @@ include(MSVCMultipleProcessCompile) # /MP
 if(INCLUDE_DISTRIB)
 	add_subdirectory(distrib)
 endif(INCLUDE_DISTRIB)
-include_directories(${OpenCV_INCLUDE_DIRS})	# Comment me if not using OpenCV
+#include_directories(${OpenCV_INCLUDE_DIRS})	# Comment me if not using OpenCV
 
 include_directories(
 	external/AntTweakBar-1.16/include/
@@ -84,8 +84,8 @@ create_target_launcher(SnowGL WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/")
 SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
 SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
 
-#set(output_folder "build/Debug")	# Uncomment me on Visual Studio compilers
-set(output_folder "build")			# Uncomment me on other compilers
+set(output_folder "build/Debug")	# Uncomment me on Visual Studio compilers
+#set(output_folder "build")			# Uncomment me on other compilers
 
 if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${output_folder}/data/)
     file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${output_folder}/data/)

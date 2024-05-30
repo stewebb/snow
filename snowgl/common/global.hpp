@@ -9,7 +9,7 @@
 #define WINDOW_BORDER           false
 
 // OpenCV Capture Window
-#define USE_OPENCV              // Comment this line if OpenCV is not installed
+//#define USE_OPENCV              // Comment this line if OpenCV is not installed
 #define CV_WINDOW_NAME          "SnowGL (OpenCV Capture)"
 
 // OpenCV Output
@@ -19,7 +19,7 @@
 #define AUTO_STOP_RECORDING     true
 
 // Operating Mode 
-//#define IS_WINDOWS_OS           // Comment this line on non-Windows Operating Systems
+#define IS_WINDOWS_OS           // Comment this line on non-Windows Operating Systems
 #define DAYTIME_SIMULATION      true      
 #define FRAME_MICRO_STEP        1.0
 #define INITIAL_TIME_OF_DAY     0 * 60
@@ -28,16 +28,25 @@
 #define MANUAL_SNOW_AMOUNT      0.0
 #define MANUAL_LIGHT_INTENSITY  1.0
 
-// Eye position
+// Eye position (front of the statue)
+//#define EYE_POS_X               0
+//#define EYE_POS_Y               -30
+//#define EYE_POS_Z               12.5
+
+// Eye position (end of the statue)
 #define EYE_POS_X               0
-#define EYE_POS_Y               -30
+#define EYE_POS_Y               30
 #define EYE_POS_Z               12.5
 
-// Camera view
-#define HORIZONTAL_FIXED        true
-#define VERTICAL_FIXED          true
-#define HORIZONTAL_ANGLE        (MY_PI * 1.00)
-#define VERTICAL_ANGLE          (-MY_PI * 1.50)
+// Camera view (front of the statue)
+#define HORIZONTAL_FIXED        false
+#define VERTICAL_FIXED          false
+//#define HORIZONTAL_ANGLE        (MY_PI * 1.00)
+//#define VERTICAL_ANGLE          (-MY_PI * 1.50)
+
+// Camera view (end of the statue)
+#define HORIZONTAL_ANGLE        (MY_PI * 2.00)
+#define VERTICAL_ANGLE          (-MY_PI * 0.50)
 
 // Lighting Configuration
 // Models and textures
